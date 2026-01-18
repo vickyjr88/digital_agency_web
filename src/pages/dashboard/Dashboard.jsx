@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
 
@@ -10,6 +10,7 @@ export default function Dashboard({ onLogout }) {
 	const [brands, setBrands] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState('trends');
+	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -62,73 +63,146 @@ export default function Dashboard({ onLogout }) {
 		);
 	}
 
-	return (
-		<div className="min-h-screen bg-gray-50 font-sans">
-			<aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-10 hidden md:flex flex-col">
-				<div className="p-6 border-b border-gray-100">
+	const closeMobileSidebar = () => setMobileSidebarOpen(false);
+
+	const SidebarContent = ({ isMobile = false }) => (
+		<>
+			<div className="p-6 border-b border-gray-100">
+				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
 						<div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
 							D
 						</div>
 						<span className="text-xl font-bold text-gray-900">Dexter</span>
 					</div>
-				</div>
-
-				<nav className="p-4 space-y-1 flex-1">
-					<button
-						onClick={() => setActiveTab('trends')}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-							activeTab === 'trends' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
-						}`}
-					>
-						<TrendingUp size={20} />
-						Trends
-					</button>
-
-					<button
-						onClick={() => setActiveTab('brands')}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-							activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
-						}`}
-					>
-						<LayoutGrid size={20} />
-						My Brands
-					</button>
-
-					{user?.role === 'admin' && (
+					{isMobile && (
 						<button
-							onClick={() => setActiveTab('admin')}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-								activeTab === 'admin' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-							}`}
+							onClick={closeMobileSidebar}
+							className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+							aria-label="Close menu"
 						>
-							<Shield size={20} />
-							Admin Panel
+							<X size={24} />
 						</button>
 					)}
-				</nav>
-
-				<div className="p-4 border-t border-gray-100">
-					<div className="flex items-center gap-3 px-4 py-3 mb-2">
-						<div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs">
-							{user?.name?.[0]}
-						</div>
-						<div className="flex-1 min-w-0">
-							<p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-							<p className="text-xs text-gray-500 truncate">{user?.email}</p>
-						</div>
-					</div>
-					<button
-						onClick={handleLogout}
-						className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
-					>
-						<LogOut size={16} />
-						Sign Out
-					</button>
 				</div>
+			</div>
+
+			<nav className="p-4 space-y-1 flex-1">
+				<button
+					onClick={() => {
+						setActiveTab('trends');
+						if (isMobile) closeMobileSidebar();
+					}}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+						activeTab === 'trends' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+					}`}
+				>
+					<TrendingUp size={20} />
+					Trends
+				</button>
+
+				<button
+					onClick={() => {
+						setActiveTab('brands');
+						if (isMobile) closeMobileSidebar();
+					}}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+						activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+					}`}
+				>
+					<LayoutGrid size={20} />
+					My Brands
+				</button>
+
+				{user?.role === 'admin' && (
+					<button
+						onClick={() => {
+							setActiveTab('admin');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+							activeTab === 'admin' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+						}`}
+					>
+						<Shield size={20} />
+						Admin Panel
+					</button>
+				)}
+			</nav>
+
+			<div className="p-4 border-t border-gray-100">
+				<div className="flex items-center gap-3 px-4 py-3 mb-2">
+					<div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs">
+						{user?.name?.[0]}
+					</div>
+					<div className="flex-1 min-w-0">
+						<p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
+						<p className="text-xs text-gray-500 truncate">{user?.email}</p>
+					</div>
+				</div>
+				<button
+					onClick={handleLogout}
+					className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
+				>
+					<LogOut size={16} />
+					Sign Out
+				</button>
+			</div>
+		</>
+	);
+
+	return (
+		<div className="min-h-screen bg-gray-50 font-sans">
+			{/* Mobile Header */}
+			<div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 px-4 h-16 flex items-center justify-between">
+				<div className="flex items-center gap-3">
+					<div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+						D
+					</div>
+					<span className="text-xl font-bold text-gray-900">Dexter</span>
+				</div>
+				<button
+					onClick={() => setMobileSidebarOpen(true)}
+					className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+					aria-label="Open menu"
+				>
+					<Menu size={24} />
+				</button>
+			</div>
+
+			{/* Desktop Sidebar */}
+			<aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-10 hidden md:flex flex-col">
+				<SidebarContent />
 			</aside>
 
-			<main className="md:ml-64 p-8">
+			{/* Mobile Sidebar Overlay */}
+			<AnimatePresence>
+				{mobileSidebarOpen && (
+					<>
+						{/* Backdrop */}
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.2 }}
+							className="fixed inset-0 bg-black/50 z-40 md:hidden"
+							onClick={closeMobileSidebar}
+						/>
+						{/* Sidebar */}
+						<motion.aside
+							initial={{ x: '-100%' }}
+							animate={{ x: 0 }}
+							exit={{ x: '-100%' }}
+							transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+							className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col md:hidden"
+						>
+							<SidebarContent isMobile />
+						</motion.aside>
+					</>
+				)}
+			</AnimatePresence>
+
+			<main className="md:ml-64 pt-16 md:pt-0 p-4 sm:p-6 md:p-8">
 				{activeTab === 'trends' && (
 					<div className="max-w-6xl mx-auto">
 						<TrendsDashboard brands={brands} />

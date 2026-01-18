@@ -141,7 +141,10 @@ export default function BrandDetails() {
 								<RefreshCw size={18} />
 								Generate New Content
 							</button>
-							<button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+							<button
+								onClick={() => navigate(`/brand/${id}/edit`)}
+								className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+							>
 								<Settings size={20} />
 							</button>
 						</div>
@@ -160,11 +163,10 @@ export default function BrandDetails() {
 							<div className="p-5 border-b border-gray-50 bg-gray-50/30">
 								<div className="flex justify-between items-start mb-2">
 									<span
-										className={`px-2 py-0.5 text-xs font-bold uppercase tracking-wide rounded-full ${
-											item.status === 'approved'
+										className={`px-2 py-0.5 text-xs font-bold uppercase tracking-wide rounded-full ${item.status === 'approved'
 												? 'bg-green-100 text-green-700'
 												: 'bg-yellow-100 text-yellow-700'
-										}`}
+											}`}
 									>
 										{item.status || 'Pending'}
 									</span>
@@ -242,11 +244,10 @@ export default function BrandDetails() {
 										<div
 											key={trend.id}
 											onClick={() => setSelectedTrend(trend)}
-											className={`p-4 rounded-xl border cursor-pointer transition-all ${
-												selectedTrend?.id === trend.id
+											className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedTrend?.id === trend.id
 													? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500'
 													: 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
-											}`}
+												}`}
 										>
 											<div className="flex justify-between items-start mb-2">
 												<span className="text-xs font-bold text-indigo-600 uppercase">{trend.source}</span>

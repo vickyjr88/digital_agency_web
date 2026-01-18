@@ -63,29 +63,29 @@ export default function CreateBrand() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 font-sans flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 md:p-8 font-sans flex items-center justify-center">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl">
         <button
           onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-6 transition-colors"
+          className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-4 sm:mb-6 transition-colors min-h-[44px]"
         >
           <ArrowLeft size={18} /> Back to Dashboard
         </button>
 
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <div className="p-8 border-b border-gray-100 bg-gray-50/50">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600">
-                <Briefcase size={24} />
+          <div className="p-4 sm:p-6 md:p-8 border-b border-gray-100 bg-gray-50/50">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600">
+                <Briefcase size={20} className="sm:w-6 sm:h-6" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Create New Brand</h1>
-                <p className="text-gray-500">Define your brand identity for AI content generation</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Create New Brand</h1>
+                <p className="text-sm sm:text-base text-gray-500">Define your brand identity for AI content generation</p>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-8 space-y-6">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-6">
             {error && (
               <div className="bg-red-50 text-red-600 p-4 rounded-xl flex items-center gap-3 border border-red-100">
                 <AlertCircle size={20} />
@@ -93,7 +93,7 @@ export default function CreateBrand() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Brand Name</label>
                 <input
@@ -101,7 +101,7 @@ export default function CreateBrand() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="w-full px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-base"
                   placeholder="e.g. Acme Corp"
                   required
                 />
@@ -113,7 +113,7 @@ export default function CreateBrand() {
                   name="industry"
                   value={formData.industry}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="w-full px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-base"
                   placeholder="e.g. Technology, Fashion"
                 />
               </div>
@@ -126,12 +126,12 @@ export default function CreateBrand() {
                 value={formData.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none text-base"
                 placeholder="Briefly describe what your brand does..."
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                   <MessageSquare size={16} /> Brand Voice
@@ -140,7 +140,7 @@ export default function CreateBrand() {
                   name="voice"
                   value={formData.voice}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                  className="w-full px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white text-base"
                 >
                   <option value="Professional">Professional</option>
                   <option value="Casual">Casual</option>
@@ -159,7 +159,7 @@ export default function CreateBrand() {
                   name="hashtags"
                   value={formData.hashtags}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="w-full px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-base"
                   placeholder="e.g. tech, innovation (comma separated)"
                 />
               </div>
@@ -172,7 +172,7 @@ export default function CreateBrand() {
                 value={formData.custom_instructions}
                 onChange={handleChange}
                 rows={2}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none text-base"
                 placeholder="Any specific rules for the AI..."
               />
             </div>
@@ -181,7 +181,7 @@ export default function CreateBrand() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg shadow-indigo-200 disabled:opacity-70"
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg shadow-indigo-200 disabled:opacity-70 min-h-[48px]"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
