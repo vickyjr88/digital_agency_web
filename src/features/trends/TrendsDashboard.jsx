@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../services/api';
 import { motion } from 'framer-motion';
 import { TrendingUp, RefreshCw, Zap, Loader } from 'lucide-react';
 
@@ -16,11 +17,7 @@ export default function TrendsDashboard({ brands }) {
 
   const fetchTrends = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/trends', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
+      const data = await api.request('/trends');
       setTrends(data);
     } catch (error) {
       console.error('Failed to fetch trends:', error);
@@ -32,11 +29,7 @@ export default function TrendsDashboard({ brands }) {
   const handleRefreshTrends = async () => {
     setRefreshing(true);
     try {
-      const token = localStorage.getItem('token');
-      await fetch('/api/trends/refresh', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.request('/trends/refresh', { method: 'POST' });
       await fetchTrends();
     } catch (error) {
       console.error('Failed to refresh trends:', error);
@@ -50,13 +43,8 @@ export default function TrendsDashboard({ brands }) {
 
     setGenerating(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/generate/${selectedBrandId}`, {
+      await api.request(`/generate/${selectedBrandId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
         body: JSON.stringify({
           trend: selectedTrend.topic,
           trend_id: selectedTrend.id

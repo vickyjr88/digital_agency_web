@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Mail, Calendar, Shield, Briefcase, Activity } from 'lucide-react';
 
@@ -15,13 +16,8 @@ export default function UserDetails() {
 
     const fetchUserDetails = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`/api/admin/users/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            if (!res.ok) throw new Error('Failed to fetch user details');
-            setUser(await res.json());
+            const userData = await api.request(`/admin/users/${id}`);
+            setUser(userData);
         } catch (err) {
             setError(err.message);
         } finally {

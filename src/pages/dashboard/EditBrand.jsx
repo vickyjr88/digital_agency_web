@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Briefcase, Hash, MessageSquare, Save, AlertCircle } from 'lucide-react';
@@ -24,12 +25,7 @@ export default function EditBrand() {
 
     const fetchBrand = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`/api/brands/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Failed to fetch brand');
-            const data = await res.json();
+            const data = await api.request(`/brands/${id}`);
             setFormData({
                 name: data.name || '',
                 industry: data.industry || '',
@@ -56,7 +52,6 @@ export default function EditBrand() {
         setError('');
 
         try {
-            const token = localStorage.getItem('token');
             const hashtagsArray = formData.hashtags
                 .split(',')
                 .map((tag) => tag.trim())
@@ -69,20 +64,10 @@ export default function EditBrand() {
                 content_focus: [] // Keep existing or empty
             };
 
-            const res = await fetch(`/api/brands/${id}`, {
+            await api.request(`/brands/${id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                },
                 body: JSON.stringify(payload)
             });
-
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.detail || 'Failed to update brand');
-            }
-
             navigate(`/brand/${id}`);
         } catch (err) {
             setError(err.message);

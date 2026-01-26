@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Edit2, RefreshCw, Settings, Loader, Zap, Eye, Copy, Check } from 'lucide-react';
@@ -22,21 +23,11 @@ export default function BrandDetails() {
 
 	const fetchBrandData = async () => {
 		try {
-			const token = localStorage.getItem('token');
-			const brandRes = await fetch(`/api/brands/${id}`, {
-				headers: { Authorization: `Bearer ${token}` }
-			});
-			if (!brandRes.ok) throw new Error('Failed to fetch brand');
-			const brandData = await brandRes.json();
+			const brandData = await api.request(`/brands/${id}`);
 			setBrand(brandData);
 
-			const contentRes = await fetch(`/api/brands/${id}/content`, {
-				headers: { Authorization: `Bearer ${token}` }
-			});
-			if (contentRes.ok) {
-				const contentData = await contentRes.json();
-				setContent(contentData);
-			}
+			const contentData = await api.request(`/brands/${id}/content`);
+			setContent(contentData);
 		} catch (error) {
 			console.error('Error:', error);
 		} finally {
@@ -54,11 +45,7 @@ export default function BrandDetails() {
 		setShowTrendModal(true);
 		setLoadingTrends(true);
 		try {
-			const token = localStorage.getItem('token');
-			const res = await fetch('/api/trends', {
-				headers: { Authorization: `Bearer ${token}` }
-			});
-			const data = await res.json();
+			const data = await api.request('/trends');
 			setTrends(data);
 		} catch (error) {
 			console.error('Failed to fetch trends:', error);
@@ -72,28 +59,19 @@ export default function BrandDetails() {
 
 		setGenerating(true);
 		try {
-			const token = localStorage.getItem('token');
-			const res = await fetch(`/api/generate/${id}`, {
+			await api.request(`/generate/${id}`, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`
-				},
 				body: JSON.stringify({
 					trend: selectedTrend.topic,
 					trend_id: selectedTrend.id
 				})
 			});
-
-			if (res.ok) {
-				setShowTrendModal(false);
-				setSelectedTrend(null);
-				fetchBrandData();
-				alert('Content generated successfully!');
-			} else {
-				alert('Generation failed. Please try again.');
-			}
+			setShowTrendModal(false);
+			setSelectedTrend(null);
+			fetchBrandData();
+			alert('Content generated successfully!');
 		} catch (error) {
+			alert('Generation failed. Please try again.');
 			console.error('Generation failed:', error);
 		} finally {
 			setGenerating(false);

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../../services/api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Copy, Check } from 'lucide-react';
 
@@ -44,12 +45,8 @@ export default function EditContent() {
         tiktok_idea: data['TikTok Idea']
       };
 
-      await fetch(`/api/content/${data.id}`, {
+      await api.request(`/content/${data.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify(payload)
       });
       navigate('/dashboard');

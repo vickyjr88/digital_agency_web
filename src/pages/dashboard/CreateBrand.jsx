@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Briefcase, Hash, MessageSquare, Save, AlertCircle } from 'lucide-react';
@@ -40,20 +41,10 @@ export default function CreateBrand() {
         content_focus: []
       };
 
-      const res = await fetch('/api/brands', {
+      await api.request('/brands', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
         body: JSON.stringify(payload)
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.detail || 'Failed to create brand');
-      }
-
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);

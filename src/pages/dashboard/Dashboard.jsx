@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X } from 'lucide-react';
@@ -26,18 +27,9 @@ export default function Dashboard({ onLogout }) {
 				return;
 			}
 
-			const userRes = await fetch('/api/auth/me', {
-				headers: { Authorization: `Bearer ${token}` }
-			});
-
-			if (!userRes.ok) throw new Error('Failed to fetch user');
-			const userData = await userRes.json();
+			const userData = await api.getProfile();
 			setUser(userData);
-
-			const brandsRes = await fetch('/api/brands', {
-				headers: { Authorization: `Bearer ${token}` }
-			});
-			const brandsData = await brandsRes.json();
+			const brandsData = await api.request('/brands');
 			setBrands(brandsData);
 		} catch (error) {
 			console.error('Error:', error);
