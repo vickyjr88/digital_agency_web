@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import Signup from './pages/auth/Signup';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LayoutDashboard } from 'lucide-react';
 
@@ -43,7 +44,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<import('./pages/auth/Signup').then(m => m.default) />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>
