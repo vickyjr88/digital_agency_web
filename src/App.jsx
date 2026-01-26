@@ -71,6 +71,9 @@ function App() {
               <Layout><EditContent /></Layout>
             </ProtectedRoute>
           } />
+          {/* Add direct brand routes for public/legacy links */}
+          <Route path="/brand/:id" element={<BrandDetails />} />
+          <Route path="/brands/new" element={<CreateBrand />} />
         </Routes>
       </Router>
     </AuthProvider>

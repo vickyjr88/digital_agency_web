@@ -1,3 +1,5 @@
+
+import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4001/api';
 
 class ApiService {
@@ -9,27 +11,34 @@ class ApiService {
     const url = `${this.baseURL}${endpoint}`;
     const token = localStorage.getItem('token');
 
-    const config = {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...options.headers,
-      },
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...(options.headers || {}),
+    };
+
+    const axiosConfig = {
+      url,
+      method: options.method || 'GET',
+      headers,
+      data: options.body ? JSON.parse(options.body) : undefined,
+      params: options.params,
     };
 
     try {
-      const response = await fetch(url, config);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Request failed');
-      }
-
-      return data;
+      const response = await axios(axiosConfig);
+      return response.data;
     } catch (error) {
-      console.error('API Error:', error);
-      throw error;
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        throw new Error(error.response.data?.message || error.response.statusText || 'Request failed');
+      } else if (error.request) {
+        // Request was made but no response received
+        throw new Error('No response from server');
+      } else {
+        // Something else happened
+        throw new Error(error.message || 'Request failed');
+      }
     }
   }
 
