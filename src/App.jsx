@@ -43,39 +43,33 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-
+          <Route path="/signup" element={<import('./pages/auth/Signup').then(m => m.default) />} />
           <Route path="/" element={<Navigate to="/dashboard" />} />
-
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Layout><Dashboard /></Layout>
             </ProtectedRoute>
           } />
-
           <Route path="/dashboard/brands/new" element={
             <ProtectedRoute>
               <Layout><CreateBrand /></Layout>
             </ProtectedRoute>
           } />
-
           <Route path="/dashboard/brands/:id" element={
             <ProtectedRoute>
               <Layout><BrandDetails /></Layout>
             </ProtectedRoute>
           } />
-
           <Route path="/dashboard/brands/:id/edit" element={
             <ProtectedRoute>
               <Layout><EditBrand /></Layout>
             </ProtectedRoute>
           } />
-
           <Route path="/dashboard/content/:id/edit" element={
             <ProtectedRoute>
               <Layout><EditContent /></Layout>
             </ProtectedRoute>
           } />
-
         </Routes>
       </Router>
     </AuthProvider>
