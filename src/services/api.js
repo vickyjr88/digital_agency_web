@@ -225,7 +225,7 @@ class ApiService {
 
   // Users
   async getProfile() {
-    return this.request('/users/me');
+    return this.request('/auth/me');
   }
 }
 
