@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../services/api';
 import { motion } from 'framer-motion';
 import { Users, Briefcase, TrendingUp, FileText, Shield, Search, AlertCircle, Activity, LayoutGrid, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -20,24 +21,16 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
-
-      const [statsRes, latestRes, usersRes, brandsRes] = await Promise.all([
-        fetch('/api/admin/stats', { headers }),
-        fetch('/api/admin/latest', { headers }),
-        fetch('/api/admin/users', { headers }),
-        fetch('/api/admin/brands', { headers })
+      const [stats, latest, users, brands] = await Promise.all([
+        api.getAdminStats(),
+        api.request('/admin/latest'),
+        api.getAdminUsers(),
+        api.request('/admin/brands')
       ]);
-
-      if (!statsRes.ok || !latestRes.ok || !usersRes.ok || !brandsRes.ok) {
-        throw new Error('Failed to fetch dashboard data');
-      }
-
-      setStats(await statsRes.json());
-      setLatest(await latestRes.json());
-      setUsers(await usersRes.json());
-      setBrands(await brandsRes.json());
+      setStats(stats);
+      setLatest(latest);
+      setUsers(users);
+      setBrands(brands);
     } catch (err) {
       setError(err.message);
     } finally {

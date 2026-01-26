@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, User, Mail, ArrowRight, CheckCircle, AlertCircle, Home } from 'lucide-react';
@@ -51,27 +52,16 @@ export default function Signup({ onSignup } = {}) {
 		setLoading(true);
 
 		try {
-			const res = await fetch('/api/auth/register', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					name: formData.name,
-					email: formData.email,
-					password: formData.password
-				})
+			const data = await api.register({
+				name: formData.name,
+				email: formData.email,
+				password: formData.password
 			});
-
-			const data = await res.json();
-
-					if (res.ok) {
-						localStorage.setItem('token', data.access_token);
-						if (onSignup) onSignup();
-						navigate('/dashboard');
-			} else {
-				setError(data.detail || 'Registration failed');
-			}
+			localStorage.setItem('token', data.access_token);
+			if (onSignup) onSignup();
+			navigate('/dashboard');
 		} catch (err) {
-			setError('Network error. Please try again.');
+			setError(err.message || 'Network error. Please try again.');
 		} finally {
 			setLoading(false);
 		}

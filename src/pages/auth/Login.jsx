@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, Mail, ArrowRight, AlertCircle, Home } from 'lucide-react';
@@ -16,23 +17,12 @@ export default function Login({ onLogin } = {}) {
 		setError('');
 
 		try {
-			const res = await fetch('/api/auth/login', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, password })
-			});
-
-			const data = await res.json();
-
-			if (res.ok) {
-				localStorage.setItem('token', data.access_token);
-				if (onLogin) onLogin();
-				navigate('/dashboard');
-			} else {
-				setError(data.detail || 'Invalid email or password');
-			}
+			const data = await api.login(email, password);
+			localStorage.setItem('token', data.access_token);
+			if (onLogin) onLogin();
+			navigate('/dashboard');
 		} catch (err) {
-			setError('Network error. Please try again.');
+			setError(err.message || 'Network error. Please try again.');
 		} finally {
 			setLoading(false);
 		}
