@@ -155,6 +155,17 @@ class ApiService {
     return this.request(`/billing/verify/${reference}`);
   }
 
+  async getTransactionHistory() {
+    return this.request('/billing/transactions');
+  }
+
+  async scheduleContent(contentId, scheduledAt) {
+    return this.request(`/content/${contentId}/schedule`, {
+      method: 'POST',
+      body: JSON.stringify({ scheduled_at: scheduledAt }),
+    });
+  }
+
   // Admin
   async getAdminStats() {
     return this.request('/admin/stats');
@@ -257,7 +268,15 @@ class ApiService {
   async getProfile() {
     return this.request('/auth/me');
   }
+
+  async updateProfile(profileData) {
+    return this.request('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+  }
 }
+
 
 export const api = new ApiService();
 export default api;

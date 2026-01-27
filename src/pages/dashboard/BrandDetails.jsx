@@ -141,12 +141,14 @@ export default function BrandDetails() {
 							<div className="p-5 border-b border-gray-50 bg-gray-50/30">
 								<div className="flex justify-between items-start mb-2">
 									<span
-										className={`px-2 py-0.5 text-xs font-bold uppercase tracking-wide rounded-full ${item.status === 'approved'
+										className={`px-2 py-0.5 text-xs font-bold uppercase tracking-wide rounded-full ${item.scheduled_at
+											? 'bg-blue-100 text-blue-700'
+											: item.status === 'approved'
 												? 'bg-green-100 text-green-700'
 												: 'bg-yellow-100 text-yellow-700'
 											}`}
 									>
-										{item.status || 'Pending'}
+										{item.scheduled_at ? 'Scheduled' : (item.status || 'Pending')}
 									</span>
 									<span className="text-xs text-gray-400 font-mono">
 										{new Date(item.generated_at).toLocaleDateString()}
@@ -164,7 +166,7 @@ export default function BrandDetails() {
 
 								<div className="flex gap-2 pt-4 mt-auto border-t border-gray-50">
 									<button
-										onClick={() => navigate(`/view/${item.id}`, { state: { item } })}
+										onClick={() => navigate(`/dashboard/content/${item.id}/edit`, { state: { item } })}
 										className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
 										title="View Details"
 									>
@@ -178,7 +180,7 @@ export default function BrandDetails() {
 										{copiedId === item.id ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
 									</button>
 									<button
-										onClick={() => navigate(`/edit/${item.id}`, { state: { item } })}
+										onClick={() => navigate(`/dashboard/content/${item.id}/edit`, { state: { item } })}
 										className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors text-sm font-semibold"
 									>
 										<Edit2 size={16} /> Edit
@@ -223,8 +225,8 @@ export default function BrandDetails() {
 											key={trend.id}
 											onClick={() => setSelectedTrend(trend)}
 											className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedTrend?.id === trend.id
-													? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500'
-													: 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
+												? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500'
+												: 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
 												}`}
 										>
 											<div className="flex justify-between items-start mb-2">

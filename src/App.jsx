@@ -13,6 +13,7 @@ import EditContent from './pages/dashboard/EditContent';
 import BillingCallback from './pages/dashboard/BillingCallback';
 import Login from './pages/auth/Login';
 import LandingPage from './pages/home/LandingPage';
+import UserDetails from './features/admin/UserDetails';
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -51,7 +52,37 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>
-              <Layout><Dashboard /></Layout>
+              <Layout><Dashboard defaultTab="trends" /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/trends" element={
+            <ProtectedRoute>
+              <Layout><Dashboard defaultTab="trends" /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/my-brands" element={
+            <ProtectedRoute>
+              <Layout><Dashboard defaultTab="brands" /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/billing" element={
+            <ProtectedRoute>
+              <Layout><Dashboard defaultTab="billing" /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Layout><Dashboard defaultTab="profile" /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <Layout><Dashboard defaultTab="admin" /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/user/:id" element={
+            <ProtectedRoute>
+              <Layout><UserDetails /></Layout>
             </ProtectedRoute>
           } />
           <Route path="/dashboard/brands/new" element={

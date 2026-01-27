@@ -80,12 +80,60 @@ export default function AdminDashboard() {
       {/* OVERVIEW TAB */}
       {activeTab === 'overview' && (
         <div className="space-y-8">
-          {/* Stats Cards */}
+          {/* Financial Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <StatsCard icon={Shield} title="Total Revenue" value={stats?.total_revenue} color="bg-green-50 text-green-600" />
+            <StatsCard icon={Shield} title="Active Subscriptions" value={stats?.active_subscriptions} color="bg-indigo-50 text-indigo-600" />
+            <StatsCard icon={Clock} title="Pending Transactions" value={stats?.pending_transactions} color="bg-yellow-50 text-yellow-600" />
+          </div>
+
+          {/* Usage Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatsCard icon={Users} title="Total Users" value={stats?.users} color="bg-blue-50 text-blue-600" />
             <StatsCard icon={Briefcase} title="Total Brands" value={stats?.brands} color="bg-purple-50 text-purple-600" />
-            <StatsCard icon={TrendingUp} title="Total Trends" value={stats?.trends} color="bg-green-50 text-green-600" />
-            <StatsCard icon={FileText} title="Content Generated" value={stats?.content} color="bg-orange-50 text-orange-600" />
+            <StatsCard icon={TrendingUp} title="Total Trends" value={stats?.trends} color="bg-teal-50 text-teal-600" />
+            <StatsCard icon={FileText} title="Content Generated" value={stats?.content_generated} color="bg-orange-50 text-orange-600" />
+          </div>
+
+          {/* Recent Transactions Table */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                <Clock size={18} className="text-gray-400" />
+                Recent Transactions
+              </h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-gray-50 border-b border-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Date</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">User</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Amount</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {stats?.recent_transactions?.map(tx => (
+                    <tr key={tx.id}>
+                      <td className="px-6 py-4 text-sm text-gray-500">{new Date(tx.created_at).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{tx.user_email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 font-medium">{tx.currency} {tx.amount}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${tx.status === 'success' ? 'bg-green-100 text-green-700' : tx.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
+                          {tx.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {(!stats?.recent_transactions || stats?.recent_transactions.length === 0) && (
+                    <tr>
+                      <td colSpan="4" className="px-6 py-8 text-center text-sm text-gray-500 italic">No recent transactions</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Latest Activity */}
@@ -121,7 +169,7 @@ export default function AdminDashboard() {
             )} />
 
             <LatestSection title="Latest Content" icon={FileText} items={latest?.content} renderItem={content => (
-              <div key={content.id} className="flex justify-between items-center py-3 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 px-2 -mx-2 rounded-lg transition-colors" onClick={() => navigate(`/view/${content.id}`)}>
+              <div key={content.id} className="flex justify-between items-center py-3 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 px-2 -mx-2 rounded-lg transition-colors" onClick={() => navigate(`/dashboard/content/${content.id}/edit`, { state: { item: content } })}>
                 <div className="flex-1 min-w-0 pr-4">
                   <p className="font-medium text-sm text-gray-900 truncate">{content.trend}</p>
                   <p className="text-xs text-gray-500 capitalize">{content.status}</p>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from '../../services/api';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Copy, Check } from 'lucide-react';
+import { ArrowLeft, Save, Copy, Check, Share2, Calendar, Facebook, Twitter, Clock } from 'lucide-react';
 
 export default function EditContent() {
   const { state } = useLocation();
@@ -17,12 +17,15 @@ export default function EditContent() {
       'Facebook Post': item.facebook_post || item['Facebook Post'],
       'Instagram Reel Script': item.instagram_reel_script || item['Instagram Reel Script'],
       'TikTok Idea': item.tiktok_idea || item['TikTok Idea'],
-      Timestamp: item.generated_at || item.Timestamp
+      Timestamp: item.generated_at || item.Timestamp,
+      ScheduledAt: item.scheduled_at || null
     };
   });
 
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [scheduledAt, setScheduledAt] = useState(data.ScheduledAt ? data.ScheduledAt.split('T')[0] : '');
 
   if (!state?.item)
     return (
@@ -49,12 +52,37 @@ export default function EditContent() {
         method: 'PUT',
         body: JSON.stringify(payload)
       });
-      navigate('/dashboard');
+      alert('Changes saved successfully!');
     } catch (err) {
       alert('Failed to save');
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSchedule = async () => {
+    if (!scheduledAt) return;
+    setSaving(true);
+    try {
+      await api.scheduleContent(data.id, scheduledAt);
+      setData({ ...data, ScheduledAt: scheduledAt });
+      setShowScheduleModal(false);
+      alert('Content scheduled successfully!');
+    } catch (err) {
+      alert('Failed to schedule');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const shareToTwitter = (text) => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
+  const shareToFacebook = (text) => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
   };
 
   const copyToClipboard = (text, field) => {
@@ -80,6 +108,14 @@ export default function EditContent() {
               Generated: {new Date(data.Timestamp).toLocaleDateString()}
             </span>
             <button
+              onClick={() => setShowScheduleModal(true)}
+              disabled={saving}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium shadow-sm"
+            >
+              <Calendar size={18} />
+              {data.ScheduledAt ? `Scheduled: ${new Date(data.ScheduledAt).toLocaleDateString()}` : 'Schedule'}
+            </button>
+            <button
               onClick={handleSave}
               disabled={saving}
               className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm disabled:opacity-50"
@@ -101,13 +137,22 @@ export default function EditContent() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Twitter Content</label>
-                <button
-                  onClick={() => copyToClipboard(data.Tweet, 'tweet')}
-                  className="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-medium"
-                >
-                  {copied === 'tweet' ? <Check size={14} /> : <Copy size={14} />}
-                  {copied === 'tweet' ? 'Copied!' : 'Copy'}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => shareToTwitter(data.Tweet)}
+                    className="text-xs flex items-center gap-1 text-gray-500 hover:text-indigo-600 font-medium"
+                  >
+                    <Twitter size={14} />
+                    Share
+                  </button>
+                  <button
+                    onClick={() => copyToClipboard(data.Tweet, 'tweet')}
+                    className="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-medium border-l border-gray-200 pl-2"
+                  >
+                    {copied === 'tweet' ? <Check size={14} /> : <Copy size={14} />}
+                    {copied === 'tweet' ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
               </div>
               <textarea
                 value={data.Tweet || ''}
@@ -125,13 +170,22 @@ export default function EditContent() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Facebook Post</label>
-                <button
-                  onClick={() => copyToClipboard(data['Facebook Post'], 'fb')}
-                  className="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-medium"
-                >
-                  {copied === 'fb' ? <Check size={14} /> : <Copy size={14} />}
-                  {copied === 'fb' ? 'Copied!' : 'Copy'}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => shareToFacebook(data['Facebook Post'])}
+                    className="text-xs flex items-center gap-1 text-gray-500 hover:text-indigo-600 font-medium"
+                  >
+                    <Facebook size={14} />
+                    Share
+                  </button>
+                  <button
+                    onClick={() => copyToClipboard(data['Facebook Post'], 'fb')}
+                    className="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-medium border-l border-gray-200 pl-2"
+                  >
+                    {copied === 'fb' ? <Check size={14} /> : <Copy size={14} />}
+                    {copied === 'fb' ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
               </div>
               <textarea
                 value={data['Facebook Post'] || ''}
@@ -176,6 +230,44 @@ export default function EditContent() {
           </div>
         </div>
       </div>
+
+      {showScheduleModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Schedule content</h3>
+            <div className="space-y-4 mb-8">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Publish Date</label>
+                <input
+                  type="date"
+                  value={scheduledAt}
+                  onChange={(e) => setScheduledAt(e.target.value)}
+                  className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              <p className="text-sm text-gray-500">
+                You can view your scheduled posts in the Brand Dashboard. (Scheduling is currently a mock feature).
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowScheduleModal(false)}
+                className="flex-1 py-3 text-gray-600 font-medium hover:bg-gray-50 rounded-xl transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSchedule}
+                disabled={!scheduledAt || saving}
+                className="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50"
+              >
+                {saving ? 'Scheduling...' : 'Confirm Schedule'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

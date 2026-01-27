@@ -3,13 +3,15 @@ import { api } from '../../services/api';
 import { motion } from 'framer-motion';
 import { TrendingUp, RefreshCw, Zap, Loader } from 'lucide-react';
 
-export default function TrendsDashboard({ brands }) {
+export default function TrendsDashboard({ brands, user }) {
   const [trends, setTrends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedTrend, setSelectedTrend] = useState(null);
   const [selectedBrandId, setSelectedBrandId] = useState('');
   const [generating, setGenerating] = useState(false);
+
+  const isOverLimit = user?.usage && user.usage.current >= user.usage.limit;
 
   useEffect(() => {
     fetchTrends();
@@ -51,16 +53,12 @@ export default function TrendsDashboard({ brands }) {
         })
       });
 
-      if (res.ok) {
-  await res.json();
-        setSelectedTrend(null);
-        setSelectedBrandId('');
-        alert('Content generated successfully! Check your brand dashboard.');
-      } else {
-        alert('Generation failed. Please try again.');
-      }
+      setSelectedTrend(null);
+      setSelectedBrandId('');
+      alert('Content generated successfully! Check your brand dashboard.');
     } catch (error) {
       console.error('Generation error:', error);
+      alert('Generation failed. Please try again.');
     } finally {
       setGenerating(false);
     }
@@ -88,6 +86,28 @@ export default function TrendsDashboard({ brands }) {
         </button>
       </div>
 
+      {isOverLimit && (
+        <div className="mb-8 p-6 bg-red-50 border border-red-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex gap-4 items-start text-center sm:text-left">
+            <div className="p-3 bg-red-100 rounded-xl text-red-600">
+              <Zap size={24} />
+            </div>
+            <div>
+              <h4 className="font-bold text-red-900">Monthly limit reached</h4>
+              <p className="text-sm text-red-700 mt-1">
+                You've generated {user.usage.current} posts this month. Upgrade your plan to keep creating.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => window.location.href = '/billing'}
+            className="px-6 py-2 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm"
+          >
+            Upgrade Plan
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {trends.map((trend, index) => (
           <motion.div
@@ -95,11 +115,10 @@ export default function TrendsDashboard({ brands }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className={`bg-white rounded-xl shadow-sm border p-5 sm:p-6 cursor-pointer transition-all min-h-[120px] ${
-              selectedTrend?.id === trend.id
-                ? 'border-indigo-500 ring-2 ring-indigo-100'
-                : 'border-gray-100 hover:border-indigo-200 hover:shadow-md active:scale-[0.98]'
-            }`}
+            className={`bg-white rounded-xl shadow-sm border p-5 sm:p-6 cursor-pointer transition-all min-h-[120px] ${selectedTrend?.id === trend.id
+              ? 'border-indigo-500 ring-2 ring-indigo-100'
+              : 'border-gray-100 hover:border-indigo-200 hover:shadow-md active:scale-[0.98]'
+              }`}
             onClick={() => setSelectedTrend(trend)}
           >
             <div className="flex justify-between items-start mb-3">
@@ -160,7 +179,7 @@ export default function TrendsDashboard({ brands }) {
               </button>
               <button
                 onClick={handleGenerate}
-                disabled={!selectedBrandId || generating}
+                disabled={!selectedBrandId || generating || isOverLimit}
                 className="flex-1 py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed min-h-[48px]"
               >
                 {generating ? (
@@ -169,7 +188,7 @@ export default function TrendsDashboard({ brands }) {
                   </>
                 ) : (
                   <>
-                    <Zap size={20} /> Generate
+                    <Zap size={20} /> {isOverLimit ? 'Limit Reached' : 'Generate'}
                   </>
                 )}
               </button>

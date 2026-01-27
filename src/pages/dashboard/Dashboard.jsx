@@ -5,14 +5,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
+import ProfileSettings from '../../features/profile/ProfileSettings';
+import SubscriptionManager from '../../features/billing/SubscriptionManager';
+import { Settings, CreditCard, BarChart2 } from 'lucide-react';
 
-export default function Dashboard({ onLogout }) {
+export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 	const [user, setUser] = useState(null);
 	const [brands, setBrands] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [activeTab, setActiveTab] = useState('trends');
+	const [activeTab, setActiveTab] = useState(defaultTab);
 	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		setActiveTab(defaultTab);
+	}, [defaultTab]);
 
 	useEffect(() => {
 		fetchUserData();
@@ -82,12 +89,11 @@ export default function Dashboard({ onLogout }) {
 			<nav className="p-4 space-y-1 flex-1">
 				<button
 					onClick={() => {
-						setActiveTab('trends');
+						navigate('/trends');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-						activeTab === 'trends' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
-					}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+						}`}
 				>
 					<TrendingUp size={20} />
 					Trends
@@ -95,26 +101,48 @@ export default function Dashboard({ onLogout }) {
 
 				<button
 					onClick={() => {
-						setActiveTab('brands');
+						navigate('/my-brands');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-						activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
-					}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+						}`}
 				>
 					<LayoutGrid size={20} />
 					My Brands
 				</button>
 
+				<button
+					onClick={() => {
+						navigate('/billing');
+						if (isMobile) closeMobileSidebar();
+					}}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+						}`}
+				>
+					<CreditCard size={20} />
+					Subscription
+				</button>
+
+				<button
+					onClick={() => {
+						navigate('/profile');
+						if (isMobile) closeMobileSidebar();
+					}}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+						}`}
+				>
+					<Settings size={20} />
+					Profile
+				</button>
+
 				{user?.role === 'admin' && (
 					<button
 						onClick={() => {
-							setActiveTab('admin');
+							navigate('/admin');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-							activeTab === 'admin' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-						}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'admin' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+							}`}
 					>
 						<Shield size={20} />
 						Admin Panel
@@ -123,6 +151,24 @@ export default function Dashboard({ onLogout }) {
 			</nav>
 
 			<div className="p-4 border-t border-gray-100">
+				{user?.usage && (
+					<div className="px-4 mb-6">
+						<div className="flex justify-between items-end mb-2">
+							<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Monthly Usage</span>
+							<span className="text-xs font-bold text-indigo-600">{user.usage.current} / {user.usage.limit}</span>
+						</div>
+						<div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+							<div
+								className={`h-full transition-all duration-1000 ${user.usage.current / user.usage.limit > 0.9 ? 'bg-red-500' : 'bg-indigo-600'
+									}`}
+								style={{ width: `${Math.min(100, (user.usage.current / user.usage.limit) * 100)}%` }}
+							/>
+						</div>
+						{user.usage.current / user.usage.limit > 0.8 && (
+							<p className="text-[10px] text-orange-600 mt-2 font-medium">Almost at your limit! Upgrade soon.</p>
+						)}
+					</div>
+				)}
 				<div className="flex items-center gap-3 px-4 py-3 mb-2">
 					<div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs">
 						{user?.name?.[0]}
@@ -197,7 +243,7 @@ export default function Dashboard({ onLogout }) {
 			<main className="md:ml-64 pt-16 md:pt-0 p-4 sm:p-6 md:p-8">
 				{activeTab === 'trends' && (
 					<div className="max-w-6xl mx-auto">
-						<TrendsDashboard brands={brands} />
+						<TrendsDashboard brands={brands} user={user} />
 					</div>
 				)}
 
@@ -250,9 +296,8 @@ export default function Dashboard({ onLogout }) {
 													{brand.name[0]}
 												</div>
 												<span
-													className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-														brand.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
-													}`}
+													className={`px-2.5 py-1 rounded-full text-xs font-medium ${brand.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+														}`}
 												>
 													{brand.is_active ? 'Active' : 'Inactive'}
 												</span>
@@ -285,7 +330,23 @@ export default function Dashboard({ onLogout }) {
 					</div>
 				)}
 
-				{activeTab === 'admin' && user?.role === 'admin' && <AdminUsers />}
+				{activeTab === 'admin' && user?.role === 'admin' && (
+					<div className="space-y-8">
+						<AdminUsers />
+					</div>
+				)}
+
+				{activeTab === 'profile' && (
+					<div className="max-w-4xl mx-auto">
+						<ProfileSettings user={user} setUser={setUser} />
+					</div>
+				)}
+
+				{activeTab === 'billing' && (
+					<div className="max-w-6xl mx-auto">
+						<SubscriptionManager user={user} />
+					</div>
+				)}
 			</main>
 		</div>
 	);
