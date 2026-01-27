@@ -1,11 +1,6 @@
-/**
- * Marketplace Page for Dexter Platform
- * Browse and search influencers and packages
- */
-
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { influencerApi, packageApi } from '../../services/marketplaceApi';
+import { influencerApi, packageApi, campaignApi } from '../../services/marketplaceApi';
 import './Marketplace.css';
 
 const PLATFORMS = [
@@ -21,14 +16,16 @@ const SORT_OPTIONS = [
     { value: 'followers', label: 'Most Followers' },
     { value: 'price_low', label: 'Price: Low to High' },
     { value: 'price_high', label: 'Price: High to Low' },
+    { value: 'latest', label: 'Newest First' },
 ];
 
 export default function Marketplace() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [viewMode, setViewMode] = useState('influencers'); // influencers or packages
+    const [viewMode, setViewMode] = useState(searchParams.get('view') || 'influencers'); // influencers, packages, or campaigns
     const [loading, setLoading] = useState(true);
     const [influencers, setInfluencers] = useState([]);
     const [packages, setPackages] = useState([]);
+    const [campaigns, setCampaigns] = useState([]);
     const [pagination, setPagination] = useState({ page: 1, total: 0 });
 
     // Filters
@@ -70,9 +67,15 @@ export default function Marketplace() {
                 const response = await influencerApi.search(params);
                 setInfluencers(response.influencers || []);
                 setPagination(response.pagination || { page: 1, total: 0 });
-            } else {
+            } else if (viewMode === 'packages') {
                 const response = await packageApi.browse(params);
                 setPackages(response.packages || []);
+                setPagination(response.pagination || { page: 1, total: 0 });
+            } else if (viewMode === 'campaigns') {
+                // Adjust sort for campaigns if needed
+                if (params.sort_by === 'rating') params.sort_by = 'created_at'; // Campaigns don't usually have a rating to sort by yet
+                const response = await campaignApi.getAll({ ...params, status: 'open' }); // Only show open campaigns
+                setCampaigns(response.campaigns || []);
                 setPagination(response.pagination || { page: 1, total: 0 });
             }
         } catch (error) {
@@ -90,6 +93,16 @@ export default function Marketplace() {
     const handleSearch = (e) => {
         e.preventDefault();
         fetchData();
+    };
+
+    const handleViewChange = (mode) => {
+        setViewMode(mode);
+        // Update URL
+        setSearchParams(prev => {
+            prev.set('view', mode);
+            return prev;
+        });
+        setPagination(prev => ({ ...prev, page: 1 }));
     };
 
     const formatPrice = (price) => {
@@ -110,23 +123,29 @@ export default function Marketplace() {
         <div className="marketplace-page">
             <div className="marketplace-header">
                 <div className="marketplace-title">
-                    <h1>🎯 Influencer Marketplace</h1>
-                    <p>Find the perfect creators for your brand</p>
+                    <h1>🎯 Marketplace</h1>
+                    <p>Connect with the perfect partners for your next campaign</p>
                 </div>
 
                 {/* View Toggle */}
                 <div className="view-toggle">
                     <button
                         className={viewMode === 'influencers' ? 'active' : ''}
-                        onClick={() => setViewMode('influencers')}
+                        onClick={() => handleViewChange('influencers')}
                     >
                         👤 Influencers
                     </button>
                     <button
                         className={viewMode === 'packages' ? 'active' : ''}
-                        onClick={() => setViewMode('packages')}
+                        onClick={() => handleViewChange('packages')}
                     >
                         📦 Packages
+                    </button>
+                    <button
+                        className={viewMode === 'campaigns' ? 'active' : ''}
+                        onClick={() => handleViewChange('campaigns')}
+                    >
+                        📢 Campaigns
                     </button>
                 </div>
             </div>
@@ -136,7 +155,7 @@ export default function Marketplace() {
                 <form onSubmit={handleSearch} className="search-form">
                     <input
                         type="text"
-                        placeholder="Search influencers, niches, or packages..."
+                        placeholder={`Search ${viewMode}...`}
                         value={filters.query}
                         onChange={(e) => handleFilterChange('query', e.target.value)}
                     />
@@ -144,18 +163,20 @@ export default function Marketplace() {
                 </form>
 
                 <div className="filter-row">
-                    <select
-                        value={filters.platform}
-                        onChange={(e) => handleFilterChange('platform', e.target.value)}
-                    >
-                        {PLATFORMS.map(p => (
-                            <option key={p.value} value={p.value}>{p.label}</option>
-                        ))}
-                    </select>
+                    {viewMode !== 'campaigns' && (
+                        <select
+                            value={filters.platform}
+                            onChange={(e) => handleFilterChange('platform', e.target.value)}
+                        >
+                            {PLATFORMS.map(p => (
+                                <option key={p.value} value={p.value}>{p.label}</option>
+                            ))}
+                        </select>
+                    )}
 
                     <input
                         type="text"
-                        placeholder="Niche (e.g. Fashion)"
+                        placeholder={viewMode === 'campaigns' ? "Industry / Niche" : "Niche (e.g. Fashion)"}
                         value={filters.niche}
                         onChange={(e) => handleFilterChange('niche', e.target.value)}
                     />
@@ -183,14 +204,16 @@ export default function Marketplace() {
                         ))}
                     </select>
 
-                    <label className="verified-toggle">
-                        <input
-                            type="checkbox"
-                            checked={filters.verifiedOnly}
-                            onChange={(e) => handleFilterChange('verifiedOnly', e.target.checked)}
-                        />
-                        Verified Only
-                    </label>
+                    {viewMode === 'influencers' && (
+                        <label className="verified-toggle">
+                            <input
+                                type="checkbox"
+                                checked={filters.verifiedOnly}
+                                onChange={(e) => handleFilterChange('verifiedOnly', e.target.checked)}
+                            />
+                            Verified Only
+                        </label>
+                    )}
                 </div>
             </div>
 
@@ -199,7 +222,7 @@ export default function Marketplace() {
                 {loading ? (
                     <div className="loading-state">
                         <div className="spinner"></div>
-                        <p>Finding the best creators for you...</p>
+                        <p>Loading results...</p>
                     </div>
                 ) : viewMode === 'influencers' ? (
                     <>
@@ -217,7 +240,7 @@ export default function Marketplace() {
                             ))}
                         </div>
                     </>
-                ) : (
+                ) : viewMode === 'packages' ? (
                     <>
                         <div className="results-header">
                             <span>{pagination.total} packages found</span>
@@ -227,6 +250,21 @@ export default function Marketplace() {
                                 <PackageCard
                                     key={pkg.id}
                                     package={pkg}
+                                    formatPrice={formatPrice}
+                                />
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="results-header">
+                            <span>{pagination.total} open campaigns found</span>
+                        </div>
+                        <div className="campaign-grid">
+                            {campaigns.map(campaign => (
+                                <CampaignCard
+                                    key={campaign.id}
+                                    campaign={campaign}
                                     formatPrice={formatPrice}
                                 />
                             ))}
@@ -379,6 +417,43 @@ function PackageCard({ package: pkg, formatPrice }) {
             <div className="package-footer">
                 <div className="price">{formatPrice(pkg.price)}</div>
                 <button className="view-btn">View Details →</button>
+            </div>
+        </Link>
+    );
+}
+
+// Campaign Card Component
+function CampaignCard({ campaign, formatPrice }) {
+    return (
+        <Link to={`/campaigns/${campaign.id}`} className="campaign-card">
+            <div className="campaign-badge">
+                {campaign.is_public ? 'Public' : 'Private'}
+            </div>
+
+            <div className="campaign-info">
+                <h3>{campaign.title || "Untitled Campaign"}</h3>
+                <div className="brand-info">
+                    <span className="icon">🏢</span>
+                    <span>{campaign.brand?.name || "Unknown Brand"}</span>
+                </div>
+            </div>
+
+            <p className="description">{campaign.brief?.substring(0, 120)}...</p>
+
+            <div className="campaign-meta">
+                <div className="meta-item">
+                    <span className="label">Budget</span>
+                    <span className="value highlight">{formatPrice(campaign.budget || 0)}</span>
+                </div>
+                <div className="meta-item">
+                    <span className="label">Platform</span>
+                    <span className="value capital">{campaign.platform || 'Multi'}</span>
+                </div>
+            </div>
+
+            <div className="campaign-footer">
+                <span className="posted-date">Posted {new Date(campaign.created_at).toLocaleDateString()}</span>
+                <button className="apply-btn">Apply Now →</button>
             </div>
         </Link>
     );

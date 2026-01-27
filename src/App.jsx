@@ -193,15 +193,15 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* Wallet */}
+            {/* Wallet - Now part of Dashboard */}
             <Route path="/wallet" element={
               <ProtectedRoute>
-                <MinimalLayout><Wallet /></MinimalLayout>
+                <Layout><Dashboard defaultTab="wallet" /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/wallet/callback" element={
               <ProtectedRoute>
-                <MinimalLayout><Wallet /></MinimalLayout>
+                <Layout><Dashboard defaultTab="wallet" /></Layout>
               </ProtectedRoute>
             } />
 

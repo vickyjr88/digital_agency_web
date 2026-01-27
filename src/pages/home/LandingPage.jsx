@@ -265,6 +265,96 @@ export default function LandingPage() {
 				</div>
 			</section>
 
+			<section id="marketplace" className="py-24 bg-gradient-to-br from-purple-50 to-pink-50">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div className="flex flex-col md:flex-row items-center gap-16">
+						<div className="flex-1">
+							<div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+								<Users size={16} />
+								Influencer Marketplace
+							</div>
+							<h2 className="text-4xl font-bold text-gray-900 mb-6">
+								Connect with Top Creators to Amplify Your Reach
+							</h2>
+							<p className="text-xl text-gray-600 mb-8 leading-relaxed">
+								Don't just rely on AI. Collaborate with verified influencers who align with your brand's voice and values.
+								Browse packages, view ratings, and launch campaigns instantly.
+							</p>
+
+							<div className="flex flex-col sm:flex-row gap-4">
+								<button
+									onClick={() => navigate('/marketplace')}
+									className="flex items-center justify-center gap-2 bg-purple-600 text-white px-8 py-4 rounded-xl hover:bg-purple-700 transition-all text-lg font-semibold shadow-lg shadow-purple-200"
+								>
+									Browse Influencers <ArrowRight size={20} />
+								</button>
+								<button
+									onClick={() => navigate('/marketplace?view=packages')}
+									className="flex items-center justify-center gap-2 bg-white text-gray-700 px-8 py-4 rounded-xl hover:bg-gray-50 transition-all text-lg font-medium border border-gray-200"
+								>
+									View Packages
+								</button>
+							</div>
+
+							<div className="mt-12 grid grid-cols-3 gap-8">
+								<div>
+									<div className="text-3xl font-bold text-gray-900 mb-1">500+</div>
+									<div className="text-sm text-gray-600">Verified Creators</div>
+								</div>
+								<div>
+									<div className="text-3xl font-bold text-gray-900 mb-1">10k+</div>
+									<div className="text-sm text-gray-600">Campaigns Completed</div>
+								</div>
+								<div>
+									<div className="text-3xl font-bold text-gray-900 mb-1">4.9/5</div>
+									<div className="text-sm text-gray-600">Average Rating</div>
+								</div>
+							</div>
+						</div>
+
+						<div className="flex-1 relative">
+							{/* Visual representation */}
+							<div className="relative z-10 bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+								<div className="flex items-center gap-4 mb-4">
+									<div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+										<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150" alt="Influencer" className="w-full h-full object-cover" />
+									</div>
+									<div>
+										<h3 className="font-bold text-gray-900 text-lg">Sarah Jenkins</h3>
+										<p className="text-purple-600 text-sm font-medium">Lifestyle & Fashion</p>
+										<div className="flex items-center gap-1 text-yellow-500 text-sm mt-1">
+											{'⭐'.repeat(5)} (48 reviews)
+										</div>
+									</div>
+								</div>
+								<div className="space-y-3 mb-6">
+									<div className="flex justify-between text-sm">
+										<span className="text-gray-500">Instagram Followers</span>
+										<span className="font-semibold text-gray-900">125K</span>
+									</div>
+									<div className="flex justify-between text-sm">
+										<span className="text-gray-500">Avg. Engagement</span>
+										<span className="font-semibold text-gray-900">4.8%</span>
+									</div>
+								</div>
+								<div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+									<div className="text-xs font-semibold text-gray-500 uppercase mb-2">Popular Package</div>
+									<div className="font-bold text-gray-900 flex justify-between items-center">
+										<span>Instagram Reel + Story</span>
+										<span className="text-purple-600">KES 15,000</span>
+									</div>
+								</div>
+							</div>
+
+							{/* Decorative elements behind */}
+							<div className="absolute top-10 -right-4 w-full h-full bg-purple-200 rounded-2xl -z-10 transform rotate-12 opacity-50"></div>
+							<div className="absolute -bottom-10 -left-10 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
+							<div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<section id="how-it-works" className="py-24 bg-gradient-to-br from-indigo-50 to-purple-50">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-16">

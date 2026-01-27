@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X } from 'lucide-react';
+import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2 } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
 import ProfileSettings from '../../features/profile/ProfileSettings';
 import SubscriptionManager from '../../features/billing/SubscriptionManager';
-import { Settings, CreditCard, BarChart2 } from 'lucide-react';
+import Wallet from '../Wallet/Wallet';
 
 export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 	const [user, setUser] = useState(null);
@@ -345,6 +345,12 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 				{activeTab === 'billing' && (
 					<div className="max-w-6xl mx-auto">
 						<SubscriptionManager user={user} />
+					</div>
+				)}
+
+				{activeTab === 'wallet' && (
+					<div className="max-w-6xl mx-auto">
+						<Wallet user={user} />
 					</div>
 				)}
 			</main>
