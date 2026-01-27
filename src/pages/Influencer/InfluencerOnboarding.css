@@ -1,0 +1,555 @@
+/**
+ * Influencer Onboarding CSS
+ * Modern, engaging multi-step form design
+ */
+
+.onboarding-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.onboarding-container {
+    max-width: 800px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 2rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.progress-step.active .step-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    transform: scale(1.1);
+}
+
+.progress-step.completed .step-icon {
+    background: #10b981;
+    border-color: #10b981;
+}
+
+.step-title {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #a0aec0;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.progress-step.active .step-title,
+.progress-step.completed .step-title {
+    opacity: 1;
+    color: white;
+}
+
+.step-line {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 0;
+}
+
+.progress-step.completed .step-line {
+    background: linear-gradient(90deg, #10b981 0%, #667eea 100%);
+}
+
+/* Content Area */
+.onboarding-content {
+    min-height: 400px;
+    color: white;
+}
+
+/* Error Message */
+.error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Welcome Step */
+.welcome-step {
+    text-align: center;
+}
+
+.welcome-emoji {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-step h1 {
+    font-size: 2rem;
+    margin: 0 0 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.welcome-subtitle {
+    color: #a0aec0;
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.benefit-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.benefit-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.benefit-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+}
+
+.benefit-card p {
+    margin: 0;
+    color: #a0aec0;
+    font-size: 0.85rem;
+}
+
+.welcome-note {
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+/* Profile Step */
+.profile-step h2,
+.social-step h2,
+.review-step h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+}
+
+.step-subtitle {
+    color: #a0aec0;
+    margin: 0 0 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: white;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: #1a1a3e;
+}
+
+.form-group .hint {
+    display: block;
+    margin-top: 0.5rem;
+    color: #a0aec0;
+    font-size: 0.8rem;
+}
+
+.form-group .char-count {
+    display: block;
+    text-align: right;
+    color: #a0aec0;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Social Media Step */
+.social-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.social-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.social-card:hover {
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.social-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.social-header .social-icon {
+    font-size: 1.5rem;
+}
+
+.social-header .social-name {
+    font-weight: 600;
+}
+
+.social-input {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.social-input .prefix {
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    color: #a0aec0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.social-input input {
+    flex: 1;
+    padding: 0.75rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.social-input input:focus {
+    outline: none;
+}
+
+.social-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+}
+
+.social-note span {
+    font-size: 1.2rem;
+}
+
+.social-note p {
+    margin: 0;
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+/* Review Step */
+.profile-preview {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.preview-avatar {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.preview-info h3 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.preview-niche {
+    display: block;
+    color: #667eea;
+    font-size: 0.9rem;
+}
+
+.preview-location {
+    display: block;
+    color: #a0aec0;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.preview-bio {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.preview-bio p {
+    margin: 0;
+    color: #a0aec0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.preview-socials h4 {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    color: #a0aec0;
+}
+
+.socials-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.social-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+}
+
+.social-item .social-icon {
+    font-size: 1rem;
+}
+
+.social-item .social-handle {
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+.submit-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 12px;
+}
+
+.submit-note span {
+    font-size: 1.2rem;
+}
+
+.submit-note p {
+    margin: 0;
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+/* Navigation */
+.onboarding-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.spacer {
+    flex: 1;
+}
+
+.btn-secondary {
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-primary {
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.btn-submit:hover {
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.spinner-small {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .onboarding-container {
+        padding: 1.5rem;
+    }
+
+    .progress-bar {
+        margin-bottom: 2rem;
+    }
+
+    .step-title {
+        display: none;
+    }
+
+    .benefits-grid,
+    .social-cards,
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-step h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 0.75rem;
+    }
+}

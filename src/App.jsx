@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import Signup from './pages/auth/Signup';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { FeatureFlagProvider, FeatureGate } from './context/FeatureFlagContext';
 import { LayoutDashboard } from 'lucide-react';
 
 // Pages
@@ -14,6 +15,17 @@ import BillingCallback from './pages/dashboard/BillingCallback';
 import Login from './pages/auth/Login';
 import LandingPage from './pages/home/LandingPage';
 import UserDetails from './features/admin/UserDetails';
+
+// Marketplace Pages
+import Marketplace from './pages/Marketplace/Marketplace';
+import InfluencerOnboarding from './pages/Influencer/InfluencerOnboarding';
+import InfluencerDashboard from './pages/Influencer/InfluencerDashboard';
+import InfluencerProfile from './pages/Influencer/InfluencerProfile';
+import PackageDetail from './pages/Package/PackageDetail';
+import CampaignDetail from './pages/Campaign/CampaignDetail';
+import BrandDashboard from './pages/Brand/BrandDashboard';
+import Wallet from './pages/Wallet/Wallet';
+
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -32,7 +44,17 @@ function Layout({ children }) {
             <LayoutDashboard className="w-8 h-8" />
             Dexter
           </Link>
-          {/* Add more nav items if needed */}
+          {/* Marketplace Nav Links */}
+          <div className="flex items-center gap-4">
+            <FeatureGate flag="marketplace_enabled">
+              <Link to="/marketplace" className="text-gray-600 hover:text-purple-600">
+                🎯 Marketplace
+              </Link>
+            </FeatureGate>
+            <Link to="/wallet" className="text-gray-600 hover:text-purple-600">
+              💳 Wallet
+            </Link>
+          </div>
         </div>
       </nav>
       <main className="flex-1 max-w-7xl mx-auto p-4 w-full">
@@ -42,81 +64,175 @@ function Layout({ children }) {
   );
 }
 
+// Minimal layout for marketplace pages (no nav bar)
+function MinimalLayout({ children }) {
+  return (
+    <div className="min-h-screen">
+      {children}
+    </div>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Layout><Dashboard defaultTab="trends" /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/trends" element={
-            <ProtectedRoute>
-              <Layout><Dashboard defaultTab="trends" /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/my-brands" element={
-            <ProtectedRoute>
-              <Layout><Dashboard defaultTab="brands" /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/billing" element={
-            <ProtectedRoute>
-              <Layout><Dashboard defaultTab="billing" /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Layout><Dashboard defaultTab="profile" /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin" element={
-            <ProtectedRoute>
-              <Layout><Dashboard defaultTab="admin" /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/user/:id" element={
-            <ProtectedRoute>
-              <Layout><UserDetails /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/brands/new" element={
-            <ProtectedRoute>
-              <Layout><CreateBrand /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/brands/:id" element={
-            <ProtectedRoute>
-              <Layout><BrandDetails /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/brands/:id/edit" element={
-            <ProtectedRoute>
-              <Layout><EditBrand /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/content/:id/edit" element={
-            <ProtectedRoute>
-              <Layout><EditContent /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/billing/callback" element={
-            <ProtectedRoute>
-              <Layout><BillingCallback /></Layout>
-            </ProtectedRoute>
-          } />
-          {/* Add direct brand routes for public/legacy links */}
-          <Route path="/brand/:id" element={<BrandDetails />} />
-          <Route path="/brands/new" element={<CreateBrand />} />
-        </Routes>
-      </Router>
+      <FeatureFlagProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="trends" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/trends" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="trends" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-brands" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="brands" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/billing" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="billing" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="profile" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="admin" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/user/:id" element={
+              <ProtectedRoute>
+                <Layout><UserDetails /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/brands/new" element={
+              <ProtectedRoute>
+                <Layout><CreateBrand /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/brands/:id" element={
+              <ProtectedRoute>
+                <Layout><BrandDetails /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/brands/:id/edit" element={
+              <ProtectedRoute>
+                <Layout><EditBrand /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/content/:id/edit" element={
+              <ProtectedRoute>
+                <Layout><EditContent /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/billing/callback" element={
+              <ProtectedRoute>
+                <Layout><BillingCallback /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* =================================================================== */}
+            {/* MARKETPLACE ROUTES */}
+            {/* =================================================================== */}
+
+            {/* Marketplace Browse (Public, but login recommended) */}
+            <Route path="/marketplace" element={
+              <MinimalLayout><Marketplace /></MinimalLayout>
+            } />
+            <Route path="/marketplace/influencer/:influencerId" element={
+              <MinimalLayout><InfluencerProfile /></MinimalLayout>
+            } />
+            <Route path="/marketplace/package/:packageId" element={
+              <MinimalLayout><PackageDetail /></MinimalLayout>
+            } />
+
+
+            {/* Influencer Onboarding */}
+            <Route path="/influencer/onboarding" element={
+              <ProtectedRoute>
+                <MinimalLayout><InfluencerOnboarding /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Influencer Dashboard */}
+            <Route path="/influencer/dashboard" element={
+              <ProtectedRoute>
+                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/profile" element={
+              <ProtectedRoute>
+                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/packages" element={
+              <ProtectedRoute>
+                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/packages/new" element={
+              <ProtectedRoute>
+                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/packages/:packageId/edit" element={
+              <ProtectedRoute>
+                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Wallet */}
+            <Route path="/wallet" element={
+              <ProtectedRoute>
+                <MinimalLayout><Wallet /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/wallet/callback" element={
+              <ProtectedRoute>
+                <MinimalLayout><Wallet /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Campaigns */}
+            <Route path="/campaigns" element={
+              <ProtectedRoute>
+                <MinimalLayout><BrandDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaigns/:campaignId" element={
+              <ProtectedRoute>
+                <MinimalLayout><CampaignDetail /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Brand Dashboard */}
+            <Route path="/brand-dashboard" element={
+              <ProtectedRoute>
+                <MinimalLayout><BrandDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Add direct brand routes for public/legacy links */}
+            <Route path="/brand/:id" element={<BrandDetails />} />
+            <Route path="/brands/new" element={<CreateBrand />} />
+          </Routes>
+        </Router>
+      </FeatureFlagProvider>
     </AuthProvider>
   );
 }
 
 export default App;
+
