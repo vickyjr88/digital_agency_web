@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { api } from '../../services/api';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, User, Mail, ArrowRight, CheckCircle, AlertCircle, Home } from 'lucide-react';
 
@@ -59,6 +59,25 @@ export default function Signup({ onSignup } = {}) {
 			});
 			localStorage.setItem('token', data.access_token);
 			if (onSignup) onSignup();
+
+			// Check for plan in query params
+			const params = new URLSearchParams(window.location.search);
+			const planId = params.get('plan');
+
+			if (planId && planId !== 'free') {
+				try {
+					const callbackUrl = `${window.location.origin}/dashboard/billing/callback`;
+					const subResponse = await api.subscribeToPlan(planId, callbackUrl);
+					if (subResponse && subResponse.data && subResponse.data.authorization_url) {
+						window.location.href = subResponse.data.authorization_url;
+						return;
+					}
+				} catch (subError) {
+					console.error("Subscription init failed:", subError);
+					// Fall through to dashboard if payment fails, user can try again later
+				}
+			}
+
 			navigate('/dashboard');
 		} catch (err) {
 			setError(err.message || 'Network error. Please try again.');
@@ -164,9 +183,8 @@ export default function Signup({ onSignup } = {}) {
 									{[...Array(5)].map((_, index) => (
 										<div
 											key={index}
-											className={`h-1 flex-1 rounded-full transition-all ${
-												index < passwordStrength ? strengthColors[passwordStrength - 1] : 'bg-gray-200'
-											}`}
+											className={`h-1 flex-1 rounded-full transition-all ${index < passwordStrength ? strengthColors[passwordStrength - 1] : 'bg-gray-200'
+												}`}
 										/>
 									))}
 								</div>

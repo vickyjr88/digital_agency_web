@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 import {
 	TrendingUp,
 	Zap,
@@ -13,13 +15,16 @@ import {
 	Users,
 	BarChart3,
 	Clock,
-	Shield
+	Shield,
+	CreditCard
 } from 'lucide-react';
 
 export default function LandingPage() {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { isAuthenticated, user } = useAuth();
 	const [email, setEmail] = useState('');
+	const [loadingPlan, setLoadingPlan] = useState(null);
 
 	useEffect(() => {
 		if (!location.hash) return;
@@ -30,8 +35,52 @@ export default function LandingPage() {
 		}
 	}, [location]);
 
+	const [trends, setTrends] = useState([]);
+
+	useEffect(() => {
+		const fetchTrends = async () => {
+			try {
+				const data = await api.getTrends(3);
+				setTrends(data);
+			} catch (error) {
+				console.error("Failed to fetch trends:", error);
+				// Fallback or leave empty to show nothing
+			}
+		};
+		fetchTrends();
+	}, []);
+
 	const handleGetStarted = () => {
 		navigate('/signup');
+	};
+
+	const handlePlanSelect = async (planId) => {
+		if (planId === 'free') {
+			navigate('/signup');
+			return;
+		}
+
+		if (!isAuthenticated) {
+			navigate(`/signup?plan=${planId}`);
+			return;
+		}
+
+		try {
+			setLoadingPlan(planId);
+			const callbackUrl = `${window.location.origin}/dashboard/billing/callback`;
+			const response = await api.subscribeToPlan(planId, callbackUrl);
+
+			if (response && response.data && response.data.authorization_url) {
+				window.location.href = response.data.authorization_url;
+			} else {
+				console.error("Invalid response from payment provider");
+			}
+		} catch (error) {
+			console.error("Payment initialization failed:", error);
+			alert("Failed to initialize payment. Please try again.");
+		} finally {
+			setLoadingPlan(null);
+		}
 	};
 
 	return (
@@ -105,29 +154,48 @@ export default function LandingPage() {
 						</div>
 						<div className="p-8 bg-gray-50">
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-								{[1, 2, 3].map((i) => (
-									<div key={i} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-										<div className="flex items-center gap-2 mb-4">
-											<div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-												<TrendingUp size={16} className="text-indigo-600" />
+								{trends.length > 0 ? (
+									trends.map((trend, i) => (
+										<div key={i} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+											<div className="flex items-center gap-2 mb-4">
+												<div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+													<TrendingUp size={16} className="text-indigo-600" />
+												</div>
+												<span className="text-xs font-semibold text-indigo-600">TRENDING NOW</span>
 											</div>
-											<span className="text-xs font-semibold text-indigo-600">TRENDING NOW</span>
+											<h3 className="font-bold text-gray-900 mb-2 truncate" title={trend.topic || trend.query}>
+												{trend.topic || trend.query || `Trend #${i + 1}`}
+											</h3>
+											<p className="text-sm text-gray-600 mb-4 line-clamp-2">
+												{trend.volume ? `${trend.volume} searches` : 'High engagement predicted'}
+											</p>
+											<div className="flex gap-2">
+												<div className="w-6 h-6 rounded bg-blue-100 flex items-center justify-center">
+													<Twitter size={14} className="text-blue-600" />
+												</div>
+												<div className="w-6 h-6 rounded bg-blue-100 flex items-center justify-center">
+													<Facebook size={14} className="text-blue-600" />
+												</div>
+												<div className="w-6 h-6 rounded bg-pink-100 flex items-center justify-center">
+													<Instagram size={14} className="text-pink-600" />
+												</div>
+											</div>
 										</div>
-										<h3 className="font-bold text-gray-900 mb-2">AI Innovation {i}</h3>
-										<p className="text-sm text-gray-600 mb-4">Generated content preview...</p>
-										<div className="flex gap-2">
-											<div className="w-6 h-6 rounded bg-blue-100 flex items-center justify-center">
-												<Twitter size={14} className="text-blue-600" />
-											</div>
-											<div className="w-6 h-6 rounded bg-blue-100 flex items-center justify-center">
-												<Facebook size={14} className="text-blue-600" />
-											</div>
-											<div className="w-6 h-6 rounded bg-pink-100 flex items-center justify-center">
-												<Instagram size={14} className="text-pink-600" />
+									))
+								) : (
+									/* Skeleton Loading State */
+									[1, 2, 3].map((i) => (
+										<div key={i} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-pulse">
+											<div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+											<div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+											<div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+											<div className="flex gap-2">
+												<div className="w-6 h-6 bg-gray-200 rounded"></div>
+												<div className="w-6 h-6 bg-gray-200 rounded"></div>
 											</div>
 										</div>
-									</div>
-								))}
+									))
+								)}
 							</div>
 						</div>
 					</div>
@@ -246,37 +314,50 @@ export default function LandingPage() {
 						<p className="text-xl text-gray-600">Choose the plan that fits your needs</p>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+					<div className="grid grid-cols-1 md:grid-cols-5 gap-4">
 						{[
 							{
+								id: 'day_pass',
+								name: 'Day Pass',
+								price: 'KES 29',
+								period: '24 hours',
+								features: ['1 brand profile', '5 content pieces', 'Instant Access', 'No Commitment'],
+								cta: 'One-Time Buy',
+								popular: false
+							},
+							{
+								id: 'free',
 								name: 'Free',
-								price: '$0',
+								price: 'KES 0',
 								period: 'forever',
 								features: ['1 brand profile', '10 content pieces/month', 'Manual trend selection', '7-day history'],
 								cta: 'Get Started',
 								popular: false
 							},
 							{
+								id: 'starter',
 								name: 'Starter',
-								price: '$29',
+								price: 'KES 2,999',
 								period: 'per month',
-								features: ['3 brand profiles', '100 content pieces/month', 'Daily AI trends', '30-day history', 'No watermark'],
+								features: ['3 brand profiles', '100 content pieces/month', 'Daily AI trends', '30-day history', 'No watermark', 'M-PESA Supported'],
 								cta: 'Start Free Trial',
 								popular: false
 							},
 							{
+								id: 'professional',
 								name: 'Professional',
-								price: '$99',
+								price: 'KES 7,999',
 								period: 'per month',
-								features: ['10 brand profiles', '500 content pieces/month', '3x daily trends', 'Team collaboration (3)', 'API access', 'Analytics'],
+								features: ['10 brand profiles', '500 content pieces/month', '3x daily trends', 'Team collaboration (3)', 'API access', 'Analytics', 'Priority Support'],
 								cta: 'Start Free Trial',
 								popular: true
 							},
 							{
+								id: 'agency',
 								name: 'Agency',
-								price: '$299',
+								price: 'KES 19,999',
 								period: 'per month',
-								features: ['Unlimited brands', '2,000 content pieces/month', 'Hourly trends', 'Unlimited team', 'White-label', 'Priority support'],
+								features: ['Unlimited brands', '2,000 content pieces/month', 'Hourly trends', 'Unlimited team', 'White-label', 'Priority support', 'Dedicated Account Manager'],
 								cta: 'Contact Sales',
 								popular: false
 							}
@@ -287,22 +368,29 @@ export default function LandingPage() {
 								whileInView={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: index * 0.1 }}
 								viewport={{ once: true }}
-								className={`relative bg-white rounded-2xl border-2 p-8 ${
-									plan.popular ? 'border-indigo-600 shadow-xl scale-105' : 'border-gray-200'
-								}`}
+								className={`relative bg-white rounded-2xl border-2 p-8 ${plan.popular ? 'border-indigo-600 shadow-xl scale-105' : 'border-gray-200'
+									}`}
 							>
 								{plan.popular && (
 									<div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
 										<span className="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
-											Most Popular
+											Most Loved
 										</span>
 									</div>
 								)}
 								<h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
 								<div className="mb-6">
-									<span className="text-5xl font-bold text-gray-900">{plan.price}</span>
+									<span className="text-3xl font-bold text-gray-900">{plan.price}</span>
 									<span className="text-gray-600 ml-2">/{plan.period}</span>
 								</div>
+
+								{plan.id !== 'free' && (
+									<div className="flex items-center gap-2 mb-4 text-sm text-gray-500 bg-gray-50 p-2 rounded">
+										<CreditCard size={16} />
+										<span>Card & M-PESA Accepted</span>
+									</div>
+								)}
+
 								<ul className="space-y-3 mb-8">
 									{plan.features.map((feature) => (
 										<li key={feature} className="flex items-start gap-2 text-gray-600">
@@ -312,14 +400,18 @@ export default function LandingPage() {
 									))}
 								</ul>
 								<button
-									onClick={handleGetStarted}
-									className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-										plan.popular
-											? 'bg-indigo-600 text-white hover:bg-indigo-700'
-											: 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-									}`}
+									onClick={() => handlePlanSelect(plan.id)}
+									disabled={loadingPlan === plan.id}
+									className={`w-full py-3 rounded-lg font-semibold transition-colors flex justify-center items-center gap-2 ${plan.popular
+										? 'bg-indigo-600 text-white hover:bg-indigo-700'
+										: 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+										}`}
 								>
-									{plan.cta}
+									{loadingPlan === plan.id ? (
+										<div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+									) : (
+										plan.cta
+									)}
 								</button>
 							</motion.div>
 						))}

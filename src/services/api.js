@@ -63,6 +63,11 @@ class ApiService {
     return this.request(`/events${query}`);
   }
 
+  // Trends
+  async getTrends(limit = 3) {
+    return this.request(`/trends?limit=${limit}`);
+  }
+
   async getEvent(id) {
     return this.request(`/events/${id}`);
   }
@@ -132,6 +137,22 @@ class ApiService {
 
   async getOrder(orderId) {
     return this.request(`/orders/${orderId}`);
+  }
+
+  // Billing (Paystack)
+  async getBillingPlans() {
+    return this.request('/billing/plans');
+  }
+
+  async subscribeToPlan(planId, callbackUrl) {
+    return this.request('/billing/subscribe', {
+      method: 'POST',
+      body: JSON.stringify({ plan_id: planId, callback_url: callbackUrl }),
+    });
+  }
+
+  async verifyPayment(reference) {
+    return this.request(`/billing/verify/${reference}`);
   }
 
   // Admin

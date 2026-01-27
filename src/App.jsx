@@ -8,8 +8,11 @@ import Dashboard from './pages/dashboard/Dashboard';
 import CreateBrand from './pages/dashboard/CreateBrand';
 import BrandDetails from './pages/dashboard/BrandDetails';
 import EditBrand from './pages/dashboard/EditBrand';
+
 import EditContent from './pages/dashboard/EditContent';
+import BillingCallback from './pages/dashboard/BillingCallback';
 import Login from './pages/auth/Login';
+import LandingPage from './pages/home/LandingPage';
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -45,7 +48,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Layout><Dashboard /></Layout>
@@ -69,6 +72,11 @@ function App() {
           <Route path="/dashboard/content/:id/edit" element={
             <ProtectedRoute>
               <Layout><EditContent /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/billing/callback" element={
+            <ProtectedRoute>
+              <Layout><BillingCallback /></Layout>
             </ProtectedRoute>
           } />
           {/* Add direct brand routes for public/legacy links */}
