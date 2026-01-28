@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { api } from '../../services/api';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Lock, User, Mail, ArrowRight, CheckCircle, AlertCircle, Home, Briefcase } from 'lucide-react';
 
 export default function Signup({ onSignup } = {}) {
 	const navigate = useNavigate();
+	const { register } = useAuth();
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
@@ -53,13 +55,19 @@ export default function Signup({ onSignup } = {}) {
 		setLoading(true);
 
 		try {
-			const data = await api.register({
+			const result = await register({
 				name: formData.name,
 				email: formData.email,
 				password: formData.password,
 				user_type: formData.user_type
 			});
-			localStorage.setItem('token', data.access_token);
+
+			if (!result.success) {
+				setError(result.error || 'Registration failed');
+				setLoading(false);
+				return;
+			}
+
 			if (onSignup) onSignup();
 
 			// Check for plan in query params

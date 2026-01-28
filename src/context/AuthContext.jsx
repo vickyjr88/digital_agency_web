@@ -35,7 +35,12 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem('token', access_token);
       setToken(access_token);
-      setUser(userData);
+
+      if (userData) {
+        setUser(userData);
+      } else {
+        await loadUser();
+      }
 
       return { success: true };
     } catch (error) {
@@ -50,7 +55,12 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem('token', access_token);
       setToken(access_token);
-      setUser(newUser);
+
+      if (newUser) {
+        setUser(newUser);
+      } else {
+        await loadUser();
+      }
 
       return { success: true };
     } catch (error) {

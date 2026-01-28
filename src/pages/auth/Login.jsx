@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { api } from '../../services/api';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Lock, Mail, ArrowRight, AlertCircle, Home } from 'lucide-react';
 
 export default function Login({ onLogin } = {}) {
 	const navigate = useNavigate();
+	const { login } = useAuth();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
@@ -17,10 +19,13 @@ export default function Login({ onLogin } = {}) {
 		setError('');
 
 		try {
-			const data = await api.login(email, password);
-			localStorage.setItem('token', data.access_token);
-			if (onLogin) onLogin();
-			navigate('/dashboard');
+			const result = await login(email, password);
+			if (result.success) {
+				if (onLogin) onLogin();
+				navigate('/dashboard');
+			} else {
+				setError(result.error || 'Login failed');
+			}
 		} catch (err) {
 			setError(err.message || 'Network error. Please try again.');
 		} finally {
