@@ -28,7 +28,14 @@ export default function PackageDetail() {
         setLoading(true);
         setError(null);
         try {
+            console.log('Fetching package:', packageId);
             const response = await packageApi.getById(packageId);
+            console.log('Package API Response:', response);
+
+            if (!response) {
+                throw new Error('Package not found');
+            }
+
             setPkg(response);
             setInfluencer(response.influencer);
 
@@ -39,7 +46,7 @@ export default function PackageDetail() {
             }
         } catch (err) {
             console.error('Error fetching package:', err);
-            setError('Package not found');
+            setError(err.message || 'Package not found');
         } finally {
             setLoading(false);
         }
@@ -83,9 +90,11 @@ export default function PackageDetail() {
         return (
             <div className="package-error">
                 <span className="error-icon">📦</span>
-                <h2>Package Not Found</h2>
-                <p>This package doesn't exist or has been removed.</p>
-                <Link to="/marketplace" className="btn-primary">← Back to Marketplace</Link>
+                <h2>{error === 'Package not found' ? 'Package Not Found' : 'Error Loading Package'}</h2>
+                <p>{error || "This package doesn't exist or has been removed."}</p>
+                <div className="error-actions">
+                    <Link to="/marketplace" className="btn-primary">← Back to Marketplace</Link>
+                </div>
             </div>
         );
     }

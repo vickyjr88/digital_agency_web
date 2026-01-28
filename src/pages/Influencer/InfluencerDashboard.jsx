@@ -253,11 +253,20 @@ function OverviewTab({ campaigns, packages, stats, formatPrice }) {
             {campaigns.length === 0 && (
                 <div className="empty-state">
                     <span className="icon">🎯</span>
-                    <h3>No campaigns yet</h3>
-                    <p>Create attractive packages and brands will start reaching out!</p>
-                    <Link to="/influencer/packages/new" className="btn-primary">
-                        Create Your First Package
-                    </Link>
+                    {packages.length === 0 ? (
+                        <>
+                            <h3>No campaigns yet</h3>
+                            <p>Create attractive packages and brands will start reaching out!</p>
+                            <Link to="/influencer/packages/new" className="btn-primary">
+                                Create Your First Package
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <h3>Awaiting campaigns</h3>
+                            <p>You have {packages.length} active service {packages.length === 1 ? 'package' : 'packages'}. Brands will reach out once they are interested in your profile.</p>
+                        </>
+                    )}
                 </div>
             )}
 

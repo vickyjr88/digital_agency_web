@@ -33,7 +33,7 @@ export default function InfluencerProfile() {
             ]);
 
             setProfile(profileRes);
-            setPackages(packagesRes.packages || []);
+            setPackages(packagesRes || []);
             setReviews(reviewsRes.reviews || []);
         } catch (err) {
             console.error('Error fetching influencer:', err);

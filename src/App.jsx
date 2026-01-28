@@ -33,14 +33,24 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
-  if (loading) return <div className="p-8 text-center"><div className="spinner mx-auto"></div></div>;
+  if (loading) return (
+    <div className="initial-loader">
+      <div className="spinner"></div>
+      <p>Verifying Access...</p>
+    </div>
+  );
   return isAuthenticated ? children : <Navigate to="/login" />;
 }
 
 // Admin Route Component
 function AdminRoute({ children }) {
   const { user, isAuthenticated, loading } = useAuth();
-  if (loading) return <div className="p-8 text-center"><div className="spinner mx-auto"></div></div>;
+  if (loading) return (
+    <div className="initial-loader">
+      <div className="spinner"></div>
+      <p>Verifying Admin...</p>
+    </div>
+  );
   if (!isAuthenticated || user?.user_type !== 'admin') {
     return <Navigate to="/dashboard" />;
   }

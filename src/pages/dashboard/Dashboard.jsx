@@ -37,7 +37,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 			const userData = await api.getProfile();
 			setUser(userData);
 
-			if (userData.user_type === 'influencer') {
+			if (userData.user_type === 'influencer' && activeTab !== 'wallet') {
 				navigate('/influencer/dashboard');
 				return;
 			}
