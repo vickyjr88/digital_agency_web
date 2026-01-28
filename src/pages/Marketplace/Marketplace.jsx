@@ -126,7 +126,7 @@ export default function Marketplace() {
             style: 'currency',
             currency: 'KES',
             minimumFractionDigits: 0,
-        }).format(price);
+        }).format((price || 0) / 100);
     };
 
     const formatFollowers = (count) => {
@@ -153,8 +153,8 @@ export default function Marketplace() {
                         <button
                             onClick={() => handleViewChange('influencers')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === 'influencers'
-                                    ? 'bg-indigo-600 text-white shadow-sm'
-                                    : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50'
+                                ? 'bg-indigo-600 text-white shadow-sm'
+                                : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50'
                                 }`}
                         >
                             <Users size={16} />
@@ -163,8 +163,8 @@ export default function Marketplace() {
                         <button
                             onClick={() => handleViewChange('packages')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === 'packages'
-                                    ? 'bg-indigo-600 text-white shadow-sm'
-                                    : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50'
+                                ? 'bg-indigo-600 text-white shadow-sm'
+                                : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50'
                                 }`}
                         >
                             <Package size={16} />
@@ -173,8 +173,8 @@ export default function Marketplace() {
                         <button
                             onClick={() => handleViewChange('campaigns')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === 'campaigns'
-                                    ? 'bg-indigo-600 text-white shadow-sm'
-                                    : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50'
+                                ? 'bg-indigo-600 text-white shadow-sm'
+                                : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50'
                                 }`}
                         >
                             <Megaphone size={16} />
@@ -521,8 +521,8 @@ function CampaignCard({ campaign, formatPrice }) {
         <Link to={`/campaigns/${campaign.id}`} className="group bg-white rounded-xl border border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full hover:-translate-y-1 relative">
             <div className="absolute top-4 right-4">
                 <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${campaign.is_public
-                        ? 'bg-green-50 text-green-700 border border-green-100'
-                        : 'bg-yellow-50 text-yellow-700 border border-yellow-100'
+                    ? 'bg-green-50 text-green-700 border border-green-100'
+                    : 'bg-yellow-50 text-yellow-700 border border-yellow-100'
                     }`}>
                     {campaign.is_public ? 'Public' : 'Private'}
                 </span>

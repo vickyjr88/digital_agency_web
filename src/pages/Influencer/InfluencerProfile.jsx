@@ -48,7 +48,7 @@ export default function InfluencerProfile() {
             style: 'currency',
             currency: 'KES',
             minimumFractionDigits: 0,
-        }).format(price || 0);
+        }).format((price || 0) / 100);
     };
 
     const formatFollowers = (count) => {
@@ -164,7 +164,16 @@ export default function InfluencerProfile() {
                     </div>
 
                     <div className="action-buttons">
-                        <button className="btn-primary">
+                        <button
+                            className="btn-primary"
+                            onClick={() => {
+                                if (profile?.contact_email) {
+                                    window.location.href = `mailto:${profile.contact_email}?subject=Collaboration Inquiry via Dexter`;
+                                } else {
+                                    alert('Contact information not available');
+                                }
+                            }}
+                        >
                             💬 Contact
                         </button>
                         <button className="btn-secondary">

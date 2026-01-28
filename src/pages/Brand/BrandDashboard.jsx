@@ -80,7 +80,7 @@ export default function BrandDashboard() {
             style: 'currency',
             currency: 'KES',
             minimumFractionDigits: 0,
-        }).format(price || 0);
+        }).format((price || 0) / 100);
     };
 
     const formatDate = (dateString) => {

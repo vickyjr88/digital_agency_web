@@ -225,7 +225,7 @@ function App() {
             } />
             <Route path="/influencer/packages/:packageId/edit" element={
               <ProtectedRoute>
-                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
+                <InfluencerLayout><CreatePackage /></InfluencerLayout>
               </ProtectedRoute>
             } />
 

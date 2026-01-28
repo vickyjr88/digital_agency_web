@@ -549,8 +549,10 @@
     border-radius: 24px;
     width: 100%;
     max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     animation: modalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -571,12 +573,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.75rem 2rem;
+    padding: 1.5rem 2rem;
     border-bottom: 1px solid #f3f4f6;
-    position: sticky;
-    top: 0;
     background: white;
-    z-index: 10;
+    flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -608,6 +608,8 @@
 
 .modal-body {
     padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .error-message {
@@ -805,6 +807,12 @@
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-contact:hover {
+    background: #f3f4f6;
+    transform: translateY(-1px);
 }
 
 .btn-secondary:hover {

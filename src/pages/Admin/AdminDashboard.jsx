@@ -70,7 +70,7 @@ export default function AdminDashboard() {
             style: 'currency',
             currency: 'KES',
             minimumFractionDigits: 0,
-        }).format(price || 0);
+        }).format((price || 0) / 100);
     };
 
     return (

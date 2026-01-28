@@ -204,6 +204,12 @@ export const walletApi = {
         return api.request(`/v2/wallet/transactions?${queryString}`);
     },
 
+    // Verify deposit
+    verifyDeposit: async (reference) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/wallet/deposit/verify/${reference}`);
+    },
+
     // Admin: Get all transactions
     getAllTransactionsAdmin: async (params = {}) => {
         const { api } = await import('./api');

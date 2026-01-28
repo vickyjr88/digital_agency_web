@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { walletApi } from '../../services/marketplaceApi';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -22,17 +23,47 @@ import {
 } from 'lucide-react';
 
 export default function Wallet() {
+    const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
+    const [verifying, setVerifying] = useState(false);
     const [wallet, setWallet] = useState(null);
     const [transactions, setTransactions] = useState([]);
     const [escrowHolds, setEscrowHolds] = useState([]);
     const [activeTab, setActiveTab] = useState('overview');
     const [showDepositModal, setShowDepositModal] = useState(false);
     const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+    const [verificationStatus, setVerificationStatus] = useState(null);
 
     useEffect(() => {
-        fetchWalletData();
+        const reference = searchParams.get('reference');
+        if (reference) {
+            handleVerifyDeposit(reference);
+        } else {
+            fetchWalletData();
+        }
     }, []);
+
+    const handleVerifyDeposit = async (reference) => {
+        setVerifying(true);
+        try {
+            const result = await walletApi.verifyDeposit(reference);
+            setVerificationStatus({
+                success: result.status === 'success' || result.status === 'already_completed',
+                message: result.message || 'Deposit processed successfully'
+            });
+            // Clear reference from URL
+            setSearchParams({}, { replace: true });
+        } catch (error) {
+            console.error('Verification error:', error);
+            setVerificationStatus({
+                success: false,
+                message: 'Failed to verify transaction'
+            });
+        } finally {
+            setVerifying(false);
+            fetchWalletData();
+        }
+    };
 
     const fetchWalletData = async () => {
         setLoading(true);
@@ -52,11 +83,13 @@ export default function Wallet() {
     };
 
     const formatPrice = (amount) => {
+        // Divide by 100 because amount is in cents
+        const kesAmount = (amount || 0) / 100;
         return new Intl.NumberFormat('en-KE', {
             style: 'currency',
             currency: 'KES',
             minimumFractionDigits: 0,
-        }).format(amount || 0);
+        }).format(kesAmount);
     };
 
     const formatDate = (dateString) => {
@@ -105,6 +138,42 @@ export default function Wallet() {
                     </button>
                 </div>
             </header>
+
+            {/* Verification Status Alert */}
+            <AnimatePresence>
+                {verifying && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="p-4 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center gap-3 text-indigo-700"
+                    >
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-600"></div>
+                        <p className="font-medium">Verifying your deposit...</p>
+                    </motion.div>
+                )}
+
+                {verificationStatus && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className={`p-4 rounded-xl flex items-center justify-between gap-3 ${verificationStatus.success ? 'bg-green-50 border border-green-100 text-green-700' : 'bg-red-50 border border-red-100 text-red-700'
+                            }`}
+                    >
+                        <div className="flex items-center gap-3">
+                            {verificationStatus.success ? <Check size={20} /> : <AlertCircle size={20} />}
+                            <p className="font-medium">{verificationStatus.message}</p>
+                        </div>
+                        <button
+                            onClick={() => setVerificationStatus(null)}
+                            className="text-current opacity-50 hover:opacity-100"
+                        >
+                            <X size={18} />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Balance Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -547,7 +616,7 @@ function DepositModal({ onClose, onSuccess, formatPrice }) {
                                     : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                                     }`}
                             >
-                                {formatPrice(preset)}
+                                {formatPrice(preset * 100)}
                             </button>
                         ))}
                     </div>
@@ -572,7 +641,7 @@ function DepositModal({ onClose, onSuccess, formatPrice }) {
                         disabled={loading || !amount}
                         className="flex-1 py-2.5 px-4 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
-                        {loading ? 'Processing...' : `Deposit ${amount ? formatPrice(Number(amount)) : ''}`}
+                        {loading ? 'Processing...' : `Deposit ${amount ? formatPrice(Number(amount) * 100) : ''}`}
                     </button>
                 </div>
             </motion.div>
@@ -588,13 +657,14 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
 
     const handleWithdraw = async () => {
         const numAmount = Number(amount);
+        const amountCents = numAmount * 100;
 
         if (!amount || isNaN(numAmount) || numAmount < 10) {
             setError('Minimum withdrawal is KES 10');
             return;
         }
 
-        if (numAmount > availableBalance) {
+        if (amountCents > availableBalance) {
             setError(`Maximum withdrawal is ${formatPrice(availableBalance)}`);
             return;
         }
@@ -603,7 +673,7 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
         setError('');
 
         try {
-            await walletApi.withdraw(numAmount);
+            await walletApi.withdraw(numAmount); // API handles KES to cents? Let's check.
             onSuccess();
         } catch (err) {
             setError(err.message || 'Failed to request withdrawal');
@@ -652,11 +722,11 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
                                 onChange={(e) => setAmount(e.target.value)}
                                 placeholder="Enter amount"
                                 min="100"
-                                max={availableBalance}
+                                max={availableBalance / 100}
                                 className="w-full pl-12 pr-20 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-lg font-medium"
                             />
                             <button
-                                onClick={() => setAmount(availableBalance.toString())}
+                                onClick={() => setAmount((availableBalance / 100).toString())}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded hover:bg-indigo-100"
                             >
                                 MAX
@@ -684,7 +754,7 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
                         disabled={loading || !amount}
                         className="flex-1 py-2.5 px-4 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
-                        {loading ? 'Processing...' : `Withdraw ${amount ? formatPrice(Number(amount)) : ''}`}
+                        {loading ? 'Processing...' : `Withdraw ${amount ? formatPrice(Number(amount) * 100) : ''}`}
                     </button>
                 </div>
             </motion.div>

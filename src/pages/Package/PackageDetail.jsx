@@ -57,7 +57,7 @@ export default function PackageDetail() {
             style: 'currency',
             currency: 'KES',
             minimumFractionDigits: 0,
-        }).format(price || 0);
+        }).format((price || 0) / 100);
     };
 
     const formatFollowers = (count) => {
@@ -242,7 +242,16 @@ export default function PackageDetail() {
                             Book Now →
                         </button>
 
-                        <button className="btn-contact">
+                        <button
+                            className="btn-contact"
+                            onClick={() => {
+                                if (influencer?.contact_email) {
+                                    window.location.href = `mailto:${influencer.contact_email}?subject=Inquiry about ${pkg.name}`;
+                                } else {
+                                    alert('Contact information not available');
+                                }
+                            }}
+                        >
                             💬 Contact Influencer
                         </button>
                     </div>
