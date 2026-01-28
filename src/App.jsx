@@ -21,6 +21,7 @@ import Marketplace from './pages/Marketplace/Marketplace';
 import InfluencerOnboarding from './pages/Influencer/InfluencerOnboarding';
 import InfluencerDashboard from './pages/Influencer/InfluencerDashboard';
 import InfluencerProfile from './pages/Influencer/InfluencerProfile';
+import CreatePackage from './pages/Influencer/CreatePackage';
 import PackageDetail from './pages/Package/PackageDetail';
 import CampaignDetail from './pages/Campaign/CampaignDetail';
 import BrandDashboard from './pages/Brand/BrandDashboard';
@@ -184,7 +185,7 @@ function App() {
             } />
             <Route path="/influencer/packages/new" element={
               <ProtectedRoute>
-                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+                <MinimalLayout><CreatePackage /></MinimalLayout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/packages/:packageId/edit" element={

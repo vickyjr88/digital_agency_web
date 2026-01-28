@@ -275,6 +275,65 @@ class ApiService {
       body: JSON.stringify(profileData),
     });
   }
+
+  // Marketplace & Influencer
+  async onboardInfluencer(profileData) {
+    return this.request('/v2/influencers/onboard', {
+      method: 'POST',
+      body: JSON.stringify(profileData),
+    });
+  }
+
+  async getInfluencerProfile(id = 'me') {
+    return this.request(`/v2/influencers/${id}`);
+  }
+
+  async createPackage(packageData) {
+    return this.request('/v2/packages', {
+      method: 'POST',
+      body: JSON.stringify(packageData),
+    });
+  }
+
+  async getMyPackages() {
+    return this.request('/v2/packages/mine');
+  }
+
+  async getPackage(id) {
+    return this.request(`/v2/packages/${id}`);
+  }
+
+  async getMarketplacePackages(params) {
+    const query = new URLSearchParams(params).toString();
+    return this.request(`/v2/packages?${query}`);
+  }
+
+  async createCampaign(campaignData) {
+    return this.request('/v2/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(campaignData),
+    });
+  }
+
+  async getMyCampaigns() {
+    return this.request('/v2/campaigns/mine');
+  }
+
+  // Wallet
+  async getWallet() {
+    return this.request('/v2/wallet/me');
+  }
+
+  async depositWallet(amount, callbackUrl) {
+    return this.request('/v2/wallet/deposit', {
+      method: 'POST',
+      body: JSON.stringify({ amount, callback_url: callbackUrl }),
+    });
+  }
+
+  async verifyWalletDeposit(reference) {
+    return this.request(`/v2/wallet/deposit/verify/${reference}`);
+  }
 }
 
 
