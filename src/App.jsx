@@ -38,24 +38,30 @@ function ProtectedRoute({ children }) {
 
 // Layout Component
 function Layout({ children }) {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/dashboard" className="flex items-center gap-2 text-2xl font-bold text-purple-600">
+          <Link to={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2 text-2xl font-bold text-purple-600">
             <LayoutDashboard className="w-8 h-8" />
             Dexter
           </Link>
           {/* Marketplace Nav Links */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
+            <Link to="/" className="text-gray-600 hover:text-purple-600 font-medium">
+              Home
+            </Link>
             <FeatureGate flag="marketplace_enabled">
-              <Link to="/marketplace" className="text-gray-600 hover:text-purple-600">
+              <Link to="/marketplace" className="text-gray-600 hover:text-purple-600 font-medium">
                 🎯 Marketplace
               </Link>
             </FeatureGate>
-            <Link to="/wallet" className="text-gray-600 hover:text-purple-600">
-              💳 Wallet
-            </Link>
+            {isAuthenticated && (
+              <Link to="/wallet" className="text-gray-600 hover:text-purple-600 font-medium">
+                💳 Wallet
+              </Link>
+            )}
           </div>
         </div>
       </nav>
@@ -151,13 +157,13 @@ function App() {
 
             {/* Marketplace Browse (Public, but login recommended) */}
             <Route path="/marketplace" element={
-              <MinimalLayout><Marketplace /></MinimalLayout>
+              <Layout><Marketplace /></Layout>
             } />
             <Route path="/marketplace/influencer/:influencerId" element={
-              <MinimalLayout><InfluencerProfile /></MinimalLayout>
+              <Layout><InfluencerProfile /></Layout>
             } />
             <Route path="/marketplace/package/:packageId" element={
-              <MinimalLayout><PackageDetail /></MinimalLayout>
+              <Layout><PackageDetail /></Layout>
             } />
 
 
@@ -217,7 +223,7 @@ function App() {
             } />
             <Route path="/campaigns/:campaignId" element={
               <ProtectedRoute>
-                <MinimalLayout><CampaignDetail /></MinimalLayout>
+                <Layout><CampaignDetail /></Layout>
               </ProtectedRoute>
             } />
 

@@ -162,7 +162,7 @@ export default function CreatePackage() {
                                 name="price"
                                 value={formData.price}
                                 onChange={handleChange}
-                                min={500}
+                                min={10}
                                 required
                             />
                         </div>

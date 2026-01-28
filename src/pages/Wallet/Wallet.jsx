@@ -473,8 +473,8 @@ function DepositModal({ onClose, onSuccess, formatPrice }) {
     const presetAmounts = [1000, 5000, 10000, 25000, 50000];
 
     const handleDeposit = async () => {
-        if (!amount || isNaN(amount) || Number(amount) < 100) {
-            setError('Minimum deposit is KES 100');
+        if (!amount || isNaN(amount) || Number(amount) < 10) {
+            setError('Minimum deposit is KES 10');
             return;
         }
 
@@ -531,7 +531,7 @@ function DepositModal({ onClose, onSuccess, formatPrice }) {
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 placeholder="Enter amount"
-                                min="100"
+                                min="10"
                                 className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-lg font-medium"
                             />
                         </div>
@@ -589,8 +589,8 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
     const handleWithdraw = async () => {
         const numAmount = Number(amount);
 
-        if (!amount || isNaN(numAmount) || numAmount < 100) {
-            setError('Minimum withdrawal is KES 100');
+        if (!amount || isNaN(numAmount) || numAmount < 10) {
+            setError('Minimum withdrawal is KES 10');
             return;
         }
 
