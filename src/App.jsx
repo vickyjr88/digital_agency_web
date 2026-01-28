@@ -49,7 +49,7 @@ function AdminRoute({ children }) {
 
 // Layout Component
 function Layout({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <nav className="bg-white shadow-md">
