@@ -29,7 +29,7 @@ export default function PackageDetail() {
         setError(null);
         try {
             const response = await packageApi.getById(packageId);
-            setPkg(response.package);
+            setPkg(response);
             setInfluencer(response.influencer);
 
             // Fetch wallet balance if authenticated

@@ -27,13 +27,24 @@ import CampaignDetail from './pages/Campaign/CampaignDetail';
 import BrandDashboard from './pages/Brand/BrandDashboard';
 import Wallet from './pages/Wallet/Wallet';
 import InfluencerLayout from './components/InfluencerLayout';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="p-8 text-center"><div className="spinner mx-auto"></div></div>;
   return isAuthenticated ? children : <Navigate to="/login" />;
+}
+
+// Admin Route Component
+function AdminRoute({ children }) {
+  const { user, isAuthenticated, loading } = useAuth();
+  if (loading) return <div className="p-8 text-center"><div className="spinner mx-auto"></div></div>;
+  if (!isAuthenticated || user?.user_type !== 'admin') {
+    return <Navigate to="/dashboard" />;
+  }
+  return children;
 }
 
 // Layout Component
@@ -57,6 +68,11 @@ function Layout({ children }) {
                 🎯 Marketplace
               </Link>
             </FeatureGate>
+            {user?.user_type === 'admin' && (
+              <Link to="/admin" className="text-gray-600 hover:text-purple-600 font-medium">
+                🛡️ Staff
+              </Link>
+            )}
             {isAuthenticated && (
               <Link to="/wallet" className="text-gray-600 hover:text-purple-600 font-medium">
                 💳 Wallet
@@ -232,6 +248,13 @@ function App() {
               <ProtectedRoute>
                 <MinimalLayout><BrandDashboard /></MinimalLayout>
               </ProtectedRoute>
+            } />
+
+            {/* Admin Routes */}
+            <Route path="/admin" element={
+              <AdminRoute>
+                <Layout><AdminDashboard /></Layout>
+              </AdminRoute>
             } />
 
             {/* Add direct brand routes for public/legacy links */}

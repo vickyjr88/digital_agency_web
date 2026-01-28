@@ -36,7 +36,7 @@ export default function InfluencerDashboard() {
 
             setProfile(profileRes);
             setStats(statsRes);
-            setPackages(packagesRes.packages || []);
+            setPackages(packagesRes || []);
             setCampaigns(campaignsRes.campaigns || []);
             setWallet(walletRes);
         } catch (error) {

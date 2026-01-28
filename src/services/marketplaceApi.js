@@ -76,6 +76,13 @@ export const influencerApi = {
             method: 'PUT',
         });
     },
+
+    // Admin: Get all influencers
+    getAllAdmin: async (params = {}) => {
+        const { api } = await import('./api');
+        const queryString = new URLSearchParams(params).toString();
+        return api.request(`/v2/influencers/admin?${queryString}`);
+    },
 };
 
 
@@ -151,6 +158,13 @@ export const packageApi = {
         const { api } = await import('./api');
         return api.request(`/v2/influencers/${influencerId}/packages`);
     },
+
+    // Admin: Get all packages
+    getAllAdmin: async (params = {}) => {
+        const { api } = await import('./api');
+        const queryString = new URLSearchParams(params).toString();
+        return api.request(`/v2/packages/admin?${queryString}`);
+    },
 };
 
 
@@ -188,6 +202,13 @@ export const walletApi = {
         const { api } = await import('./api');
         const queryString = new URLSearchParams(params).toString();
         return api.request(`/v2/wallet/transactions?${queryString}`);
+    },
+
+    // Admin: Get all transactions
+    getAllTransactionsAdmin: async (params = {}) => {
+        const { api } = await import('./api');
+        const queryString = new URLSearchParams(params).toString();
+        return api.request(`/v2/wallet/admin/transactions?${queryString}`);
     },
 };
 
@@ -280,6 +301,22 @@ export const campaignApi = {
         return api.request(`/v2/campaigns/${campaignId}/dispute`, {
             method: 'POST',
             body: JSON.stringify({ reason, evidence_urls: evidenceUrls }),
+        });
+    },
+
+    // Admin: Get all campaigns
+    getAllAdmin: async (params = {}) => {
+        const { api } = await import('./api');
+        const queryString = new URLSearchParams(params).toString();
+        return api.request(`/v2/campaigns/admin?${queryString}`);
+    },
+
+    // Admin: Resolve dispute
+    resolveDispute: async (campaignId, decision, resolutionNotes) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/campaigns/admin/${campaignId}/resolve-dispute`, {
+            method: 'POST',
+            body: JSON.stringify({ decision, resolution_notes: resolutionNotes }),
         });
     },
 };
