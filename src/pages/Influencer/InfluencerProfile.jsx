@@ -88,9 +88,12 @@ export default function InfluencerProfile() {
     const socialStats = [
         profile.instagram && { platform: 'Instagram', icon: '📸', handle: profile.instagram.handle, followers: profile.instagram.followers, engagement: profile.instagram.engagement_rate },
         profile.tiktok && { platform: 'TikTok', icon: '🎵', handle: profile.tiktok.handle, followers: profile.tiktok.followers, engagement: profile.tiktok.engagement_rate },
-        profile.youtube && { platform: 'YouTube', icon: '▶️', handle: profile.youtube.channel, followers: profile.youtube.subscribers, engagement: null },
-        profile.twitter && { platform: 'Twitter', icon: '🐦', handle: profile.twitter.handle, followers: profile.twitter.followers, engagement: null },
+        profile.youtube && { platform: 'YouTube', icon: '▶️', handle: profile.youtube.channel, followers: profile.youtube.subscribers, engagement: null, link: profile.youtube_link },
+        profile.twitter && { platform: 'Twitter', icon: '🐦', handle: profile.twitter.handle, followers: profile.twitter.followers, engagement: null, link: profile.twitter_link },
+        profile.facebook && { platform: 'Facebook', icon: '👥', handle: profile.facebook.handle, followers: profile.facebook.followers, engagement: null, link: profile.facebook_link },
     ].filter(Boolean);
+
+    const whatsapp = profile.whatsapp_number;
 
     const minPrice = packages.length ? Math.min(...packages.map(p => p.price)) : null;
 
@@ -179,6 +182,14 @@ export default function InfluencerProfile() {
                         <button className="btn-secondary">
                             ❤️ Save
                         </button>
+                        {whatsapp && (
+                            <button
+                                className="btn-whatsapp"
+                                onClick={() => window.open(`https://wa.me/${whatsapp}`, '_blank')}
+                            >
+                                💬 WhatsApp
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -193,7 +204,13 @@ export default function InfluencerProfile() {
                                 <span className="platform-icon">{stat.icon}</span>
                                 <span className="platform-name">{stat.platform}</span>
                                 {stat.handle && (
-                                    <span className="handle">@{stat.handle}</span>
+                                    stat.link ? (
+                                        <a href={stat.link} target="_blank" rel="noopener noreferrer" className="handle">
+                                            @{stat.handle}
+                                        </a>
+                                    ) : (
+                                        <span className="handle">@{stat.handle}</span>
+                                    )
                                 )}
                             </div>
                             <div className="stat-body">

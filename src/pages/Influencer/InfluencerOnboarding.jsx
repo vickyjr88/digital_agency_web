@@ -47,6 +47,18 @@ export default function InfluencerOnboarding() {
         tiktok_handle: '',
         youtube_channel: '',
         twitter_handle: '',
+        facebook_handle: '',
+        whatsapp_number: '',
+        instagram_followers: '',
+        tiktok_followers: '',
+        youtube_subscribers: '',
+        twitter_followers: '',
+        facebook_followers: '',
+        instagram_link: '',
+        tiktok_link: '',
+        youtube_link: '',
+        twitter_link: '',
+        facebook_link: '',
     });
 
     const handleChange = (e) => {
@@ -69,7 +81,7 @@ export default function InfluencerOnboarding() {
                 break;
             case 3:
                 const hasAnySocial = formData.instagram_handle || formData.tiktok_handle ||
-                    formData.youtube_channel || formData.twitter_handle;
+                    formData.youtube_channel || formData.twitter_handle || formData.facebook_handle;
                 if (!hasAnySocial) {
                     setError('Please add at least one social media account');
                     return false;
@@ -312,15 +324,26 @@ function SocialMediaStep({ formData, handleChange }) {
                         <span className="social-icon">📸</span>
                         <span className="social-name">Instagram</span>
                     </div>
-                    <div className="social-input">
-                        <span className="prefix">@</span>
-                        <input
-                            type="text"
-                            name="instagram_handle"
-                            value={formData.instagram_handle}
-                            onChange={handleChange}
-                            placeholder="username"
-                        />
+                    <div className="social-input-group">
+                        <div className="social-input">
+                            <span className="prefix">@</span>
+                            <input
+                                type="text"
+                                name="instagram_handle"
+                                value={formData.instagram_handle}
+                                onChange={handleChange}
+                                placeholder="username"
+                            />
+                        </div>
+                        <div className="social-input">
+                            <input
+                                type="number"
+                                name="instagram_followers"
+                                value={formData.instagram_followers}
+                                onChange={handleChange}
+                                placeholder="Followers"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -329,15 +352,26 @@ function SocialMediaStep({ formData, handleChange }) {
                         <span className="social-icon">🎵</span>
                         <span className="social-name">TikTok</span>
                     </div>
-                    <div className="social-input">
-                        <span className="prefix">@</span>
-                        <input
-                            type="text"
-                            name="tiktok_handle"
-                            value={formData.tiktok_handle}
-                            onChange={handleChange}
-                            placeholder="username"
-                        />
+                    <div className="social-input-group">
+                        <div className="social-input">
+                            <span className="prefix">@</span>
+                            <input
+                                type="text"
+                                name="tiktok_handle"
+                                value={formData.tiktok_handle}
+                                onChange={handleChange}
+                                placeholder="username"
+                            />
+                        </div>
+                        <div className="social-input">
+                            <input
+                                type="number"
+                                name="tiktok_followers"
+                                value={formData.tiktok_followers}
+                                onChange={handleChange}
+                                placeholder="Followers"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -346,15 +380,26 @@ function SocialMediaStep({ formData, handleChange }) {
                         <span className="social-icon">▶️</span>
                         <span className="social-name">YouTube</span>
                     </div>
-                    <div className="social-input">
-                        <span className="prefix">youtube.com/</span>
-                        <input
-                            type="text"
-                            name="youtube_channel"
-                            value={formData.youtube_channel}
-                            onChange={handleChange}
-                            placeholder="channel"
-                        />
+                    <div className="social-input-group">
+                        <div className="social-input">
+                            <span className="prefix">youtube.com/</span>
+                            <input
+                                type="text"
+                                name="youtube_channel"
+                                value={formData.youtube_channel}
+                                onChange={handleChange}
+                                placeholder="channel"
+                            />
+                        </div>
+                        <div className="social-input">
+                            <input
+                                type="number"
+                                name="youtube_subscribers"
+                                value={formData.youtube_subscribers}
+                                onChange={handleChange}
+                                placeholder="Subscribers"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -363,14 +408,70 @@ function SocialMediaStep({ formData, handleChange }) {
                         <span className="social-icon">🐦</span>
                         <span className="social-name">Twitter/X</span>
                     </div>
+                    <div className="social-input-group">
+                        <div className="social-input">
+                            <span className="prefix">@</span>
+                            <input
+                                type="text"
+                                name="twitter_handle"
+                                value={formData.twitter_handle}
+                                onChange={handleChange}
+                                placeholder="username"
+                            />
+                        </div>
+                        <div className="social-input">
+                            <input
+                                type="number"
+                                name="twitter_followers"
+                                value={formData.twitter_followers}
+                                onChange={handleChange}
+                                placeholder="Followers"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="social-card facebook">
+                    <div className="social-header">
+                        <span className="social-icon">👥</span>
+                        <span className="social-name">Facebook</span>
+                    </div>
+                    <div className="social-input-group">
+                        <div className="social-input">
+                            <span className="prefix">facebook.com/</span>
+                            <input
+                                type="text"
+                                name="facebook_handle"
+                                value={formData.facebook_handle}
+                                onChange={handleChange}
+                                placeholder="profile"
+                            />
+                        </div>
+                        <div className="social-input">
+                            <input
+                                type="number"
+                                name="facebook_followers"
+                                value={formData.facebook_followers}
+                                onChange={handleChange}
+                                placeholder="Followers"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="social-card whatsapp">
+                    <div className="social-header">
+                        <span className="social-icon">💬</span>
+                        <span className="social-name">WhatsApp</span>
+                    </div>
                     <div className="social-input">
-                        <span className="prefix">@</span>
+                        <span className="prefix">+</span>
                         <input
                             type="text"
-                            name="twitter_handle"
-                            value={formData.twitter_handle}
+                            name="whatsapp_number"
+                            value={formData.whatsapp_number}
                             onChange={handleChange}
-                            placeholder="username"
+                            placeholder="254..."
                         />
                     </div>
                 </div>
@@ -388,9 +489,12 @@ function ReviewStep({ formData }) {
     const activeSocials = [
         formData.instagram_handle && { icon: '📸', name: 'Instagram', handle: `@${formData.instagram_handle}` },
         formData.tiktok_handle && { icon: '🎵', name: 'TikTok', handle: `@${formData.tiktok_handle}` },
-        formData.youtube_channel && { icon: '▶️', name: 'YouTube', handle: formData.youtube_channel },
-        formData.twitter_handle && { icon: '🐦', name: 'Twitter', handle: `@${formData.twitter_handle}` },
+        formData.youtube_channel && { icon: '▶️', name: 'YouTube', handle: formData.youtube_channel, followers: formData.youtube_subscribers },
+        formData.twitter_handle && { icon: '🐦', name: 'Twitter', handle: `@${formData.twitter_handle}`, followers: formData.twitter_followers },
+        formData.facebook_handle && { icon: '👥', name: 'Facebook', handle: `facebook.com/${formData.facebook_handle}`, followers: formData.facebook_followers },
     ].filter(Boolean);
+
+    const whatsapp = formData.whatsapp_number;
 
     return (
         <div className="review-step">
@@ -423,11 +527,23 @@ function ReviewStep({ formData }) {
                         {activeSocials.map((social, i) => (
                             <div key={i} className="social-item">
                                 <span className="social-icon">{social.icon}</span>
-                                <span className="social-handle">{social.handle}</span>
+                                <div className="social-review-info">
+                                    <span className="social-handle">{social.handle}</span>
+                                    {social.followers && (
+                                        <span className="social-followers-preview">{social.followers} followers</span>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
+
+                {whatsapp && (
+                    <div className="preview-whatsapp">
+                        <h4>WhatsApp</h4>
+                        <p>+ {whatsapp}</p>
+                    </div>
+                )}
             </div>
 
             <div className="submit-note">

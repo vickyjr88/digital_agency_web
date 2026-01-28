@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { influencerApi, packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
+import InfluencerProfileSettings from './InfluencerProfileSettings';
 import './InfluencerDashboard.css';
 
 export default function InfluencerDashboard() {
@@ -16,7 +17,10 @@ export default function InfluencerDashboard() {
     const [packages, setPackages] = useState([]);
     const [campaigns, setCampaigns] = useState([]);
     const [wallet, setWallet] = useState(null);
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState(
+        location.pathname === '/influencer/profile' ? 'profile' :
+            location.pathname === '/influencer/packages' ? 'packages' : 'overview'
+    );
     const [welcomeMessage, setWelcomeMessage] = useState(location.state?.message || null);
 
     useEffect(() => {
@@ -187,6 +191,12 @@ export default function InfluencerDashboard() {
                 >
                     📦 Packages
                 </button>
+                <button
+                    className={activeTab === 'profile' ? 'active' : ''}
+                    onClick={() => setActiveTab('profile')}
+                >
+                    👤 Profile Settings
+                </button>
             </div>
 
             {/* Tab Content */}
@@ -209,6 +219,12 @@ export default function InfluencerDashboard() {
                     <PackagesTab
                         packages={packages}
                         formatPrice={formatPrice}
+                    />
+                )}
+                {activeTab === 'profile' && (
+                    <InfluencerProfileSettings
+                        profile={profile}
+                        onUpdate={(updated) => setProfile(updated)}
                     />
                 )}
             </div>

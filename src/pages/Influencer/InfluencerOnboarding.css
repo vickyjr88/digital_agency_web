@@ -329,6 +329,22 @@
     box-shadow: none;
 }
 
+.social-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.social-input-group .social-input:last-child {
+    border-top: 1px solid #e5e7eb;
+    border-radius: 0 0 10px 10px;
+}
+
+.social-input-group .social-input:first-child {
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+}
+
 .social-note {
     display: flex;
     align-items: flex-start;
@@ -442,8 +458,40 @@
 
 .social-item .social-handle {
     color: #374151;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.9rem;
+}
+
+.social-review-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.social-followers-preview {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.preview-whatsapp {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed #e5e7eb;
+}
+
+.preview-whatsapp h4 {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.preview-whatsapp p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #111827;
+    font-weight: 600;
 }
 
 .submit-note {

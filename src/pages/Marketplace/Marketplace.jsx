@@ -25,6 +25,7 @@ const PLATFORMS = [
     { value: 'tiktok', label: 'TikTok' },
     { value: 'youtube', label: 'YouTube' },
     { value: 'twitter', label: 'Twitter/X' },
+    { value: 'facebook', label: 'Facebook' },
 ];
 
 const SORT_OPTIONS = [
@@ -370,6 +371,9 @@ function InfluencerCard({ influencer, formatFollowers, formatPrice }) {
         }
         if (influencer.twitter?.followers) {
             stats.push({ platform: 'Twitter', followers: influencer.twitter.followers, icon: <Twitter size={14} /> });
+        }
+        if (influencer.facebook?.followers) {
+            stats.push({ platform: 'Facebook', followers: influencer.facebook.followers, icon: <span className="text-xs font-bold">Fb</span> });
         }
         return stats.sort((a, b) => b.followers - a.followers);
     };
