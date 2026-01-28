@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2 } from 'lucide-react';
+import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
 import ProfileSettings from '../../features/profile/ProfileSettings';
 import SubscriptionManager from '../../features/billing/SubscriptionManager';
 import Wallet from '../Wallet/Wallet';
+import InfluencerDashboard from '../Influencer/InfluencerDashboard';
 
 export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 	const [user, setUser] = useState(null);
@@ -37,11 +38,6 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 			const userData = await api.getProfile();
 			setUser(userData);
 
-			if (userData.user_type === 'influencer' && activeTab !== 'wallet') {
-				navigate('/influencer/dashboard');
-				return;
-			}
-
 			const brandsData = await api.request('/brands');
 			setBrands(brandsData);
 		} catch (error) {
@@ -63,7 +59,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 	if (loading) {
 		return (
 			<div className="min-h-screen flex items-center justify-center bg-gray-50">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
 			</div>
 		);
 	}
@@ -75,7 +71,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 			<div className="p-6 border-b border-gray-100">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
-						<div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+						<div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
 							D
 						</div>
 						<span className="text-xl font-bold text-gray-900">Dexter</span>
@@ -98,7 +94,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 						navigate('/trends');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
 						}`}
 				>
 					<TrendingUp size={20} />
@@ -110,7 +106,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 						navigate('/my-brands');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
 						}`}
 				>
 					<LayoutGrid size={20} />
@@ -122,7 +118,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 						navigate('/billing');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
 						}`}
 				>
 					<CreditCard size={20} />
@@ -134,12 +130,31 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 						navigate('/profile');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
 						}`}
 				>
 					<Settings size={20} />
 					Profile
 				</button>
+
+				{user?.user_type === 'influencer' && (
+					<>
+						<div className="pt-4 pb-2 px-4">
+							<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Influencer Tools</span>
+						</div>
+						<button
+							onClick={() => {
+								navigate('/influencer/dashboard');
+								if (isMobile) closeMobileSidebar();
+							}}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencer' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+								}`}
+						>
+							<Star size={20} />
+							My Services
+						</button>
+					</>
+				)}
 
 				{user?.role === 'admin' && (
 					<button
@@ -161,11 +176,11 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 					<div className="px-4 mb-6">
 						<div className="flex justify-between items-end mb-2">
 							<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Monthly Usage</span>
-							<span className="text-xs font-bold text-indigo-600">{user.usage.current} / {user.usage.limit}</span>
+							<span className="text-xs font-bold text-purple-600">{user.usage.current} / {user.usage.limit}</span>
 						</div>
 						<div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
 							<div
-								className={`h-full transition-all duration-1000 ${user.usage.current / user.usage.limit > 0.9 ? 'bg-red-500' : 'bg-indigo-600'
+								className={`h-full transition-all duration-1000 ${user.usage.current / user.usage.limit > 0.9 ? 'bg-red-500' : 'bg-purple-600'
 									}`}
 								style={{ width: `${Math.min(100, (user.usage.current / user.usage.limit) * 100)}%` }}
 							/>
@@ -200,7 +215,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 			{/* Mobile Header */}
 			<div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 px-4 h-16 flex items-center justify-between">
 				<div className="flex items-center gap-3">
-					<div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+					<div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
 						D
 					</div>
 					<span className="text-xl font-bold text-gray-900">Dexter</span>
@@ -262,7 +277,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 							</div>
 							<button
 								onClick={() => navigate('/brands/new')}
-								className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium"
+								className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium"
 							>
 								<Plus size={18} />
 								New Brand
@@ -280,7 +295,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 								</p>
 								<button
 									onClick={() => navigate('/brands/new')}
-									className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium shadow-lg shadow-indigo-200"
+									className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium shadow-lg shadow-purple-200"
 								>
 									Create Your First Brand
 								</button>
@@ -357,6 +372,12 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 				{activeTab === 'wallet' && (
 					<div className="max-w-6xl mx-auto">
 						<Wallet user={user} />
+					</div>
+				)}
+
+				{activeTab === 'influencer' && (
+					<div className="max-w-6xl mx-auto">
+						<InfluencerDashboard />
 					</div>
 				)}
 			</main>

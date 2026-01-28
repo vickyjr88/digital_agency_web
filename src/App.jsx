@@ -26,7 +26,6 @@ import PackageDetail from './pages/Package/PackageDetail';
 import CampaignDetail from './pages/Campaign/CampaignDetail';
 import BrandDashboard from './pages/Brand/BrandDashboard';
 import Wallet from './pages/Wallet/Wallet';
-import InfluencerLayout from './components/InfluencerLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 
 
@@ -198,34 +197,34 @@ function App() {
             {/* Influencer Onboarding */}
             <Route path="/influencer/onboarding" element={
               <ProtectedRoute>
-                <InfluencerLayout><InfluencerOnboarding /></InfluencerLayout>
+                <Layout><InfluencerOnboarding /></Layout>
               </ProtectedRoute>
             } />
 
             {/* Influencer Dashboard */}
             <Route path="/influencer/dashboard" element={
               <ProtectedRoute>
-                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/profile" element={
               <ProtectedRoute>
-                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/packages" element={
               <ProtectedRoute>
-                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/packages/new" element={
               <ProtectedRoute>
-                <InfluencerLayout><CreatePackage /></InfluencerLayout>
+                <Layout><CreatePackage /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/packages/:packageId/edit" element={
               <ProtectedRoute>
-                <InfluencerLayout><CreatePackage /></InfluencerLayout>
+                <Layout><CreatePackage /></Layout>
               </ProtectedRoute>
             } />
 
