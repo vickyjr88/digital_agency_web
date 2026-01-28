@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { api } from '../../services/api';
-import { User, Mail, Lock, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, Mail, Lock, CheckCircle, AlertCircle, Briefcase } from 'lucide-react';
 
 export default function ProfileSettings({ user, setUser }) {
     const [formData, setFormData] = useState({
@@ -8,7 +8,8 @@ export default function ProfileSettings({ user, setUser }) {
         email: user?.email || '',
         currentPassword: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        user_type: user?.user_type || 'brand'
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
@@ -30,7 +31,8 @@ export default function ProfileSettings({ user, setUser }) {
         try {
             const updateData = {
                 name: formData.name,
-                email: formData.email
+                email: formData.email,
+                user_type: formData.user_type
             };
 
             if (formData.newPassword) {
@@ -40,7 +42,7 @@ export default function ProfileSettings({ user, setUser }) {
             await api.updateProfile(updateData);
 
             // Refresh user data locally
-            setUser(prev => ({ ...prev, name: formData.name, email: formData.email }));
+            setUser(prev => ({ ...prev, name: formData.name, email: formData.email, user_type: formData.user_type }));
 
             setMessage({ type: 'success', text: 'Profile updated successfully' });
             // Clear password fields
@@ -97,6 +99,33 @@ export default function ProfileSettings({ user, setUser }) {
                                     onChange={handleChange}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">Account Type</label>
+                            <div className="grid grid-cols-2 gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData(prev => ({ ...prev, user_type: 'brand' }))}
+                                    className={`flex items-center gap-3 px-4 py-3 border rounded-lg transition-all ${formData.user_type === 'brand'
+                                            ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                        }`}
+                                >
+                                    <Briefcase size={18} />
+                                    <span className="font-medium">Brand</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData(prev => ({ ...prev, user_type: 'influencer' }))}
+                                    className={`flex items-center gap-3 px-4 py-3 border rounded-lg transition-all ${formData.user_type === 'influencer'
+                                            ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                        }`}
+                                >
+                                    <User size={18} />
+                                    <span className="font-medium">Influencer</span>
+                                </button>
                             </div>
                         </div>
                     </div>

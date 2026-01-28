@@ -26,6 +26,7 @@ import PackageDetail from './pages/Package/PackageDetail';
 import CampaignDetail from './pages/Campaign/CampaignDetail';
 import BrandDashboard from './pages/Brand/BrandDashboard';
 import Wallet from './pages/Wallet/Wallet';
+import InfluencerLayout from './components/InfluencerLayout';
 
 
 // Protected Route Component (Simplified for now)
@@ -160,37 +161,39 @@ function App() {
             } />
 
 
+
+
             {/* Influencer Onboarding */}
             <Route path="/influencer/onboarding" element={
               <ProtectedRoute>
-                <MinimalLayout><InfluencerOnboarding /></MinimalLayout>
+                <InfluencerLayout><InfluencerOnboarding /></InfluencerLayout>
               </ProtectedRoute>
             } />
 
             {/* Influencer Dashboard */}
             <Route path="/influencer/dashboard" element={
               <ProtectedRoute>
-                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/profile" element={
               <ProtectedRoute>
-                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/packages" element={
               <ProtectedRoute>
-                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/packages/new" element={
               <ProtectedRoute>
-                <MinimalLayout><CreatePackage /></MinimalLayout>
+                <InfluencerLayout><CreatePackage /></InfluencerLayout>
               </ProtectedRoute>
             } />
             <Route path="/influencer/packages/:packageId/edit" element={
               <ProtectedRoute>
-                <MinimalLayout><InfluencerDashboard /></MinimalLayout>
+                <InfluencerLayout><InfluencerDashboard /></InfluencerLayout>
               </ProtectedRoute>
             } />
 

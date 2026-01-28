@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { api } from '../../services/api';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, User, Mail, ArrowRight, CheckCircle, AlertCircle, Home } from 'lucide-react';
+import { Lock, User, Mail, ArrowRight, CheckCircle, AlertCircle, Home, Briefcase } from 'lucide-react';
 
 export default function Signup({ onSignup } = {}) {
 	const navigate = useNavigate();
@@ -10,7 +10,8 @@ export default function Signup({ onSignup } = {}) {
 		name: '',
 		email: '',
 		password: '',
-		confirmPassword: ''
+		confirmPassword: '',
+		user_type: 'brand'
 	});
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
@@ -55,7 +56,8 @@ export default function Signup({ onSignup } = {}) {
 			const data = await api.register({
 				name: formData.name,
 				email: formData.email,
-				password: formData.password
+				password: formData.password,
+				user_type: formData.user_type
 			});
 			localStorage.setItem('token', data.access_token);
 			if (onSignup) onSignup();
@@ -210,6 +212,34 @@ export default function Signup({ onSignup } = {}) {
 								placeholder="••••••••"
 								required
 							/>
+						</div>
+					</div>
+
+					<div className="space-y-2">
+						<label className="text-sm font-medium text-gray-700 ml-1">Profile Type</label>
+						<div className="grid grid-cols-2 gap-3">
+							<button
+								type="button"
+								onClick={() => setFormData(prev => ({ ...prev, user_type: 'brand' }))}
+								className={`flex flex-col items-center justify-center p-4 border-2 rounded-xl transition-all ${formData.user_type === 'brand'
+									? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+									: 'border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-200'
+									}`}
+							>
+								<Briefcase size={24} className="mb-2" />
+								<span className="text-sm font-bold">Brand</span>
+							</button>
+							<button
+								type="button"
+								onClick={() => setFormData(prev => ({ ...prev, user_type: 'influencer' }))}
+								className={`flex flex-col items-center justify-center p-4 border-2 rounded-xl transition-all ${formData.user_type === 'influencer'
+									? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+									: 'border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-200'
+									}`}
+							>
+								<User size={24} className="mb-2" />
+								<span className="text-sm font-bold">Influencer</span>
+							</button>
 						</div>
 					</div>
 

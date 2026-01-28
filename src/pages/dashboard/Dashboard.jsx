@@ -36,6 +36,12 @@ export default function Dashboard({ defaultTab = 'trends', onLogout }) {
 
 			const userData = await api.getProfile();
 			setUser(userData);
+
+			if (userData.user_type === 'influencer') {
+				navigate('/influencer/dashboard');
+				return;
+			}
+
 			const brandsData = await api.request('/brands');
 			setBrands(brandsData);
 		} catch (error) {
