@@ -161,7 +161,36 @@ export default function PackageDetail() {
                     {pkg.requirements && (
                         <div className="package-section">
                             <h3>📋 Requirements from You</h3>
-                            <p className="requirements">{pkg.requirements}</p>
+                            <div className="requirements-list">
+                                {pkg.requirements.brand_guidelines && (
+                                    <div className="requirement-item">
+                                        <span className="icon">📄</span>
+                                        <span>Brand guidelines required for content creation</span>
+                                    </div>
+                                )}
+                                {pkg.requirements.product_samples && (
+                                    <div className="requirement-item">
+                                        <span className="icon">📦</span>
+                                        <span>Physical product samples must be provided</span>
+                                    </div>
+                                )}
+                                {pkg.requirements.hashtags_required && pkg.requirements.hashtags_required.length > 0 && (
+                                    <div className="requirement-item">
+                                        <span className="icon">#️⃣</span>
+                                        <span>Required Hashtags: {pkg.requirements.hashtags_required.join(', ')}</span>
+                                    </div>
+                                )}
+                                {pkg.requirements.mentions_required && pkg.requirements.mentions_required.length > 0 && (
+                                    <div className="requirement-item">
+                                        <span className="icon">@</span>
+                                        <span>Required Mentions: {pkg.requirements.mentions_required.join(', ')}</span>
+                                    </div>
+                                )}
+                                <div className="requirement-item">
+                                    <span className="icon">⚖️</span>
+                                    <span>Content Rights: {pkg.requirements.content_rights === 'exclusive' ? 'Full Exclusive Rights' : 'Shared Usage Rights'}</span>
+                                </div>
+                            </div>
                         </div>
                     )}
 
