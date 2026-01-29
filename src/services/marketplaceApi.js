@@ -234,15 +234,11 @@ export const walletApi = {
 
 export const campaignApi = {
     // Create campaign (purchase package)
-    create: async (packageId, brief, customRequirements = null) => {
+    create: async (data) => {
         const { api } = await import('./api');
         return api.request('/v2/campaigns', {
             method: 'POST',
-            body: JSON.stringify({
-                package_id: packageId,
-                brief,
-                custom_requirements: customRequirements,
-            }),
+            body: JSON.stringify(data),
         });
     },
 
@@ -416,6 +412,34 @@ export const notificationApi = {
 };
 
 
+// ============================================================================
+// BRAND API METHODS
+// ============================================================================
+
+export const brandApi = {
+    // Get all brands for current user
+    getAll: async () => {
+        const { api } = await import('./api');
+        return api.request('/brands');
+    },
+
+    // Get brand by ID
+    getById: async (brandId) => {
+        const { api } = await import('./api');
+        return api.request(`/brands/${brandId}`);
+    },
+
+    // Create brand
+    create: async (brandData) => {
+        const { api } = await import('./api');
+        return api.request('/brands', {
+            method: 'POST',
+            body: JSON.stringify(brandData),
+        });
+    },
+};
+
+
 // Export all APIs
 export default {
     influencer: influencerApi,
@@ -424,6 +448,7 @@ export default {
     campaign: campaignApi,
     review: reviewApi,
     notification: notificationApi,
+    brand: brandApi,
     getConfig: async () => {
         const { api } = await import('./api');
         return api.request('/v2/config');

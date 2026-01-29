@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
+import { packageApi, campaignApi, walletApi, brandApi } from '../../services/marketplaceApi';
 import { useAuth } from '../../context/AuthContext';
 import './PackageDetail.css';
 
@@ -335,7 +335,10 @@ function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, o
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [brands, setBrands] = useState([]);
+    const [fetchingBrands, setFetchingBrands] = useState(false);
     const [briefData, setBriefData] = useState({
+        brand_id: '',
         brand_name: '',
         campaign_objective: '',
         target_audience: '',
@@ -343,15 +346,57 @@ function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, o
         content_guidelines: '',
         deadline: '',
         special_requirements: '',
+        product_description: '', // Added to match backend schema
     });
 
-    const platformFee = pkg.price * (config.platform_fee_percent / 100);
+    useEffect(() => {
+        fetchBrands();
+    }, []);
+
+    const fetchBrands = async () => {
+        setFetchingBrands(true);
+        try {
+            const brandsData = await brandApi.getAll();
+            setBrands(brandsData || []);
+            // If they have brands, pre-select the first one
+            if (brandsData?.length > 0) {
+                const firstBrand = brandsData[0];
+                setBriefData(prev => ({
+                    ...prev,
+                    brand_id: firstBrand.id,
+                    brand_name: firstBrand.name,
+                    product_description: firstBrand.description || '',
+                    target_audience: prev.target_audience || firstBrand.target_audience || '',
+                    voice: firstBrand.voice || '',
+                }));
+            }
+        } catch (err) {
+            console.error('Error fetching brands:', err);
+        } finally {
+            setFetchingBrands(false);
+        }
+    };
+
+    const platformFee = Math.ceil(pkg.price * (config.platform_fee_percent / 100));
     const totalAmount = pkg.price + platformFee;
     const availableBalance = (wallet?.balance || 0) - (wallet?.hold_balance || 0);
     const hasEnoughBalance = availableBalance >= totalAmount;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (name === 'brand_id' && value !== 'new') {
+            const selectedBrand = brands.find(b => b.id === value);
+            if (selectedBrand) {
+                setBriefData(prev => ({
+                    ...prev,
+                    brand_id: value,
+                    brand_name: selectedBrand.name,
+                    product_description: selectedBrand.description || '',
+                    target_audience: selectedBrand.target_audience || '',
+                }));
+                return;
+            }
+        }
         setBriefData(prev => ({ ...prev, [name]: value }));
     };
 
@@ -365,12 +410,27 @@ function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, o
         setError('');
 
         try {
-            const response = await campaignApi.create({
+            // Map briefData to CampaignBrief schema
+            const campaignData = {
                 package_id: pkg.id,
-                brief: briefData,
-            });
+                brand_entity_id: briefData.brand_id !== 'new' ? briefData.brand_id : null,
+                brief: {
+                    product_description: briefData.product_description || briefData.brand_name || 'Campaign for ' + briefData.brand_name,
+                    target_audience: briefData.target_audience,
+                    key_messages: briefData.key_messages ? briefData.key_messages.split('\n') : [],
+                    hashtags: [],
+                    dos: briefData.content_guidelines ? [briefData.content_guidelines] : [],
+                    donts: [],
+                    reference_links: [],
+                    additional_notes: briefData.special_requirements,
+                    campaign_objective: briefData.campaign_objective, // Extra metadata
+                },
+                custom_requirements: briefData.special_requirements
+            };
 
-            onSuccess(response.campaign_id);
+            const response = await campaignApi.create(campaignData);
+
+            onSuccess(response.id);
         } catch (err) {
             setError(err.message || 'Failed to create campaign');
         } finally {
@@ -395,13 +455,55 @@ function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, o
                             <p className="step-description">Tell {influencer?.display_name} about your campaign</p>
 
                             <div className="form-group">
-                                <label>Brand Name *</label>
-                                <input
-                                    type="text"
-                                    name="brand_name"
-                                    value={briefData.brand_name}
+                                <label>Select Brand *</label>
+                                {brands.length > 0 ? (
+                                    <select
+                                        name="brand_id"
+                                        value={briefData.brand_id}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        {brands.map(brand => (
+                                            <option key={brand.id} value={brand.id}>
+                                                {brand.name}
+                                            </option>
+                                        ))}
+                                        <option value="new">+ Use different brand name</option>
+                                    </select>
+                                ) : (
+                                    <input
+                                        type="text"
+                                        name="brand_name"
+                                        value={briefData.brand_name}
+                                        onChange={handleChange}
+                                        placeholder="Your brand or company name"
+                                        required
+                                    />
+                                )}
+                            </div>
+
+                            {briefData.brand_id === 'new' && brands.length > 0 && (
+                                <div className="form-group">
+                                    <label>Brand Name *</label>
+                                    <input
+                                        type="text"
+                                        name="brand_name"
+                                        value={briefData.brand_name}
+                                        onChange={handleChange}
+                                        placeholder="Enter brand name"
+                                        required
+                                    />
+                                </div>
+                            )}
+
+                            <div className="form-group">
+                                <label>Product/Service Description *</label>
+                                <textarea
+                                    name="product_description"
+                                    value={briefData.product_description}
                                     onChange={handleChange}
-                                    placeholder="Your brand or company name"
+                                    placeholder="Describe what you want to promote"
+                                    rows={3}
                                     required
                                 />
                             </div>
@@ -506,11 +608,17 @@ function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, o
 
                             <div className="wallet-balance">
                                 <div className="balance-row">
-                                    <span>Your Wallet Balance</span>
+                                    <span>Available Balance</span>
                                     <span className={hasEnoughBalance ? 'sufficient' : 'insufficient'}>
                                         {formatPrice(availableBalance)}
                                     </span>
                                 </div>
+                                {wallet?.hold_balance > 0 && (
+                                    <div className="balance-info-sub">
+                                        <span>Total: {formatPrice(wallet.balance)}</span>
+                                        <span>On Hold: {formatPrice(wallet.hold_balance)}</span>
+                                    </div>
+                                )}
                                 {!hasEnoughBalance && (
                                     <div className="balance-warning">
                                         <span>⚠️</span>
@@ -538,7 +646,7 @@ function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, o
                             <button
                                 className="btn-primary"
                                 onClick={() => setStep(2)}
-                                disabled={!briefData.brand_name || !briefData.campaign_objective}
+                                disabled={(!briefData.brand_name && !briefData.brand_id) || !briefData.campaign_objective || !briefData.product_description}
                             >
                                 Continue to Payment →
                             </button>

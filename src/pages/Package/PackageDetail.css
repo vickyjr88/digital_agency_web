@@ -737,6 +737,15 @@
     color: #e11d48;
 }
 
+.balance-info-sub {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    color: #6b7280;
+    font-size: 0.813rem;
+    font-weight: 500;
+}
+
 .balance-warning {
     display: flex;
     align-items: center;
