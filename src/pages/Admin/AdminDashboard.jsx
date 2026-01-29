@@ -89,61 +89,71 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
     );
 
     return (
-        <div className="admin-dashboard">
-            <header className="dashboard-header">
+        <div className="admin-dashboard bg-gray-50 min-h-screen">
+            <header className="dashboard-header bg-white shadow-sm px-8 py-6 sticky top-0 z-20">
                 <div>
-                    <h1>System Administration</h1>
-                    <p>Manage users, brands, content, and system health</p>
+                    <h1 className="text-2xl font-bold text-gray-900">System Administration</h1>
+                    <p className="text-sm text-gray-500 mt-1">Manage users, brands, content, and system health</p>
                 </div>
             </header>
 
-            <div className="flex flex-col md:flex-row gap-6 mt-6">
-                {/* Sidebar Navigation */}
-                <nav className="admin-sidebar md:w-64 flex-shrink-0 bg-white shadow-sm rounded-lg overflow-hidden h-fit">
-                    <div className="p-4 bg-gray-50 border-b font-bold text-gray-500 uppercase text-xs">Core Platform</div>
-                    <div className="flex flex-col">
-                        <TabButton name="users" label="Users" icon="👥" />
-                        <TabButton name="brands" label="Brands" icon="🏢" />
-                        <TabButton name="content" label="Content" icon="📝" />
-                        <TabButton name="failures" label="Failures/Logs" icon="⚠️" />
-                    </div>
+            <div className="max-w-[1600px] mx-auto p-6">
+                <div className="flex flex-col md:flex-row gap-6 relative items-start">
+                    {/* Sidebar Navigation */}
+                    <nav className="admin-sidebar md:w-64 flex-shrink-0 bg-white shadow-sm rounded-xl overflow-hidden sticky top-32 self-start">
+                        <div className="p-4 bg-gray-50/50 border-b font-bold text-gray-400 uppercase text-[10px] tracking-wider">Core Platform</div>
+                        <div className="flex flex-col p-2 space-y-1">
+                            <TabButton name="users" label="Users" icon="👥" />
+                            <TabButton name="brands" label="Brands" icon="🏢" />
+                            <TabButton name="content" label="Content" icon="📝" />
+                            <TabButton name="failures" label="Failures/Logs" icon="⚠️" />
+                        </div>
 
-                    <div className="p-4 bg-gray-50 border-b border-t font-bold text-gray-500 uppercase text-xs mt-2">Marketplace</div>
-                    <div className="flex flex-col">
-                        <TabButton name="influencers" label="Influencers" icon="🤳" />
-                        <TabButton name="packages" label="Packages" icon="📦" />
-                        <TabButton name="campaigns" label="Campaigns" icon="🎯" />
-                    </div>
-                </nav>
+                        <div className="p-4 bg-gray-50/50 border-b border-t font-bold text-gray-400 uppercase text-[10px] tracking-wider mt-2">Marketplace</div>
+                        <div className="flex flex-col p-2 space-y-1">
+                            <TabButton name="influencers" label="Influencers" icon="🤳" />
+                            <TabButton name="packages" label="Packages" icon="📦" />
+                            <TabButton name="campaigns" label="Campaigns" icon="🎯" />
+                        </div>
+                    </nav>
 
-                {/* Main Content Area */}
-                <main className="flex-1 min-w-0 bg-white shadow-sm rounded-lg p-6">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold capitalize">{activeTab} Management</h2>
-                        <button onClick={fetchAdminData} className="p-2 hover:bg-gray-100 rounded-full" title="Refresh">🔄</button>
-                    </div>
-
-                    {children ? (
-                        children
-                    ) : (
-                        loading ? (
-                            <div className="loading-state py-12">
-                                <div className="spinner"></div>
-                                <p className="mt-4 text-gray-500">Loading data...</p>
+                    {/* Main Content Area */}
+                    <main className="flex-1 min-w-0 bg-white shadow-sm rounded-xl border border-gray-100">
+                        {!children && (
+                            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/30 rounded-t-xl">
+                                <h2 className="text-lg font-bold capitalize text-gray-800 flex items-center gap-2">
+                                    {activeTab} Management
+                                </h2>
+                                <button onClick={fetchAdminData} className="p-2 hover:bg-gray-200 rounded-lg text-gray-500 transition-colors" title="Refresh">
+                                    <span className="text-lg">↻</span>
+                                </button>
                             </div>
-                        ) : (
-                            <>
-                                {activeTab === 'users' && <UserManagement users={data.users} />}
-                                {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
-                                {activeTab === 'content' && <ContentManagement content={data.content} />}
-                                {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
-                                {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
-                                {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
-                                {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
-                            </>
-                        )
-                    )}
-                </main>
+                        )}
+
+                        <div className="p-6">
+                            {children ? (
+                                children
+                            ) : (
+                                loading ? (
+                                    <div className="loading-state py-20 flex flex-col items-center">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+                                        <p className="text-gray-500 font-medium">Loading data...</p>
+                                    </div>
+                                ) : (
+                                    <div className="animate-in fade-in duration-300">
+                                        {activeTab === 'users' && <UserManagement users={data.users} />}
+                                        {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
+                                        {activeTab === 'content' && <ContentManagement content={data.content} />}
+                                        {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
+                                        {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
+                                        {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
+                                        {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    </main>
+                </div>
             </div>
         </div>
     );
@@ -151,37 +161,39 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
 
 // --- Sub-components ---
 
+// --- Sub-components ---
+
 function UserManagement({ users }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="text-left bg-gray-50">
-                        <th className="p-3">User</th>
-                        <th className="p-3">Role</th>
-                        <th className="p-3">Tier</th>
-                        <th className="p-3">Status</th>
-                        <th className="p-3">Joined</th>
-                        <th className="p-3">Actions</th>
+                    <tr className="text-left bg-gray-50 border-b border-gray-200">
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tier</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Joined</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                     {users.map(user => (
-                        <tr key={user.id} className="border-t hover:bg-gray-50">
-                            <td className="p-3">
-                                <div className="font-bold">{user.name}</div>
-                                <div className="text-xs text-gray-500">{user.email}</div>
+                        <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-4">
+                                <div className="font-medium text-gray-900">{user.name || 'Unknown User'}</div>
+                                <div className="text-sm text-gray-500">{user.email}</div>
                             </td>
-                            <td className="p-3"><span className="px-2 py-1 bg-gray-100 rounded-full text-xs">{user.role}</span></td>
-                            <td className="p-3"><span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs uppercase">{user.subscription_tier}</span></td>
-                            <td className="p-3">{user.subscription_status}</td>
-                            <td className="p-3 text-sm text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
-                            <td className="p-3">
-                                <Link to={`/admin/user/${user.id}`} className="text-blue-600 text-sm hover:underline">Manage</Link>
+                            <td className="p-4"><span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 capitalize">{user.role}</span></td>
+                            <td className="p-4"><span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold uppercase">{user.subscription_tier}</span></td>
+                            <td className="p-4 text-sm text-gray-600 capitalize">{user.subscription_status}</td>
+                            <td className="p-4 text-sm text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
+                            <td className="p-4">
+                                <Link to={`/admin/user/${user.id}`} className="text-indigo-600 text-sm font-medium hover:text-indigo-800 hover:underline">Manage</Link>
                             </td>
                         </tr>
                     ))}
-                    {users.length === 0 && <tr><td colSpan="6" className="p-6 text-center text-gray-500">No users found</td></tr>}
+                    {users.length === 0 && <tr><td colSpan="6" className="p-8 text-center text-gray-500 italic">No users found</td></tr>}
                 </tbody>
             </table>
         </div>
@@ -191,29 +203,29 @@ function UserManagement({ users }) {
 function BrandManagement({ brands }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="text-left bg-gray-50">
-                        <th className="p-3">Brand Name</th>
-                        <th className="p-3">Owner</th>
-                        <th className="p-3">Industry</th>
-                        <th className="p-3">Created</th>
+                    <tr className="text-left bg-gray-50 border-b border-gray-200">
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Brand Name</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Industry</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                     {brands.map(brand => (
-                        <tr key={brand.id} className="border-t hover:bg-gray-50">
-                            <td className="p-3 font-medium">{brand.name}</td>
-                            <td className="p-3">
-                                <Link to={`/admin/user/${brand.owner?.id}`} className="text-blue-600 hover:underline">
+                        <tr key={brand.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-4 font-medium text-gray-900">{brand.name}</td>
+                            <td className="p-4">
+                                <Link to={`/admin/user/${brand.owner?.id}`} className="text-indigo-600 hover:underline text-sm">
                                     {brand.owner?.email}
                                 </Link>
                             </td>
-                            <td className="p-3">{brand.industry || 'N/A'}</td>
-                            <td className="p-3 text-sm text-gray-500">{new Date(brand.created_at).toLocaleDateString()}</td>
+                            <td className="p-4 text-sm text-gray-600">{brand.industry || 'N/A'}</td>
+                            <td className="p-4 text-sm text-gray-500">{new Date(brand.created_at).toLocaleDateString()}</td>
                         </tr>
                     ))}
-                    {brands.length === 0 && <tr><td colSpan="4" className="p-6 text-center text-gray-500">No brands found</td></tr>}
+                    {brands.length === 0 && <tr><td colSpan="4" className="p-8 text-center text-gray-500 italic">No brands found</td></tr>}
                 </tbody>
             </table>
         </div>
@@ -223,31 +235,31 @@ function BrandManagement({ brands }) {
 function ContentManagement({ content }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="text-left bg-gray-50">
-                        <th className="p-3">Content ID</th>
-                        <th className="p-3">Ref Trend</th>
-                        <th className="p-3">Status</th>
-                        <th className="p-3">Generated</th>
+                    <tr className="text-left bg-gray-50 border-b border-gray-200">
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Content ID</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Ref Trend</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Generated</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                     {content.map(c => (
-                        <tr key={c.id} className="border-t hover:bg-gray-50">
-                            <td className="p-3 font-mono text-xs text-gray-600">{c.id.substring(0, 8)}...</td>
-                            <td className="p-3">
-                                <div className="font-medium line-clamp-1">{c.trend}</div>
+                        <tr key={c.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-4 font-mono text-xs text-gray-500">{c.id.substring(0, 8)}...</td>
+                            <td className="p-4">
+                                <div className="font-medium text-gray-900 line-clamp-1 max-w-xs">{c.trend}</div>
                             </td>
-                            <td className="p-3">
-                                <span className={`px-2 py-1 rounded-full text-xs ${c.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            <td className="p-4">
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${c.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                                     {c.status}
                                 </span>
                             </td>
-                            <td className="p-3 text-sm text-gray-500">{new Date(c.generated_at).toLocaleString()}</td>
+                            <td className="p-4 text-sm text-gray-500">{new Date(c.generated_at).toLocaleString()}</td>
                         </tr>
                     ))}
-                    {content.length === 0 && <tr><td colSpan="4" className="p-6 text-center text-gray-500">No content found</td></tr>}
+                    {content.length === 0 && <tr><td colSpan="4" className="p-8 text-center text-gray-500 italic">No content found</td></tr>}
                 </tbody>
             </table>
         </div>
@@ -257,26 +269,26 @@ function ContentManagement({ content }) {
 function FailureManagement({ failures }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="text-left bg-gray-50">
-                        <th className="p-3">Timestamp</th>
-                        <th className="p-3">Details</th>
-                        <th className="p-3">Error</th>
+                    <tr className="text-left bg-gray-50 border-b border-gray-200">
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Timestamp</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Details</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Error</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                     {failures.map(fail => (
-                        <tr key={fail.id} className="border-t hover:bg-red-50">
-                            <td className="p-3 text-sm whitespace-nowrap">{new Date(fail.timestamp).toLocaleString()}</td>
-                            <td className="p-3">
-                                <div className="text-xs text-gray-500 mb-1">Brand: {fail.brand_id}</div>
-                                <div className="font-medium">{fail.trend}</div>
+                        <tr key={fail.id} className="hover:bg-red-50/30 transition-colors">
+                            <td className="p-4 text-sm text-gray-600 whitespace-nowrap">{new Date(fail.timestamp).toLocaleString()}</td>
+                            <td className="p-4">
+                                <div className="text-xs text-gray-500 mb-1">Brand: <span className="font-mono">{fail.brand_id?.substring(0, 8)}</span></div>
+                                <div className="font-medium text-gray-900">{fail.trend}</div>
                             </td>
-                            <td className="p-3 text-red-600 text-sm font-mono whitespace-pre-wrap">{fail.error_message}</td>
+                            <td className="p-4 text-red-600 text-sm font-mono whitespace-pre-wrap max-w-md">{fail.error_message}</td>
                         </tr>
                     ))}
-                    {failures.length === 0 && <tr><td colSpan="3" className="p-6 text-center text-green-600">✅ No failures recorded</td></tr>}
+                    {failures.length === 0 && <tr><td colSpan="3" className="p-8 text-center text-green-600 font-medium bg-green-50/30">✅ No failures recorded</td></tr>}
                 </tbody>
             </table>
         </div>
@@ -286,50 +298,50 @@ function FailureManagement({ failures }) {
 function InfluencerManagement({ influencers, onVerify }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="text-left bg-gray-50">
-                        <th className="p-3">Influencer</th>
-                        <th className="p-3">Niche</th>
-                        <th className="p-3">Followers</th>
-                        <th className="p-3">Status</th>
-                        <th className="p-3">Actions</th>
+                    <tr className="text-left bg-gray-50 border-b border-gray-200">
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Influencer</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Niche</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Followers</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                     {influencers.map(inf => (
-                        <tr key={inf.id} className="border-t hover:bg-gray-50">
-                            <td className="p-3">
-                                <Link to={`/marketplace/influencer/${inf.id}`} className="flex items-center gap-3">
-                                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                                        {inf.profile_picture_url ? <img src={inf.profile_picture_url} className="w-full h-full object-cover" /> : inf.display_name?.[0]}
+                        <tr key={inf.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-4">
+                                <Link to={`/marketplace/influencer/${inf.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                                        {inf.profile_picture_url ? <img src={inf.profile_picture_url} className="w-full h-full object-cover" /> : <span className="text-gray-500 font-bold">{inf.display_name?.[0]}</span>}
                                     </div>
                                     <div>
-                                        <div className="font-medium">{inf.display_name}</div>
+                                        <div className="font-medium text-gray-900">{inf.display_name}</div>
                                         <div className="text-xs text-gray-500">@{inf.handle || inf.username}</div>
                                     </div>
                                 </Link>
                             </td>
-                            <td className="p-3">{inf.niche}</td>
-                            <td className="p-3">{new Intl.NumberFormat().format(inf.follower_count || 0)}</td>
-                            <td className="p-3">
-                                <span className={`px-2 py-1 rounded-full text-xs capitalize ${inf.verification_status === 'verified' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                            <td className="p-4 text-sm text-gray-600">{inf.niche}</td>
+                            <td className="p-4 text-sm text-gray-900 font-medium">{new Intl.NumberFormat().format(inf.follower_count || 0)}</td>
+                            <td className="p-4">
+                                <span className={`px-2 py-1 rounded-full text-xs capitalize font-medium ${inf.verification_status === 'verified' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
                                     {inf.verification_status}
                                 </span>
                             </td>
-                            <td className="p-3">
+                            <td className="p-4">
                                 <div className="flex gap-2">
                                     {inf.verification_status === 'pending' && (
                                         <>
-                                            <button className="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700" onClick={() => onVerify(inf.id, 'approve')}>Approve</button>
-                                            <button className="px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700" onClick={() => onVerify(inf.id, 'reject')}>Reject</button>
+                                            <button className="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors" onClick={() => onVerify(inf.id, 'approve')}>Approve</button>
+                                            <button className="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors" onClick={() => onVerify(inf.id, 'reject')}>Reject</button>
                                         </>
                                     )}
                                 </div>
                             </td>
                         </tr>
                     ))}
-                    {influencers.length === 0 && <tr><td colSpan="5" className="p-6 text-center text-gray-500">No influencers found</td></tr>}
+                    {influencers.length === 0 && <tr><td colSpan="5" className="p-8 text-center text-gray-500 italic">No influencers found</td></tr>}
                 </tbody>
             </table>
         </div>
@@ -339,27 +351,27 @@ function InfluencerManagement({ influencers, onVerify }) {
 function PackageManagement({ packages, formatPrice }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="text-left bg-gray-50">
-                        <th className="p-3">Package</th>
-                        <th className="p-3">Influencer</th>
-                        <th className="p-3">Price</th>
-                        <th className="p-3">Status</th>
-                        <th className="p-3">Sales</th>
+                    <tr className="text-left bg-gray-50 border-b border-gray-200">
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Package</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Influencer</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Price</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Sales</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                     {packages.map(pkg => (
-                        <tr key={pkg.id} className="border-t hover:bg-gray-50">
-                            <td className="p-3 font-medium">{pkg.name}</td>
-                            <td className="p-3">{pkg.influencer?.display_name || 'N/A'}</td>
-                            <td className="p-3 font-mono">{formatPrice(pkg.price)}</td>
-                            <td className="p-3"><span className="px-2 py-1 bg-gray-100 rounded-full text-xs">{pkg.status}</span></td>
-                            <td className="p-3">{pkg.times_purchased}</td>
+                        <tr key={pkg.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-4 font-medium text-gray-900">{pkg.name}</td>
+                            <td className="p-4 text-sm text-gray-600">{pkg.influencer?.display_name || 'N/A'}</td>
+                            <td className="p-4 font-mono text-sm text-gray-900">{formatPrice(pkg.price)}</td>
+                            <td className="p-4"><span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium capitalize text-gray-600">{pkg.status}</span></td>
+                            <td className="p-4 text-sm text-gray-600">{pkg.times_purchased}</td>
                         </tr>
                     ))}
-                    {packages.length === 0 && <tr><td colSpan="5" className="p-6 text-center text-gray-500">No packages found</td></tr>}
+                    {packages.length === 0 && <tr><td colSpan="5" className="p-8 text-center text-gray-500 italic">No packages found</td></tr>}
                 </tbody>
             </table>
         </div>
@@ -369,29 +381,29 @@ function PackageManagement({ packages, formatPrice }) {
 function CampaignManagement({ campaigns, formatPrice }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="text-left bg-gray-50">
-                        <th className="p-3">Campaign ID</th>
-                        <th className="p-3">Brand</th>
-                        <th className="p-3">Influencer</th>
-                        <th className="p-3">Value</th>
-                        <th className="p-3">Status</th>
+                    <tr className="text-left bg-gray-50 border-b border-gray-200">
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Campaign ID</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Brand</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Influencer</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Value</th>
+                        <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                     {campaigns.map(cp => (
-                        <tr key={cp.id} className="border-t hover:bg-gray-50">
-                            <td className="p-3 text-xs font-mono">{cp.id.substring(0, 8)}</td>
-                            <td className="p-3">{cp.brand?.name}</td>
-                            <td className="p-3">{cp.influencer?.display_name}</td>
-                            <td className="p-3 font-mono">{formatPrice(cp.package?.price)}</td>
-                            <td className="p-3">
-                                <span className="px-2 py-1 bg-gray-100 rounded-full text-xs uppercase">{cp.status}</span>
+                        <tr key={cp.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-4 text-xs font-mono text-gray-500">{cp.id.substring(0, 8)}</td>
+                            <td className="p-4 text-sm font-medium text-gray-900">{cp.brand?.name}</td>
+                            <td className="p-4 text-sm text-gray-600">{cp.influencer?.display_name}</td>
+                            <td className="p-4 font-mono text-sm text-gray-900">{formatPrice(cp.package?.price)}</td>
+                            <td className="p-4">
+                                <span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium uppercase text-gray-600">{cp.status}</span>
                             </td>
                         </tr>
                     ))}
-                    {campaigns.length === 0 && <tr><td colSpan="5" className="p-6 text-center text-gray-500">No campaigns found</td></tr>}
+                    {campaigns.length === 0 && <tr><td colSpan="5" className="p-8 text-center text-gray-500 italic">No campaigns found</td></tr>}
                 </tbody>
             </table>
         </div>
