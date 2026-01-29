@@ -284,6 +284,11 @@
     color: #047857;
 }
 
+.status-processing {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
 .status-failed {
     background: #fee2e2;
     color: #b91c1c;

@@ -482,8 +482,8 @@ function TransactionList({ transactions, formatPrice, formatDate, detailed = fal
                             <p className={`text-sm font-bold ${isIncoming(tx) ? 'text-green-600' : 'text-gray-900'}`}>
                                 {isIncoming(tx) ? '+' : '-'}{formatPrice(tx.amount)}
                             </p>
-                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase ${tx.status === 'success' ? 'bg-green-100 text-green-700' :
-                                tx.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase ${(tx.status === 'success' || tx.status === 'completed') ? 'bg-green-100 text-green-700' :
+                                tx.status === 'pending' || tx.status === 'processing' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
                                 }`}>
                                 {tx.status}
                             </span>

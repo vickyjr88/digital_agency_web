@@ -123,8 +123,11 @@ export default function AdminWithdrawals() {
     const getStatusBadge = (status) => {
         const config = {
             pending: { className: 'status-pending', icon: Clock, label: 'Pending' },
+            processing: { className: 'status-processing', icon: RefreshCw, label: 'Processing' },
             success: { className: 'status-success', icon: CheckCircle, label: 'Completed' },
-            failed: { className: 'status-failed', icon: XCircle, label: 'Rejected' }
+            completed: { className: 'status-success', icon: CheckCircle, label: 'Completed' },
+            failed: { className: 'status-failed', icon: XCircle, label: 'Rejected' },
+            rejected: { className: 'status-failed', icon: XCircle, label: 'Rejected' }
         };
         return config[status] || config.pending;
     };
