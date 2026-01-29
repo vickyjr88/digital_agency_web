@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
-import { influencerApi, packageApi, campaignApi } from '../../services/marketplaceApi';
+import { influencerApi, packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
 import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight } from 'lucide-react';
@@ -30,6 +30,8 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
         stats: null,
         latest: null
     });
+    const [showFundModal, setShowFundModal] = useState(false);
+    const [fundingUser, setFundingUser] = useState(null);
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     const { logout } = useAuth();
     const navigate = useNavigate();
@@ -269,7 +271,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                             </div>
                             <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${['analytics', 'overview'].includes(activeTab) ? '' : 'overflow-hidden'}`}>
                                 {activeTab === 'overview' && <OverviewDashboard stats={data.stats} latest={data.latest} navigate={navigate} />}
-                                {activeTab === 'users' && <UserManagement users={data.users} />}
+                                {activeTab === 'users' && <UserManagement users={data.users} onFund={(user) => { setFundingUser(user); setShowFundModal(true); }} />}
                                 {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
                                 {activeTab === 'content' && <ContentManagement content={data.content} />}
                                 {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
@@ -283,6 +285,17 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                     )
                 )}
             </main>
+
+            {/* Manual Fund Modal */}
+            <AnimatePresence>
+                {showFundModal && (
+                    <ManualFundModal
+                        user={fundingUser}
+                        onClose={() => { setShowFundModal(false); setFundingUser(null); }}
+                        onSuccess={() => { setShowFundModal(false); setFundingUser(null); fetchAdminData(); }}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }
@@ -291,7 +304,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
 
 // --- Sub-components ---
 
-function UserManagement({ users }) {
+function UserManagement({ users, onFund }) {
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full border-collapse">
@@ -316,8 +329,14 @@ function UserManagement({ users }) {
                             <td className="p-4"><span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold uppercase">{user.subscription_tier}</span></td>
                             <td className="p-4 text-sm text-gray-600 capitalize">{user.subscription_status}</td>
                             <td className="p-4 text-sm text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
-                            <td className="p-4">
+                            <td className="p-4 flex gap-2">
                                 <Link to={`/admin/user/${user.id}`} className="text-indigo-600 text-sm font-medium hover:text-indigo-800 hover:underline">Manage</Link>
+                                <button
+                                    onClick={() => onFund(user)}
+                                    className="text-green-600 text-sm font-medium hover:text-green-800 hover:underline"
+                                >
+                                    Fund
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -788,6 +807,104 @@ function AnalyticsDashboard({ data, formatPrice }) {
                     </div>
                 </div>
             </div>
+        </div>
+    );
+}
+
+function ManualFundModal({ user, onClose, onSuccess }) {
+    const [amount, setAmount] = useState('');
+    const [description, setDescription] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!amount || !description) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await walletApi.manualFund(user.id, parseInt(amount), description);
+            toast.success(`Successfully funded ${user.email}`);
+            onSuccess();
+        } catch (error) {
+            console.error('Manual funding error:', error);
+            toast.error(error.message || 'Failed to fund wallet');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden"
+                onClick={e => e.stopPropagation()}
+            >
+                <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-green-50">
+                    <h3 className="text-xl font-bold text-green-900">Manual Wallet Funding</h3>
+                    <button onClick={onClose} className="p-2 hover:bg-green-100 rounded-full transition-colors text-green-900">
+                        <X size={20} />
+                    </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                    <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p className="text-sm text-blue-800">
+                            <strong>Target User:</strong> {user.name || 'N/A'}<br />
+                            <strong>Email:</strong> {user.email}
+                        </p>
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-sm font-bold text-gray-700">Amount (KES)</label>
+                        <div className="relative">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">KES</span>
+                            <input
+                                type="number"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                className="w-full pl-14 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none transition-all"
+                                placeholder="e.g. 1000"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-sm font-bold text-gray-700">Reason / Reference</label>
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none transition-all min-h-[100px]"
+                            placeholder="e.g. Bank transfer ref: #12345"
+                            required
+                        />
+                        <p className="text-xs text-gray-400 italic">This will be shown to the user in their notifications.</p>
+                    </div>
+
+                    <div className="pt-4 flex gap-3">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-all"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`flex-1 px-4 py-3 rounded-xl font-bold text-white shadow-lg transition-all ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow-green-200'}`}
+                        >
+                            {loading ? 'Processing...' : 'Confirm Funding'}
+                        </button>
+                    </div>
+                </form>
+            </motion.div>
         </div>
     );
 }
