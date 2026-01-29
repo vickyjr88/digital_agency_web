@@ -3,6 +3,7 @@ import Signup from './pages/auth/Signup';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { FeatureFlagProvider, FeatureGate } from './context/FeatureFlagContext';
 import { LayoutDashboard } from 'lucide-react';
+import { Toaster } from 'sonner';
 
 // Pages
 import Dashboard from './pages/dashboard/Dashboard';
@@ -110,6 +111,7 @@ function App() {
   return (
     <AuthProvider>
       <FeatureFlagProvider>
+        <Toaster richColors position="top-right" />
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />

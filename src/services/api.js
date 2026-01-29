@@ -195,6 +195,18 @@ class ApiService {
     });
   }
 
+  async getAdminBrands() {
+    return this.request('/admin/brands');
+  }
+
+  async getAdminContent() {
+    return this.request('/admin/content');
+  }
+
+  async getGeneratorFailures() {
+    return this.request('/admin/failures');
+  }
+
   // Payments
   async initiatePayment(orderId, paymentData) {
     return this.request(`/payments/initiate/${orderId}`, {

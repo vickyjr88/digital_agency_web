@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { motion } from 'framer-motion';
 import { TrendingUp, RefreshCw, Zap, Loader } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function TrendsDashboard({ brands, user }) {
+  const navigate = useNavigate();
   const [trends, setTrends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -23,6 +26,7 @@ export default function TrendsDashboard({ brands, user }) {
       setTrends(data);
     } catch (error) {
       console.error('Failed to fetch trends:', error);
+      toast.error('Failed to load trends');
     } finally {
       setLoading(false);
     }
@@ -33,8 +37,10 @@ export default function TrendsDashboard({ brands, user }) {
     try {
       await api.request('/trends/refresh', { method: 'POST' });
       await fetchTrends();
+      toast.success('Trends refreshed');
     } catch (error) {
       console.error('Failed to refresh trends:', error);
+      toast.error('Failed to refresh trends');
     } finally {
       setRefreshing(false);
     }
@@ -44,8 +50,10 @@ export default function TrendsDashboard({ brands, user }) {
     if (!selectedBrandId || !selectedTrend) return;
 
     setGenerating(true);
+    const toastId = toast.loading('Generating content with AI...');
+
     try {
-      await api.request(`/generate/${selectedBrandId}`, {
+      const result = await api.request(`/generate/${selectedBrandId}`, {
         method: 'POST',
         body: JSON.stringify({
           trend: selectedTrend.topic,
@@ -55,10 +63,15 @@ export default function TrendsDashboard({ brands, user }) {
 
       setSelectedTrend(null);
       setSelectedBrandId('');
-      alert('Content generated successfully! Check your brand dashboard.');
+      toast.success('Content generated successfully!', { id: toastId });
+
+      // Navigate to edit content
+      if (result && result.id) {
+        navigate(`/dashboard/content/${result.id}/edit`);
+      }
     } catch (error) {
       console.error('Generation error:', error);
-      alert('Generation failed. Please try again.');
+      toast.error('Generation failed. Please try again.', { id: toastId });
     } finally {
       setGenerating(false);
     }
