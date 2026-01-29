@@ -216,6 +216,15 @@ export const walletApi = {
         const queryString = new URLSearchParams(params).toString();
         return api.request(`/v2/wallet/admin/transactions?${queryString}`);
     },
+
+    // Admin: Manually fund user wallet
+    manualFund: async (userId, amount, description) => {
+        const { api } = await import('./api');
+        return api.request('/v2/wallet/admin/fund-wallet', {
+            method: 'POST',
+            body: JSON.stringify({ user_id: userId, amount, description }),
+        });
+    },
 };
 
 
