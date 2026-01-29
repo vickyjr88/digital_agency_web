@@ -12,7 +12,7 @@ import {
     ArrowLeft, Briefcase, DollarSign, Calendar,
     Instagram, Youtube, Twitter, Video, Image, FileText,
     Plus, X, Loader2, MessageSquare, Hash, Target,
-    Megaphone, Sparkles, ChevronDown, ChevronUp
+    Megaphone, Sparkles, ChevronDown, ChevronUp, Facebook
 } from 'lucide-react';
 import './OpenCampaigns.css';
 
@@ -21,6 +21,7 @@ const PLATFORMS = [
     { id: 'tiktok', label: 'TikTok', icon: Video },
     { id: 'youtube', label: 'YouTube', icon: Youtube },
     { id: 'twitter', label: 'Twitter/X', icon: Twitter },
+    { id: 'facebook', label: 'Facebook', icon: Facebook },
 ];
 
 const CONTENT_TYPES = [
@@ -314,7 +315,7 @@ export default function CreateCampaign() {
                                 onChange={handleChange}
                                 placeholder="50000"
                                 required
-                                min={1000}
+                                min={100}
                             />
                         </div>
                         {formData.budget && (
@@ -323,7 +324,7 @@ export default function CreateCampaign() {
                             </p>
                         )}
                         <p className="hint">
-                            Multiple influencers can work on your campaign as long as the total stays within budget.
+                            Minimum budget is KES 100. Multiple influencers can work on your campaign as long as the total stays within budget.
                         </p>
                     </div>
                 </div>
@@ -702,7 +703,7 @@ export default function CreateCampaign() {
                         )}
                     </button>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }
