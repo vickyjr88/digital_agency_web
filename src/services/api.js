@@ -207,6 +207,19 @@ class ApiService {
     return this.request('/admin/failures');
   }
 
+  // Analytics
+  async getAnalyticsDashboard() {
+    return this.request('/v2/analytics/dashboard');
+  }
+
+  async getRevenueChart(days = 30) {
+    return this.request(`/v2/analytics/revenue-chart?days=${days}`);
+  }
+
+  async getUserGrowthChart(days = 30) {
+    return this.request(`/v2/analytics/users-chart?days=${days}`);
+  }
+
   // Payments
   async initiatePayment(orderId, paymentData) {
     return this.request(`/payments/initiate/${orderId}`, {

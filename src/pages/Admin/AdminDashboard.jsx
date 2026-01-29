@@ -9,7 +9,8 @@ import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
-import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut } from 'lucide-react';
+import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 
@@ -23,7 +24,8 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
         failures: [],
         influencers: [],
         packages: [],
-        campaigns: []
+        campaigns: [],
+        analytics: null
     });
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     const { logout } = useAuth();
@@ -65,6 +67,13 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
             } else if (activeTab === 'campaigns') {
                 const allRes = await campaignApi.getAllAdmin().catch(() => ({ campaigns: [] }));
                 setData(d => ({ ...d, campaigns: allRes.campaigns || [] }));
+            } else if (activeTab === 'analytics') {
+                const [dashboard, revenue, users] = await Promise.all([
+                    api.getAnalyticsDashboard(),
+                    api.getRevenueChart(),
+                    api.getUserGrowthChart()
+                ]);
+                setData(d => ({ ...d, analytics: { ...dashboard, revenueChart: revenue, userChart: users } }));
             }
         } catch (error) {
             console.error('Error fetching admin data:', error);
@@ -122,6 +131,11 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
             </div>
 
             <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
+                <Link to="/dashboard" className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-xl text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors">
+                    <LayoutDashboard size={20} />
+                    Back to App
+                </Link>
+
                 <div className="px-4 py-2 border-b border-gray-100 mb-2">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Core Platform</span>
                 </div>
@@ -134,6 +148,9 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
                 </button>
                 <button onClick={() => { setActiveTab('content'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'content' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <FileText size={20} /> Content
+                </button>
+                <button onClick={() => { setActiveTab('analytics'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'analytics' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <TrendingUp size={20} /> Analytics
                 </button>
                 <button onClick={() => { setActiveTab('failures'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'failures' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <AlertTriangle size={20} /> Failures/Logs
@@ -235,7 +252,7 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
                                     <span className="text-xl">↻</span>
                                 </button>
                             </div>
-                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${activeTab === 'analytics' ? '' : 'overflow-hidden'}`}>
                                 {activeTab === 'users' && <UserManagement users={data.users} />}
                                 {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
                                 {activeTab === 'content' && <ContentManagement content={data.content} />}
@@ -243,6 +260,7 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
                                 {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
                                 {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
                                 {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
+                                {activeTab === 'analytics' && data.analytics && <AnalyticsDashboard data={data.analytics} formatPrice={formatPrice} />}
                             </div>
                         </div>
                     )
@@ -418,13 +436,13 @@ function InfluencerManagement({ influencers, onVerify }) {
                             <td className="p-4 text-sm text-gray-600">{inf.niche}</td>
                             <td className="p-4 text-sm text-gray-900 font-medium">{new Intl.NumberFormat().format(inf.follower_count || 0)}</td>
                             <td className="p-4">
-                                <span className={`px-2 py-1 rounded-full text-xs capitalize font-medium ${inf.verification_status === 'verified' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                                    {inf.verification_status}
+                                <span className={`px-2 py-1 rounded-full text-xs capitalize font-medium ${inf.verificationStatus === 'verified' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                    {inf.verificationStatus}
                                 </span>
                             </td>
                             <td className="p-4">
                                 <div className="flex gap-2">
-                                    {inf.verification_status === 'pending' && (
+                                    {inf.verificationStatus === 'pending' && (
                                         <>
                                             <button className="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors" onClick={() => onVerify(inf.id, 'approve')}>Approve</button>
                                             <button className="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors" onClick={() => onVerify(inf.id, 'reject')}>Reject</button>
@@ -499,6 +517,125 @@ function CampaignManagement({ campaigns, formatPrice }) {
                     {campaigns.length === 0 && <tr><td colSpan="5" className="p-8 text-center text-gray-500 italic">No campaigns found</td></tr>}
                 </tbody>
             </table>
+        </div>
+    );
+}
+
+function AnalyticsDashboard({ data, formatPrice }) {
+    if (!data) return null;
+
+    return (
+        <div className="p-6 space-y-8">
+            {/* KPI Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-6 text-white shadow-lg shadow-indigo-200">
+                    <div className="opacity-80 text-sm font-medium mb-1">Total Revenue</div>
+                    <div className="text-3xl font-bold">{formatPrice(data.revenue.total)}</div>
+                    <div className="text-xs opacity-70 mt-2">
+                        {formatPrice(data.revenue.this_month)} this month
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                    <div className="text-gray-500 text-sm font-medium mb-1">Users</div>
+                    <div className="text-3xl font-bold text-gray-900">{data.users.total}</div>
+                    <div className="text-xs text-green-600 font-medium mt-2">
+                        +{data.users.new_today} today
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                    <div className="text-gray-500 text-sm font-medium mb-1">Content Generated</div>
+                    <div className="text-3xl font-bold text-gray-900">{data.content.total}</div>
+                    <div className="text-xs text-indigo-600 font-medium mt-2">
+                        +{data.content.generated_today} today
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                    <div className="text-gray-500 text-sm font-medium mb-1">Marketplace</div>
+                    <div className="flex gap-4 mt-2">
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.marketplace.influencers}</div>
+                            <div className="text-xs text-gray-400">Influencers</div>
+                        </div>
+                        <div className="w-px bg-gray-200"></div>
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.marketplace.campaigns}</div>
+                            <div className="text-xs text-gray-400">Campaigns</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Revenue Chart */}
+                <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 mb-6">Revenue Trend (30 Days)</h3>
+                    <div className="h-[300px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={data.revenueChart}>
+                                <defs>
+                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.8} />
+                                        <stop offset="95%" stopColor="#4F46E5" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                                <XAxis
+                                    dataKey="date"
+                                    tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                    stroke="#9CA3AF"
+                                    fontSize={12}
+                                />
+                                <YAxis
+                                    stroke="#9CA3AF"
+                                    fontSize={12}
+                                    tickFormatter={(val) => `KSh ${val / 1000}k`}
+                                />
+                                <Tooltip
+                                    formatter={(value) => formatPrice(value)}
+                                    labelFormatter={(label) => new Date(label).toLocaleDateString()}
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="amount"
+                                    stroke="#4F46E5"
+                                    fillOpacity={1}
+                                    fill="url(#colorRevenue)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* User Growth Chart */}
+                <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 mb-6">User Growth (30 Days)</h3>
+                    <div className="h-[300px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={data.userChart}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                                <XAxis
+                                    dataKey="date"
+                                    tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                    stroke="#9CA3AF"
+                                    fontSize={12}
+                                />
+                                <YAxis
+                                    stroke="#9CA3AF"
+                                    fontSize={12}
+                                />
+                                <Tooltip
+                                    labelFormatter={(label) => new Date(label).toLocaleDateString()}
+                                />
+                                <Bar dataKey="count" fill="#10B981" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
