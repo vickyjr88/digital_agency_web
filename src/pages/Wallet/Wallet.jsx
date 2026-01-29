@@ -23,7 +23,8 @@ import {
     Settings,
     Loader2,
     Plus,
-    Smartphone
+    Smartphone,
+    X
 } from 'lucide-react';
 
 export default function Wallet() {

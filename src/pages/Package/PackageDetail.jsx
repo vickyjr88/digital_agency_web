@@ -18,6 +18,7 @@ export default function PackageDetail() {
     const [influencer, setInfluencer] = useState(null);
     const [wallet, setWallet] = useState(null);
     const [showBookingModal, setShowBookingModal] = useState(false);
+    const [config, setConfig] = useState({ platform_fee_percent: 15 }); // Default to 15
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -41,8 +42,12 @@ export default function PackageDetail() {
 
             // Fetch wallet balance if authenticated
             if (isAuthenticated) {
-                const walletRes = await walletApi.getBalance().catch(() => null);
+                const [walletRes, configRes] = await Promise.all([
+                    walletApi.getBalance().catch(() => null),
+                    packageApi.getConfig().catch(() => ({ platform_fee_percent: 15 }))
+                ]);
                 setWallet(walletRes);
+                if (configRes) setConfig(configRes);
             }
         } catch (err) {
             console.error('Error fetching package:', err);
@@ -315,6 +320,7 @@ export default function PackageDetail() {
                     pkg={pkg}
                     influencer={influencer}
                     wallet={wallet}
+                    config={config}
                     formatPrice={formatPrice}
                     onClose={() => setShowBookingModal(false)}
                     onSuccess={(campaignId) => navigate(`/campaigns/${campaignId}`)}
@@ -325,7 +331,7 @@ export default function PackageDetail() {
 }
 
 // Booking Modal Component
-function BookingModal({ pkg, influencer, wallet, formatPrice, onClose, onSuccess }) {
+function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, onSuccess }) {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -339,7 +345,7 @@ function BookingModal({ pkg, influencer, wallet, formatPrice, onClose, onSuccess
         special_requirements: '',
     });
 
-    const platformFee = pkg.price * 0.1; // 10% platform fee
+    const platformFee = pkg.price * (config.platform_fee_percent / 100);
     const totalAmount = pkg.price + platformFee;
     const availableBalance = (wallet?.balance || 0) - (wallet?.hold_balance || 0);
     const hasEnoughBalance = availableBalance >= totalAmount;
@@ -488,7 +494,7 @@ function BookingModal({ pkg, influencer, wallet, formatPrice, onClose, onSuccess
                                     <span className="item-price">{formatPrice(pkg.price)}</span>
                                 </div>
                                 <div className="order-item fee">
-                                    <span className="item-name">Platform Fee (10%)</span>
+                                    <span className="item-name">Platform Fee ({config.platform_fee_percent}%)</span>
                                     <span className="item-price">{formatPrice(platformFee)}</span>
                                 </div>
                                 <div className="order-divider"></div>

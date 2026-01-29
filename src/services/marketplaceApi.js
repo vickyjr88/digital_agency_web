@@ -415,4 +415,8 @@ export default {
     campaign: campaignApi,
     review: reviewApi,
     notification: notificationApi,
+    getConfig: async () => {
+        const { api } = await import('./api');
+        return api.request('/v2/config');
+    },
 };
