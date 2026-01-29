@@ -1,38 +1,72 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Copy, Check, Share2, Calendar, Facebook, Twitter, Clock } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function EditContent() {
+  const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const [data, setData] = useState(() => {
-    const item = state?.item || {};
-    return {
-      id: item.id,
-      Brand: item.brand_name || 'Brand',
-      Trend: item.trend || item.Trend,
-      Tweet: item.tweet || item.Tweet,
-      'Facebook Post': item.facebook_post || item['Facebook Post'],
-      'Instagram Reel Script': item.instagram_reel_script || item['Instagram Reel Script'],
-      'TikTok Idea': item.tiktok_idea || item['TikTok Idea'],
-      Timestamp: item.generated_at || item.Timestamp,
-      ScheduledAt: item.scheduled_at || null
-    };
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (state?.item) {
+      // Data provided via navigation state
+      setData(formatContentData(state.item));
+      setLoading(false);
+    } else if (id) {
+      // Fetch from API if direct link/refresh
+      fetchContent(id);
+    }
+  }, [id, state]);
+
+  const fetchContent = async (contentId) => {
+    try {
+      const res = await api.request(`/content/${contentId}`);
+      setData(formatContentData(res));
+    } catch (error) {
+      console.error("Failed to load content", error);
+      toast.error("Could not load content");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatContentData = (item) => ({
+    id: item.id,
+    Brand: item.brand_name || 'Brand',
+    Trend: item.trend || item.Trend,
+    Tweet: item.tweet || item.Tweet,
+    'Facebook Post': item.facebook_post || item['Facebook Post'],
+    'Instagram Reel Script': item.instagram_reel_script || item['Instagram Reel Script'],
+    'TikTok Idea': item.tiktok_idea || item['TikTok Idea'],
+    Timestamp: item.generated_at || item.Timestamp,
+    ScheduledAt: item.scheduled_at || null
   });
+
+  if (loading) return <div className="p-12 text-center">Loading content...</div>;
+
+  if (!data)
+    return (
+      <div className="p-8">
+        No content found. <button onClick={() => navigate('/dashboard')} className="text-blue-500 underline">Go Back home</button>
+      </div>
+    );
 
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [scheduledAt, setScheduledAt] = useState(data.ScheduledAt ? data.ScheduledAt.split('T')[0] : '');
+  const [scheduledAt, setScheduledAt] = useState('');
 
-  if (!state?.item)
-    return (
-      <div className="p-8">
-        No content found. <button onClick={() => navigate('/')}>Go Back</button>
-      </div>
-    );
+  // Update scheduledAt when data loads
+  useEffect(() => {
+    if (data?.ScheduledAt) {
+      setScheduledAt(data.ScheduledAt.split('T')[0]);
+    }
+  }, [data]);
 
   const handleChange = (field, value) => {
     setData({ ...data, [field]: value });

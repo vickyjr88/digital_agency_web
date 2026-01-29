@@ -3,6 +3,7 @@ import { api } from '../../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Edit2, RefreshCw, Settings, Loader, Zap, Eye, Copy, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function BrandDetails() {
 	const { id } = useParams();
@@ -30,6 +31,7 @@ export default function BrandDetails() {
 			setContent(contentData);
 		} catch (error) {
 			console.error('Error:', error);
+			toast.error('Failed to load brand details');
 		} finally {
 			setLoading(false);
 		}
@@ -38,6 +40,7 @@ export default function BrandDetails() {
 	const handleCopy = (text, contentId) => {
 		navigator.clipboard.writeText(text);
 		setCopiedId(contentId);
+		toast.success('Copied to clipboard');
 		setTimeout(() => setCopiedId(null), 2000);
 	};
 
@@ -49,6 +52,7 @@ export default function BrandDetails() {
 			setTrends(data);
 		} catch (error) {
 			console.error('Failed to fetch trends:', error);
+			toast.error('Failed to fetch trends');
 		} finally {
 			setLoadingTrends(false);
 		}
@@ -58,6 +62,7 @@ export default function BrandDetails() {
 		if (!selectedTrend) return;
 
 		setGenerating(true);
+		const toastId = toast.loading('Generating content...');
 		try {
 			await api.request(`/generate/${id}`, {
 				method: 'POST',
@@ -68,10 +73,10 @@ export default function BrandDetails() {
 			});
 			setShowTrendModal(false);
 			setSelectedTrend(null);
-			fetchBrandData();
-			alert('Content generated successfully!');
+			await fetchBrandData();
+			toast.success('Content generated successfully!', { id: toastId });
 		} catch (error) {
-			alert('Generation failed. Please try again.');
+			toast.error('Generation failed. Please try again.', { id: toastId });
 			console.error('Generation failed:', error);
 		} finally {
 			setGenerating(false);
@@ -82,14 +87,14 @@ export default function BrandDetails() {
 	if (!brand) return <div className="p-8 text-center">Brand not found</div>;
 
 	return (
-		<div className="min-h-screen bg-gray-50 p-8 font-sans">
+		<div className="bg-gray-50 p-8 font-sans min-h-full">
 			<div className="max-w-6xl mx-auto">
 				<div className="mb-8">
 					<button
-						onClick={() => navigate('/dashboard')}
+						onClick={() => navigate('/my-brands')}
 						className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-4 transition-colors"
 					>
-						<ArrowLeft size={18} /> Back to Dashboard
+						<ArrowLeft size={18} /> Back to Brands
 					</button>
 
 					<div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">

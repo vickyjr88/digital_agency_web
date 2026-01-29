@@ -269,8 +269,22 @@ function App() {
             } />
 
             {/* Add direct brand routes for public/legacy links */}
-            <Route path="/brand/:id" element={<BrandDetails />} />
-            <Route path="/brands/new" element={<CreateBrand />} />
+            {/* Add direct brand routes for public/legacy links to match user expectation */}
+            <Route path="/brand/:id" element={
+              <ProtectedRoute>
+                <Layout><BrandDetails /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/brand/:id/edit" element={
+              <ProtectedRoute>
+                <Layout><EditBrand /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/brands/new" element={
+              <ProtectedRoute>
+                <Layout><CreateBrand /></Layout>
+              </ProtectedRoute>
+            } />
           </Routes>
         </Router>
       </FeatureFlagProvider>

@@ -3,6 +3,7 @@ import { api } from '../../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Briefcase, Hash, MessageSquare, Save, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function EditBrand() {
     const { id } = useParams();
@@ -36,6 +37,7 @@ export default function EditBrand() {
             });
         } catch (err) {
             setError(err.message);
+            toast.error('Failed to load brand details');
         } finally {
             setFetching(false);
         }
@@ -68,9 +70,11 @@ export default function EditBrand() {
                 method: 'PUT',
                 body: JSON.stringify(payload)
             });
-            navigate(`/brand/${id}`);
+            toast.success('Brand updated successfully');
+            setTimeout(() => navigate(`/brand/${id}`), 500);
         } catch (err) {
             setError(err.message);
+            toast.error('Failed to update brand');
         } finally {
             setLoading(false);
         }
@@ -79,7 +83,7 @@ export default function EditBrand() {
     if (fetching) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div></div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8 font-sans flex items-center justify-center">
+        <div className="bg-gray-50 p-8 font-sans flex justify-center h-full">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl">
                 <button
                     onClick={() => navigate(`/brand/${id}`)}
