@@ -4,7 +4,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
+import { api } from '../../services/api';
 import { walletApi } from '../../services/marketplaceApi';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,9 +18,12 @@ import {
     Lock,
     Activity,
     Filter,
-    X,
     Check,
-    AlertCircle
+    AlertCircle,
+    Settings,
+    Loader2,
+    Plus,
+    Smartphone
 } from 'lucide-react';
 
 export default function Wallet() {
@@ -121,6 +125,13 @@ export default function Wallet() {
                     <p className="text-gray-500 mt-1">Manage your funds, deposits, and withdrawals</p>
                 </div>
                 <div className="flex gap-3">
+                    <Link
+                        to="/payment-methods"
+                        className="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors flex items-center gap-2"
+                    >
+                        <Settings size={18} />
+                        Payment Methods
+                    </Link>
                     <button
                         onClick={() => setShowWithdrawModal(true)}
                         disabled={(wallet?.balance || 0) - (wallet?.hold_balance || 0) <= 0}
@@ -654,13 +665,32 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    const [fetchingMethods, setFetchingMethods] = useState(true);
+
+    useEffect(() => {
+        fetchMethods();
+    }, []);
+
+    const fetchMethods = async () => {
+        try {
+            const res = await api.getPaymentMethods();
+            setPaymentMethods(res.payment_methods || []);
+        } catch (err) {
+            console.error('Error fetching methods:', err);
+        } finally {
+            setFetchingMethods(false);
+        }
+    };
+
+    const primaryMethod = paymentMethods.find(m => m.is_primary);
 
     const handleWithdraw = async () => {
         const numAmount = Number(amount);
         const amountCents = numAmount * 100;
 
-        if (!amount || isNaN(numAmount) || numAmount < 10) {
-            setError('Minimum withdrawal is KES 10');
+        if (!amount || isNaN(numAmount) || numAmount < 100) {
+            setError('Minimum withdrawal is KES 100');
             return;
         }
 
@@ -734,10 +764,37 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
                         </div>
                     </div>
 
+                    <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Payout Destination</label>
+                        {fetchingMethods ? (
+                            <div className="p-4 border border-gray-200 rounded-xl flex items-center justify-center">
+                                <Loader2 className="animate-spin text-gray-400" size={20} />
+                            </div>
+                        ) : primaryMethod ? (
+                            <div className="p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+                                    <Smartphone size={20} />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold text-gray-900">{primaryMethod.method_type === 'mpesa' ? 'M-Pesa' : primaryMethod.method_type === 'airtel_money' ? 'Airtel Money' : 'Bank Transfer'}</p>
+                                    <p className="text-xs text-gray-500">{primaryMethod.phone_display || primaryMethod.phone_number || primaryMethod.account_number}</p>
+                                </div>
+                                <Link to="/payment-methods" className="ml-auto text-xs font-bold text-indigo-600 hover:underline">Change</Link>
+                            </div>
+                        ) : (
+                            <div className="p-4 border border-red-100 bg-red-50 rounded-xl">
+                                <p className="text-sm text-red-700 font-medium mb-2">No withdrawal method set!</p>
+                                <Link to="/payment-methods" className="inline-flex items-center gap-2 text-xs font-bold text-white bg-red-600 px-3 py-2 rounded-lg hover:bg-red-700">
+                                    <Plus size={14} /> Add Payment Method
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+
                     <div className="bg-yellow-50 p-4 rounded-xl flex items-start gap-3">
                         <Clock className="text-yellow-600 shrink-0 mt-0.5" size={20} />
                         <p className="text-sm text-yellow-800">
-                            Withdrawals are processed within 24-48 hours to your registered payment method.
+                            Minimum withdrawal is <strong>KES 100</strong>. Withdrawals are processed within 24-48 hours to your registered payment method.
                         </p>
                     </div>
                 </div>
@@ -751,10 +808,18 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
                     </button>
                     <button
                         onClick={handleWithdraw}
-                        disabled={loading || !amount}
+                        disabled={loading || !amount || !primaryMethod || fetchingMethods}
                         className="flex-1 py-2.5 px-4 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
-                        {loading ? 'Processing...' : `Withdraw ${amount ? formatPrice(Number(amount) * 100) : ''}`}
+                        {loading ? (
+                            <>
+                                <Loader2 className="animate-spin" size={18} /> Processing...
+                            </>
+                        ) : (
+                            <>
+                                <ArrowUpRight size={18} /> Withdraw {amount ? formatPrice(Number(amount) * 100) : ''}
+                            </>
+                        )}
                     </button>
                 </div>
             </motion.div>

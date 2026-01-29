@@ -359,6 +359,205 @@ class ApiService {
   async verifyWalletDeposit(reference) {
     return this.request(`/v2/wallet/deposit/verify/${reference}`);
   }
+
+  // Open Campaigns (Bidding System)
+  async createOpenCampaign(data) {
+    return this.request('/v2/open-campaigns', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getOpenCampaigns(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/v2/open-campaigns${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getOpenCampaign(campaignId) {
+    return this.request(`/v2/open-campaigns/${campaignId}`);
+  }
+
+  async closeCampaign(campaignId) {
+    return this.request(`/v2/open-campaigns/${campaignId}/close`, {
+      method: 'PATCH',
+    });
+  }
+
+  // Bids
+  async submitBid(campaignId, bidData) {
+    return this.request(`/v2/open-campaigns/${campaignId}/bids`, {
+      method: 'POST',
+      body: JSON.stringify(bidData),
+    });
+  }
+
+  async withdrawBid(campaignId, bidId) {
+    return this.request(`/v2/open-campaigns/${campaignId}/bids/${bidId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async acceptBid(campaignId, bidId) {
+    return this.request(`/v2/open-campaigns/${campaignId}/bids/${bidId}/accept`, {
+      method: 'POST',
+    });
+  }
+
+  async rejectBid(campaignId, bidId, reason = '') {
+    return this.request(`/v2/open-campaigns/${campaignId}/bids/${bidId}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
+
+  async getMyBids(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/v2/open-campaigns/my-bids${queryString ? `?${queryString}` : ''}`);
+  }
+
+  // ============ Campaign Content Generation ============
+
+  async getInfluencerCampaigns() {
+    return this.request('/v2/campaign-content/my-campaigns');
+  }
+
+  async getAvailableTrends(limit = 20) {
+    return this.request(`/v2/campaign-content/trends?limit=${limit}`);
+  }
+
+  async generateCampaignContent(data) {
+    return this.request('/v2/campaign-content/generate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getMyGeneratedContent(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/v2/campaign-content/my-content${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getCampaignContentDetail(contentId) {
+    return this.request(`/v2/campaign-content/${contentId}`);
+  }
+
+  async submitContentForApproval(contentId) {
+    return this.request(`/v2/campaign-content/${contentId}/submit`, {
+      method: 'POST',
+    });
+  }
+
+  async approveContent(contentId, feedback = null) {
+    return this.request(`/v2/campaign-content/${contentId}/approve`, {
+      method: 'POST',
+      body: feedback ? JSON.stringify(feedback) : null,
+    });
+  }
+
+  async deleteGeneratedContent(contentId) {
+    return this.request(`/v2/campaign-content/${contentId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // ============ Proof of Work ============
+
+  async submitProofOfWork(data) {
+    return this.request('/v2/proof-of-work/submit', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getMyProofSubmissions(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/v2/proof-of-work/my-submissions${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getPendingProofReviews() {
+    return this.request('/v2/proof-of-work/pending-reviews');
+  }
+
+  async getProofDetail(proofId) {
+    return this.request(`/v2/proof-of-work/${proofId}`);
+  }
+
+  async reviewProofOfWork(proofId, data) {
+    return this.request(`/v2/proof-of-work/${proofId}/review`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getMinimumWithdrawal() {
+    return this.request('/v2/proof-of-work/config/minimum-withdrawal');
+  }
+
+  // ============ Payment Methods ============
+
+  async getPaymentMethods() {
+    return this.request('/v2/payment-methods');
+  }
+
+  async createPaymentMethod(data) {
+    return this.request('/v2/payment-methods', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updatePaymentMethod(methodId, data) {
+    return this.request(`/v2/payment-methods/${methodId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async setPaymentMethodPrimary(methodId) {
+    return this.request(`/v2/payment-methods/${methodId}/set-primary`, {
+      method: 'POST',
+    });
+  }
+
+  async deletePaymentMethod(methodId) {
+    return this.request(`/v2/payment-methods/${methodId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // ============ Admin Withdrawals ============
+
+  async getPendingWithdrawals(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/v2/admin/withdrawals/pending${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getWithdrawalHistory(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/v2/admin/withdrawals/history${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getWithdrawalDetail(withdrawalId) {
+    return this.request(`/v2/admin/withdrawals/${withdrawalId}`);
+  }
+
+  async processWithdrawal(withdrawalId, data) {
+    return this.request(`/v2/admin/withdrawals/${withdrawalId}/process`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async rejectWithdrawal(withdrawalId, reason) {
+    return this.request(`/v2/admin/withdrawals/${withdrawalId}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
+
+  async getWithdrawalStats() {
+    return this.request('/v2/admin/withdrawals/stats/summary');
+  }
 }
 
 

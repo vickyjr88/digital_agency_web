@@ -9,10 +9,11 @@ import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
-import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase } from 'lucide-react';
+import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import AdminWithdrawals from './AdminWithdrawals';
 
 export default function AdminDashboard({ defaultTab = 'overview', children }) {
     const [loading, setLoading] = useState(true);
@@ -180,6 +181,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 <button onClick={() => { setActiveTab('campaigns'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'campaigns' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Target size={20} /> Campaigns
                 </button>
+                <button onClick={() => { setActiveTab('withdrawals'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'withdrawals' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <ArrowUpRight size={20} /> Withdrawals
+                </button>
             </nav>
 
             <div className="p-4 border-t border-gray-100">
@@ -273,6 +277,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                 {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
                                 {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
                                 {activeTab === 'analytics' && data.analytics && <AnalyticsDashboard data={data.analytics} formatPrice={formatPrice} />}
+                                {activeTab === 'withdrawals' && <AdminWithdrawals />}
                             </div>
                         </div>
                     )

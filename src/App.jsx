@@ -29,6 +29,23 @@ import BrandDashboard from './pages/Brand/BrandDashboard';
 import Wallet from './pages/Wallet/Wallet';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 
+// Open Campaigns (Bidding System)
+import CreateCampaign from './pages/OpenCampaigns/CreateCampaign';
+import OpenCampaignsList from './pages/OpenCampaigns/OpenCampaignsList';
+import OpenCampaignDetail from './pages/OpenCampaigns/OpenCampaignDetail';
+import ContentGenerator from './pages/OpenCampaigns/ContentGenerator';
+
+// Proof of Work
+import SubmitProof from './pages/ProofOfWork/SubmitProof';
+import MySubmissions from './pages/ProofOfWork/MySubmissions';
+import ReviewProof from './pages/ProofOfWork/ReviewProof';
+
+// Wallet & Payments
+import PaymentMethods from './pages/Wallet/PaymentMethods';
+
+// Admin
+import AdminWithdrawals from './pages/Admin/AdminWithdrawals';
+
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -278,10 +295,63 @@ function App() {
               </ProtectedRoute>
             } />
 
+            {/* Open Campaigns (Bidding System) */}
+            <Route path="/campaigns/create" element={
+              <ProtectedRoute>
+                <Layout><CreateCampaign /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaigns/open" element={
+              <ProtectedRoute>
+                <Layout><OpenCampaignsList /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaigns/open/:campaignId" element={
+              <ProtectedRoute>
+                <Layout><OpenCampaignDetail /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/content/generate" element={
+              <ProtectedRoute>
+                <Layout><ContentGenerator /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Proof of Work */}
+            <Route path="/proof-of-work/submit" element={
+              <ProtectedRoute>
+                <Layout><SubmitProof /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/proof-of-work/my-submissions" element={
+              <ProtectedRoute>
+                <Layout><MySubmissions /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/proof-of-work/review" element={
+              <ProtectedRoute>
+                <Layout><ReviewProof /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Payment Methods */}
+            <Route path="/payment-methods" element={
+              <ProtectedRoute>
+                <Layout><PaymentMethods /></Layout>
+              </ProtectedRoute>
+            } />
+
             {/* Brand Dashboard */}
             <Route path="/brand-dashboard" element={
               <ProtectedRoute>
                 <MinimalLayout><BrandDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Admin Withdrawals */}
+            <Route path="/admin/withdrawals" element={
+              <ProtectedRoute>
+                <Layout><AdminWithdrawals /></Layout>
               </ProtectedRoute>
             } />
 
