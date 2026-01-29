@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star } from 'lucide-react';
+import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star, Target, Mail, FileText } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
 import ProfileSettings from '../../features/profile/ProfileSettings';
@@ -136,6 +136,56 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 					<Settings size={20} />
 					Profile
 				</button>
+
+				<>
+					<div className="pt-4 pb-2 px-4">
+						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Campaigns</span>
+					</div>
+					<button
+						onClick={() => {
+							navigate('/campaigns/create');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/create' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+							}`}
+					>
+						<Plus size={20} />
+						Start Campaign
+					</button>
+					<button
+						onClick={() => {
+							navigate('/my-campaigns');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-campaigns' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+							}`}
+					>
+						<Target size={20} />
+						My Campaigns
+					</button>
+					<button
+						onClick={() => {
+							navigate('/campaign-invites');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaign-invites' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+							}`}
+					>
+						<Mail size={20} />
+						Invites
+					</button>
+					<button
+						onClick={() => {
+							navigate('/my-bids');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-bids' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+							}`}
+					>
+						<FileText size={20} />
+						My Bids
+					</button>
+				</>
 
 				{user?.user_type === 'influencer' && (
 					<>

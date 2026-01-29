@@ -1,8 +1,3 @@
-/**
- * Admin Dashboard
- * Management interface for platform administrators
- */
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
@@ -14,6 +9,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import AdminWithdrawals from './AdminWithdrawals';
+import AdminSubscriptionTransactions from './AdminSubscriptionTransactions';
+import AdminWalletTransactions from './AdminWalletTransactions';
 
 export default function AdminDashboard({ defaultTab = 'overview', children }) {
     const [loading, setLoading] = useState(true);
@@ -44,6 +41,8 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
 
     useEffect(() => {
         if (!children) {
+            // Only fetch data if the tab requires data loading at this level
+            if (activeTab === 'subscriptions' || activeTab === 'wallet_transactions') return;
             fetchAdminData();
         }
     }, [activeTab, children]);
@@ -171,6 +170,19 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 </button>
 
                 <div className="px-4 py-2 border-b border-gray-100 mb-2 mt-4">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Financials</span>
+                </div>
+                <button onClick={() => { setActiveTab('subscriptions'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'subscriptions' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Clock size={20} /> Subscription Txs
+                </button>
+                <button onClick={() => { setActiveTab('wallet_transactions'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet_transactions' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Briefcase size={20} /> Wallet Txs
+                </button>
+                <button onClick={() => { setActiveTab('withdrawals'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'withdrawals' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <ArrowUpRight size={20} /> Withdrawals
+                </button>
+
+                <div className="px-4 py-2 border-b border-gray-100 mb-2 mt-4">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Marketplace</span>
                 </div>
 
@@ -182,9 +194,6 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 </button>
                 <button onClick={() => { setActiveTab('campaigns'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'campaigns' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Target size={20} /> Campaigns
-                </button>
-                <button onClick={() => { setActiveTab('withdrawals'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'withdrawals' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
-                    <ArrowUpRight size={20} /> Withdrawals
                 </button>
             </nav>
 
@@ -205,86 +214,90 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans">
-            {/* Mobile Header */}
-            <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 px-4 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
-                        A
-                    </div>
-                    <span className="text-xl font-bold text-gray-900">Admin</span>
-                </div>
-                <button
-                    onClick={() => setMobileSidebarOpen(true)}
-                    className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-                >
-                    <Menu size={24} />
-                </button>
-            </div>
-
+        <div className="min-h-screen bg-gray-50 font-sans flex text-left">
             {/* Desktop Sidebar */}
-            <aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-30 hidden md:flex flex-col">
+            <aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-100 z-30 hidden md:flex flex-col h-screen">
                 <SidebarContent />
             </aside>
 
-            {/* Mobile Sidebar Overlay */}
-            <AnimatePresence>
-                {mobileSidebarOpen && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/50 z-40 md:hidden"
-                            onClick={closeMobileSidebar}
-                        />
-                        <motion.aside
-                            initial={{ x: '-100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '-100%' }}
-                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col md:hidden"
-                        >
-                            <SidebarContent isMobile />
-                        </motion.aside>
-                    </>
-                )}
-            </AnimatePresence>
+            <div className="flex-1 flex flex-col md:pl-64 min-h-screen transition-all duration-300">
+                {/* Mobile Header */}
+                <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 h-16 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+                            A
+                        </div>
+                        <span className="text-xl font-bold text-gray-900">Admin</span>
+                    </div>
+                    <button
+                        onClick={() => setMobileSidebarOpen(true)}
+                        className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                    >
+                        <Menu size={24} />
+                    </button>
+                </div>
 
-            {/* Main Content Area */}
-            <main className="md:ml-64 pt-16 md:pt-0 p-4 sm:p-6 md:p-8">
-                {children ? (
-                    children
-                ) : (
-                    loading ? (
-                        <div className="loading-state py-20 flex flex-col items-center justify-center h-[50vh]">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
-                            <p className="text-gray-500 font-medium">Loading data...</p>
-                        </div>
+                {/* Mobile Sidebar Overlay */}
+                <AnimatePresence>
+                    {mobileSidebarOpen && (
+                        <>
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 bg-black/50 z-50 md:hidden"
+                                onClick={closeMobileSidebar}
+                            />
+                            <motion.aside
+                                initial={{ x: '-100%' }}
+                                animate={{ x: 0 }}
+                                exit={{ x: '-100%' }}
+                                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                                className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col md:hidden"
+                            >
+                                <SidebarContent isMobile />
+                            </motion.aside>
+                        </>
+                    )}
+                </AnimatePresence>
+
+                {/* Main Content Area */}
+                <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
+                    {children ? (
+                        children
                     ) : (
-                        <div className="max-w-7xl mx-auto animate-in fade-in duration-300">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-bold capitalize text-gray-900">{activeTab} Management</h2>
-                                <button onClick={fetchAdminData} className="p-2 hover:bg-gray-200 rounded-lg text-gray-500 transition-colors" title="Reload Data">
-                                    <span className="text-xl">↻</span>
-                                </button>
+                        loading ? (
+                            <div className="loading-state py-20 flex flex-col items-center justify-center h-[50vh]">
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+                                <p className="text-gray-500 font-medium">Loading data...</p>
                             </div>
-                            <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${['analytics', 'overview'].includes(activeTab) ? '' : 'overflow-hidden'}`}>
-                                {activeTab === 'overview' && <OverviewDashboard stats={data.stats} latest={data.latest} navigate={navigate} />}
-                                {activeTab === 'users' && <UserManagement users={data.users} onFund={(user) => { setFundingUser(user); setShowFundModal(true); }} />}
-                                {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
-                                {activeTab === 'content' && <ContentManagement content={data.content} />}
-                                {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
-                                {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
-                                {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
-                                {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
-                                {activeTab === 'analytics' && data.analytics && <AnalyticsDashboard data={data.analytics} formatPrice={formatPrice} />}
-                                {activeTab === 'withdrawals' && <AdminWithdrawals />}
+                        ) : (
+                            <div className="max-w-7xl mx-auto animate-in fade-in duration-300">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-2xl font-bold capitalize text-gray-900">{activeTab} Management</h2>
+                                    <button onClick={fetchAdminData} className="p-2 hover:bg-gray-200 rounded-lg text-gray-500 transition-colors" title="Reload Data">
+                                        <span className="text-xl">↻</span>
+                                    </button>
+                                </div>
+                                <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${['analytics', 'overview'].includes(activeTab) ? '' : 'overflow-hidden'}`}>
+                                    {activeTab === 'overview' && <OverviewDashboard stats={data.stats} latest={data.latest} navigate={navigate} />}
+                                    {activeTab === 'users' && <UserManagement users={data.users} onFund={(user) => { setFundingUser(user); setShowFundModal(true); }} />}
+                                    {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
+                                    {activeTab === 'content' && <ContentManagement content={data.content} />}
+                                    {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
+                                    {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
+                                    {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
+                                    {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
+                                    {activeTab === 'analytics' && data.analytics && <AnalyticsDashboard data={data.analytics} formatPrice={formatPrice} />}
+                                    {activeTab === 'subscriptions' && <AdminSubscriptionTransactions />}
+                                    {activeTab === 'wallet_transactions' && <AdminWalletTransactions />}
+                                    {activeTab === 'withdrawals' && <AdminWithdrawals />}
+                                </div>
                             </div>
-                        </div>
-                    )
-                )}
-            </main>
+                        )
+                    )}
+                </main>
+            </div>
 
             {/* Manual Fund Modal */}
             <AnimatePresence>

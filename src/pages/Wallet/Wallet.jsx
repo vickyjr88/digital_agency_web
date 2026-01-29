@@ -704,7 +704,7 @@ function WithdrawModal({ availableBalance, onClose, onSuccess, formatPrice }) {
         setError('');
 
         try {
-            await walletApi.withdraw(numAmount); // API handles KES to cents? Let's check.
+            await walletApi.withdraw(numAmount, primaryMethod?.method_type); // Pass the correct payment method
             onSuccess();
         } catch (err) {
             setError(err.message || 'Failed to request withdrawal');

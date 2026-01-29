@@ -558,6 +558,13 @@ class ApiService {
   async getWithdrawalStats() {
     return this.request('/v2/admin/withdrawals/stats/summary');
   }
+
+  // ============ Admin Financials ============
+
+  async getAdminOrders(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/admin/orders?${queryString}`);
+  }
 }
 
 

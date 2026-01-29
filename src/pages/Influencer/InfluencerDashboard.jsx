@@ -9,7 +9,7 @@ import { influencerApi, packageApi, campaignApi, walletApi } from '../../service
 import InfluencerProfileSettings from './InfluencerProfileSettings';
 import './InfluencerDashboard.css';
 
-export default function InfluencerDashboard() {
+export default function InfluencerDashboard({ defaultTab: propDefaultTab }) {
     const location = useLocation();
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState(null);
@@ -18,8 +18,11 @@ export default function InfluencerDashboard() {
     const [campaigns, setCampaigns] = useState([]);
     const [wallet, setWallet] = useState(null);
     const [activeTab, setActiveTab] = useState(
-        location.pathname === '/influencer/profile' ? 'profile' :
-            location.pathname === '/influencer/packages' ? 'packages' : 'overview'
+        propDefaultTab ||
+        (location.pathname === '/influencer/profile' ? 'profile' :
+            location.pathname === '/influencer/packages' ? 'packages' :
+                location.pathname === '/campaign-invites' || location.pathname === '/my-bids' ? 'campaigns' :
+                    'overview')
     );
     const [welcomeMessage, setWelcomeMessage] = useState(location.state?.message || null);
 

@@ -90,17 +90,17 @@ export default function BrandDetails() {
 		<div className="bg-gray-50 p-8 font-sans min-h-full">
 			<div className="max-w-6xl mx-auto">
 				<div className="mb-8">
-					<div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
-						<div className="flex gap-4">
-							<div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">
+					<div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+						<div className="flex gap-4 w-full md:w-auto">
+							<div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md shrink-0">
 								{brand.name[0]}
 							</div>
 							<div>
-								<h1 className="text-2xl font-bold text-gray-900">{brand.name}</h1>
+								<h1 className="text-2xl font-bold text-gray-900 break-words">{brand.name}</h1>
 								<p className="text-gray-500 mt-1">
 									{brand.industry} • {brand.voice} Voice
 								</p>
-								<div className="flex gap-2 mt-3">
+								<div className="flex gap-2 mt-3 flex-wrap">
 									{brand.hashtags?.map((tag) => (
 										<span key={tag} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md">
 											{tag}
@@ -109,10 +109,10 @@ export default function BrandDetails() {
 								</div>
 							</div>
 						</div>
-						<div className="flex gap-2">
+						<div className="flex gap-2 w-full md:w-auto">
 							<button
 								onClick={handleOpenGenerateModal}
-								className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+								className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm whitespace-nowrap"
 							>
 								<RefreshCw size={18} />
 								Generate New Content

@@ -301,6 +301,24 @@ function App() {
                 <Layout><CreateCampaign /></Layout>
               </ProtectedRoute>
             } />
+
+            {/* Direct Links for Sidebar */}
+            <Route path="/my-campaigns" element={
+              <ProtectedRoute>
+                <MinimalLayout><BrandDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaign-invites" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-bids" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
+              </ProtectedRoute>
+            } />
+
             <Route path="/campaigns/open" element={
               <ProtectedRoute>
                 <Layout><OpenCampaignsList /></Layout>
