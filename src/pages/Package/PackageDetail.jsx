@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { packageApi, campaignApi, walletApi, brandApi } from '../../services/marketplaceApi';
+import { packageApi, campaignApi, walletApi, brandApi, getConfig } from '../../services/marketplaceApi';
 import { useAuth } from '../../context/AuthContext';
 import './PackageDetail.css';
 
@@ -48,7 +48,7 @@ export default function PackageDetail() {
                         console.error('Wallet fetch failed:', err);
                         return null;
                     }),
-                    packageApi.getConfig().catch(err => {
+                    getConfig().catch(err => {
                         console.error('Config fetch failed:', err);
                         return { platform_fee_percent: 15 };
                     })

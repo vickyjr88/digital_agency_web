@@ -87,6 +87,15 @@ export const influencerApi = {
 
 
 // ============================================================================
+// MARKETPLACE CONFIG API
+// ============================================================================
+
+export const getConfig = async () => {
+    const { api } = await import('./api');
+    return api.request('/v2/config');
+};
+
+// ============================================================================
 // PACKAGE API METHODS
 // ============================================================================
 
@@ -165,6 +174,9 @@ export const packageApi = {
         const queryString = new URLSearchParams(params).toString();
         return api.request(`/v2/packages/admin?${queryString}`);
     },
+
+    // Get marketplace config
+    getConfig,
 };
 
 
@@ -449,8 +461,5 @@ export default {
     review: reviewApi,
     notification: notificationApi,
     brand: brandApi,
-    getConfig: async () => {
-        const { api } = await import('./api');
-        return api.request('/v2/config');
-    },
+    getConfig,
 };
