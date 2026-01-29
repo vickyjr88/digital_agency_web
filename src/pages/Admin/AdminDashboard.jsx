@@ -9,12 +9,12 @@ import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
-import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp } from 'lucide-react';
+import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 
-export default function AdminDashboard({ defaultTab = 'users', children }) {
+export default function AdminDashboard({ defaultTab = 'overview', children }) {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState(defaultTab);
     const [data, setData] = useState({
@@ -25,7 +25,9 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
         influencers: [],
         packages: [],
         campaigns: [],
-        analytics: null
+        analytics: null,
+        stats: null,
+        latest: null
     });
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     const { logout } = useAuth();
@@ -74,6 +76,12 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
                     api.getUserGrowthChart()
                 ]);
                 setData(d => ({ ...d, analytics: { ...dashboard, revenueChart: revenue, userChart: users } }));
+            } else if (activeTab === 'overview') {
+                const [stats, latest] = await Promise.all([
+                    api.getAdminStats(),
+                    api.request('/admin/latest')
+                ]);
+                setData(d => ({ ...d, stats, latest }));
             }
         } catch (error) {
             console.error('Error fetching admin data:', error);
@@ -140,6 +148,9 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Core Platform</span>
                 </div>
 
+                <button onClick={() => { setActiveTab('overview'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Shield size={20} /> Overview
+                </button>
                 <button onClick={() => { setActiveTab('users'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Users size={20} /> Users
                 </button>
@@ -252,7 +263,8 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
                                     <span className="text-xl">↻</span>
                                 </button>
                             </div>
-                            <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${activeTab === 'analytics' ? '' : 'overflow-hidden'}`}>
+                            <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${['analytics', 'overview'].includes(activeTab) ? '' : 'overflow-hidden'}`}>
+                                {activeTab === 'overview' && <OverviewDashboard stats={data.stats} latest={data.latest} navigate={navigate} />}
                                 {activeTab === 'users' && <UserManagement users={data.users} />}
                                 {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
                                 {activeTab === 'content' && <ContentManagement content={data.content} />}
@@ -517,6 +529,141 @@ function CampaignManagement({ campaigns, formatPrice }) {
                     {campaigns.length === 0 && <tr><td colSpan="5" className="p-8 text-center text-gray-500 italic">No campaigns found</td></tr>}
                 </tbody>
             </table>
+        </div>
+    );
+}
+
+function OverviewDashboard({ stats, latest, navigate }) {
+    if (!stats) return <div className="p-8 text-center text-gray-500">Loading overview...</div>;
+
+    return (
+        <div className="p-6 space-y-8">
+            {/* Financial Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <StatsCard icon={Shield} title="Total Revenue" value={stats?.total_revenue} color="bg-green-50 text-green-600" />
+                <StatsCard icon={Shield} title="Active Subscriptions" value={stats?.active_subscriptions} color="bg-indigo-50 text-indigo-600" />
+                <StatsCard icon={Clock} title="Pending Transactions" value={stats?.pending_transactions} color="bg-yellow-50 text-yellow-600" />
+            </div>
+
+            {/* Usage Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatsCard icon={Users} title="Total Users" value={stats?.users} color="bg-blue-50 text-blue-600" />
+                <StatsCard icon={Briefcase} title="Total Brands" value={stats?.brands} color="bg-purple-50 text-purple-600" />
+                <StatsCard icon={TrendingUp} title="Total Trends" value={stats?.trends} color="bg-teal-50 text-teal-600" />
+                <StatsCard icon={FileText} title="Content Generated" value={stats?.content_generated} color="bg-orange-50 text-orange-600" />
+            </div>
+
+            {/* Recent Transactions Table */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                        <Clock size={18} className="text-gray-400" />
+                        Recent Transactions
+                    </h3>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                        <thead className="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Date</th>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">User</th>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Amount</th>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-50">
+                            {stats?.recent_transactions?.map(tx => (
+                                <tr key={tx.id}>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{new Date(tx.created_at).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-900">{tx.user_email}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">{tx.currency} {tx.amount}</td>
+                                    <td className="px-6 py-4">
+                                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${tx.status === 'success' ? 'bg-green-100 text-green-700' : tx.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
+                                            {tx.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                            {(!stats?.recent_transactions || stats?.recent_transactions.length === 0) && (
+                                <tr>
+                                    <td colSpan="4" className="px-6 py-8 text-center text-sm text-gray-500 italic">No recent transactions</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* Latest Activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <LatestSection title="Latest Users" icon={Users} items={latest?.users} renderItem={user => (
+                    <div key={user.id} className="flex justify-between items-center py-3 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 px-2 -mx-2 rounded-lg transition-colors" onClick={() => navigate(`/admin/user/${user.id}`)}>
+                        <div>
+                            <p className="font-medium text-sm text-gray-900">{user.name}</p>
+                            <p className="text-xs text-gray-500">{user.email}</p>
+                        </div>
+                        <span className="text-xs text-gray-400">{new Date(user.created_at).toLocaleDateString()}</span>
+                    </div>
+                )} />
+
+                <LatestSection title="Latest Brands" icon={Briefcase} items={latest?.brands} renderItem={brand => (
+                    <div key={brand.id} className="flex justify-between items-center py-3 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 px-2 -mx-2 rounded-lg transition-colors" onClick={() => navigate(`/brand/${brand.id}`)}>
+                        <div>
+                            <p className="font-medium text-sm text-gray-900">{brand.name}</p>
+                            <p className="text-xs text-gray-500">{brand.industry}</p>
+                        </div>
+                        <span className="text-xs text-gray-400">{new Date(brand.created_at).toLocaleDateString()}</span>
+                    </div>
+                )} />
+
+                <LatestSection title="Latest Trends" icon={TrendingUp} items={latest?.trends} renderItem={trend => (
+                    <div key={trend.id} className="flex justify-between items-center py-3 border-b border-gray-50 last:border-0">
+                        <div className="flex-1 min-w-0 pr-4">
+                            <p className="font-medium text-sm text-gray-900 truncate">{trend.topic}</p>
+                            <p className="text-xs text-gray-500">{trend.source}</p>
+                        </div>
+                        <span className="text-xs text-gray-400 whitespace-nowrap">{new Date(trend.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                )} />
+
+                <LatestSection title="Latest Content" icon={FileText} items={latest?.content} renderItem={content => (
+                    <div key={content.id} className="flex justify-between items-center py-3 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 px-2 -mx-2 rounded-lg transition-colors" onClick={() => navigate(`/dashboard/content/${content.id}/edit`, { state: { item: content } })}>
+                        <div className="flex-1 min-w-0 pr-4">
+                            <p className="font-medium text-sm text-gray-900 truncate">{content.trend}</p>
+                            <p className="text-xs text-gray-500 capitalize">{content.status}</p>
+                        </div>
+                        <span className="text-xs text-gray-400 whitespace-nowrap">{new Date(content.generated_at).toLocaleTimeString()}</span>
+                    </div>
+                )} />
+            </div>
+        </div>
+    );
+}
+
+function StatsCard({ icon: Icon, title, value, color }) {
+    return (
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+            <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${color}`}>
+                <Icon size={24} />
+            </div>
+            <div>
+                <p className="text-sm text-gray-500 font-medium">{title}</p>
+                <p className="text-2xl font-bold text-gray-900">{value ?? '-'}</p>
+            </div>
+        </div>
+    );
+}
+
+function LatestSection({ title, icon: Icon, items, renderItem }) {
+    return (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+                <Icon size={18} className="text-gray-400" />
+                <h3 className="font-bold text-gray-900">{title}</h3>
+            </div>
+            <div className="px-6 py-2">
+                {items?.length > 0 ? items.map(renderItem) : <p className="py-4 text-sm text-gray-500 text-center">No activity yet</p>}
+            </div>
         </div>
     );
 }
