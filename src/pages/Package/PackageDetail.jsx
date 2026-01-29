@@ -12,7 +12,7 @@ import './PackageDetail.css';
 export default function PackageDetail() {
     const { packageId } = useParams();
     const navigate = useNavigate();
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated, loading: authLoading } = useAuth();
     const [loading, setLoading] = useState(true);
     const [pkg, setPkg] = useState(null);
     const [influencer, setInfluencer] = useState(null);
@@ -23,7 +23,7 @@ export default function PackageDetail() {
 
     useEffect(() => {
         fetchPackageData();
-    }, [packageId]);
+    }, [packageId, isAuthenticated, authLoading]);
 
     const fetchPackageData = async () => {
         setLoading(true);
@@ -41,13 +41,23 @@ export default function PackageDetail() {
             setInfluencer(response.influencer);
 
             // Fetch wallet balance if authenticated
-            if (isAuthenticated) {
+            if (isAuthenticated && !authLoading) {
+                console.log('User is authenticated, fetching wallet...');
                 const [walletRes, configRes] = await Promise.all([
-                    walletApi.getBalance().catch(() => null),
-                    packageApi.getConfig().catch(() => ({ platform_fee_percent: 15 }))
+                    walletApi.getBalance().catch(err => {
+                        console.error('Wallet fetch failed:', err);
+                        return null;
+                    }),
+                    packageApi.getConfig().catch(err => {
+                        console.error('Config fetch failed:', err);
+                        return { platform_fee_percent: 15 };
+                    })
                 ]);
+                console.log('Wallet Response:', walletRes);
                 setWallet(walletRes);
                 if (configRes) setConfig(configRes);
+            } else {
+                console.log('Not fetching wallet: isAuthenticated=', isAuthenticated, 'authLoading=', authLoading);
             }
         } catch (err) {
             console.error('Error fetching package:', err);
@@ -331,7 +341,8 @@ export default function PackageDetail() {
 }
 
 // Booking Modal Component
-function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, onSuccess }) {
+function BookingModal({ pkg, influencer, wallet: initialWallet, config, formatPrice, onClose, onSuccess }) {
+    const [wallet, setWallet] = useState(initialWallet);
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -351,7 +362,19 @@ function BookingModal({ pkg, influencer, wallet, config, formatPrice, onClose, o
 
     useEffect(() => {
         fetchBrands();
+        fetchWallet();
     }, []);
+
+    const fetchWallet = async () => {
+        try {
+            console.log('Modal fetching fresh wallet balance...');
+            const data = await walletApi.getBalance();
+            console.log('Modal wallet data:', data);
+            setWallet(data);
+        } catch (err) {
+            console.error('Error fetching wallet inside modal:', err);
+        }
+    };
 
     const fetchBrands = async () => {
         setFetchingBrands(true);
