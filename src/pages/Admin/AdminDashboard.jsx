@@ -4,11 +4,14 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
+import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboard({ defaultTab = 'users', children }) {
     const [loading, setLoading] = useState(true);
@@ -22,10 +25,21 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
         packages: [],
         campaigns: []
     });
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchAdminData();
-    }, [activeTab]);
+        if (!children) {
+            setActiveTab(defaultTab);
+        }
+    }, [defaultTab, children]);
+
+    useEffect(() => {
+        if (!children) {
+            fetchAdminData();
+        }
+    }, [activeTab, children]);
 
     const fetchAdminData = async () => {
         setLoading(true);
@@ -79,82 +93,161 @@ export default function AdminDashboard({ defaultTab = 'users', children }) {
         }).format((price || 0) / 100);
     };
 
-    const TabButton = ({ name, label, icon }) => (
-        <button
-            className={activeTab === name ? 'active' : ''}
-            onClick={() => setActiveTab(name)}
-        >
-            <span className="text-lg">{icon}</span> {label}
-        </button>
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
+    const closeMobileSidebar = () => setMobileSidebarOpen(false);
+
+    const SidebarContent = ({ isMobile = false }) => (
+        <>
+            <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                    <Link to="/dashboard" className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+                            A
+                        </div>
+                        <span className="text-xl font-bold text-gray-900">Admin</span>
+                    </Link>
+                    {isMobile && (
+                        <button
+                            onClick={closeMobileSidebar}
+                            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                        >
+                            <X size={24} />
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
+                <div className="px-4 py-2 border-b border-gray-100 mb-2">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Core Platform</span>
+                </div>
+
+                <button onClick={() => { setActiveTab('users'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Users size={20} /> Users
+                </button>
+                <button onClick={() => { setActiveTab('brands'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Building2 size={20} /> Brands
+                </button>
+                <button onClick={() => { setActiveTab('content'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'content' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <FileText size={20} /> Content
+                </button>
+                <button onClick={() => { setActiveTab('failures'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'failures' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <AlertTriangle size={20} /> Failures/Logs
+                </button>
+
+                <div className="px-4 py-2 border-b border-gray-100 mb-2 mt-4">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Marketplace</span>
+                </div>
+
+                <button onClick={() => { setActiveTab('influencers'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencers' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <UserCheck size={20} /> Influencers
+                </button>
+                <button onClick={() => { setActiveTab('packages'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'packages' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Package size={20} /> Packages
+                </button>
+                <button onClick={() => { setActiveTab('campaigns'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'campaigns' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Target size={20} /> Campaigns
+                </button>
+            </nav>
+
+            <div className="p-4 border-t border-gray-100">
+                <Link to="/dashboard" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors mb-2">
+                    <LayoutDashboard size={20} />
+                    User Dashboard
+                </Link>
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
+                >
+                    <LogOut size={16} />
+                    Sign Out
+                </button>
+            </div>
+        </>
     );
 
     return (
-        <div className="admin-dashboard bg-gray-50 min-h-screen">
-            <header className="dashboard-header bg-white shadow-sm px-8 py-6 sticky top-0 z-20">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">System Administration</h1>
-                    <p className="text-sm text-gray-500 mt-1">Manage users, brands, content, and system health</p>
+        <div className="min-h-screen bg-gray-50 font-sans">
+            {/* Mobile Header */}
+            <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 px-4 h-16 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+                        A
+                    </div>
+                    <span className="text-xl font-bold text-gray-900">Admin</span>
                 </div>
-            </header>
+                <button
+                    onClick={() => setMobileSidebarOpen(true)}
+                    className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                    <Menu size={24} />
+                </button>
+            </div>
 
-            <div className="max-w-[1600px] mx-auto p-6">
-                <div className="flex flex-col md:flex-row gap-6 relative items-start">
-                    {/* Sidebar Navigation */}
-                    <nav className="admin-sidebar md:w-64 flex-shrink-0 bg-white shadow-sm rounded-xl overflow-hidden sticky top-32 self-start">
-                        <div className="p-4 bg-gray-50/50 border-b font-bold text-gray-400 uppercase text-[10px] tracking-wider">Core Platform</div>
-                        <div className="flex flex-col p-2 space-y-1">
-                            <TabButton name="users" label="Users" icon="👥" />
-                            <TabButton name="brands" label="Brands" icon="🏢" />
-                            <TabButton name="content" label="Content" icon="📝" />
-                            <TabButton name="failures" label="Failures/Logs" icon="⚠️" />
+            {/* Desktop Sidebar */}
+            <aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-30 hidden md:flex flex-col">
+                <SidebarContent />
+            </aside>
+
+            {/* Mobile Sidebar Overlay */}
+            <AnimatePresence>
+                {mobileSidebarOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                            onClick={closeMobileSidebar}
+                        />
+                        <motion.aside
+                            initial={{ x: '-100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '-100%' }}
+                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                            className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col md:hidden"
+                        >
+                            <SidebarContent isMobile />
+                        </motion.aside>
+                    </>
+                )}
+            </AnimatePresence>
+
+            {/* Main Content Area */}
+            <main className="md:ml-64 pt-16 md:pt-0 p-4 sm:p-6 md:p-8">
+                {children ? (
+                    children
+                ) : (
+                    loading ? (
+                        <div className="loading-state py-20 flex flex-col items-center justify-center h-[50vh]">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+                            <p className="text-gray-500 font-medium">Loading data...</p>
                         </div>
-
-                        <div className="p-4 bg-gray-50/50 border-b border-t font-bold text-gray-400 uppercase text-[10px] tracking-wider mt-2">Marketplace</div>
-                        <div className="flex flex-col p-2 space-y-1">
-                            <TabButton name="influencers" label="Influencers" icon="🤳" />
-                            <TabButton name="packages" label="Packages" icon="📦" />
-                            <TabButton name="campaigns" label="Campaigns" icon="🎯" />
-                        </div>
-                    </nav>
-
-                    {/* Main Content Area */}
-                    <main className="flex-1 min-w-0 bg-white shadow-sm rounded-xl border border-gray-100">
-                        {!children && (
-                            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/30 rounded-t-xl">
-                                <h2 className="text-lg font-bold capitalize text-gray-800 flex items-center gap-2">
-                                    {activeTab} Management
-                                </h2>
-                                <button onClick={fetchAdminData} className="p-2 hover:bg-gray-200 rounded-lg text-gray-500 transition-colors" title="Refresh">
-                                    <span className="text-lg">↻</span>
+                    ) : (
+                        <div className="max-w-7xl mx-auto animate-in fade-in duration-300">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold capitalize text-gray-900">{activeTab} Management</h2>
+                                <button onClick={fetchAdminData} className="p-2 hover:bg-gray-200 rounded-lg text-gray-500 transition-colors" title="Reload Data">
+                                    <span className="text-xl">↻</span>
                                 </button>
                             </div>
-                        )}
-
-                        <div className="p-6">
-                            {children ? (
-                                children
-                            ) : (
-                                loading ? (
-                                    <div className="loading-state py-20 flex flex-col items-center">
-                                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
-                                        <p className="text-gray-500 font-medium">Loading data...</p>
-                                    </div>
-                                ) : (
-                                    <div className="animate-in fade-in duration-300">
-                                        {activeTab === 'users' && <UserManagement users={data.users} />}
-                                        {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
-                                        {activeTab === 'content' && <ContentManagement content={data.content} />}
-                                        {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
-                                        {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
-                                        {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
-                                        {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
-                                    </div>
-                                )
-                            )}
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                {activeTab === 'users' && <UserManagement users={data.users} />}
+                                {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
+                                {activeTab === 'content' && <ContentManagement content={data.content} />}
+                                {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
+                                {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
+                                {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
+                                {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
+                            </div>
                         </div>
-                    </main>
-                </div>
-            </div>
+                    )
+                )}
+            </main>
         </div>
     );
 }
