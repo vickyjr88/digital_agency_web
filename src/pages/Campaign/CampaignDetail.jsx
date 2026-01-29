@@ -142,7 +142,7 @@ export default function CampaignDetail() {
                         <div className="brief-content">
                             <div className="brief-item">
                                 <span className="label">Brand</span>
-                                <span className="value">{campaign.brief?.brand_name || 'N/A'}</span>
+                                <span className="value">{campaign.brand_entity?.name || campaign.brief?.brand_name || 'N/A'}</span>
                             </div>
                             <div className="brief-item">
                                 <span className="label">Objective</span>
