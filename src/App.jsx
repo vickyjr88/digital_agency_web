@@ -51,7 +51,7 @@ function AdminRoute({ children }) {
       <p>Verifying Admin...</p>
     </div>
   );
-  if (!isAuthenticated || user?.user_type !== 'admin') {
+  if (!isAuthenticated || user?.role !== 'admin') {
     return <Navigate to="/dashboard" />;
   }
   return children;
