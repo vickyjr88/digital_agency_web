@@ -11,29 +11,10 @@ export default function EditContent() {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (state?.item) {
-      // Data provided via navigation state
-      setData(formatContentData(state.item));
-      setLoading(false);
-    } else if (id) {
-      // Fetch from API if direct link/refresh
-      fetchContent(id);
-    }
-  }, [id, state]);
-
-  const fetchContent = async (contentId) => {
-    try {
-      const res = await api.request(`/content/${contentId}`);
-      setData(formatContentData(res));
-    } catch (error) {
-      console.error("Failed to load content", error);
-      toast.error("Could not load content");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [saving, setSaving] = useState(false);
+  const [copied, setCopied] = useState(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [scheduledAt, setScheduledAt] = useState('');
 
   const formatContentData = (item) => ({
     id: item.id,
@@ -47,19 +28,28 @@ export default function EditContent() {
     ScheduledAt: item.scheduled_at || null
   });
 
-  if (loading) return <div className="p-12 text-center">Loading content...</div>;
+  const fetchContent = async (contentId) => {
+    try {
+      const res = await api.request(`/content/${contentId}`);
+      setData(formatContentData(res));
+    } catch (error) {
+      console.error("Failed to load content", error);
+      toast.error("Could not load content");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (!data)
-    return (
-      <div className="p-8">
-        No content found. <button onClick={() => navigate('/dashboard')} className="text-blue-500 underline">Go Back home</button>
-      </div>
-    );
-
-  const [saving, setSaving] = useState(false);
-  const [copied, setCopied] = useState(null);
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [scheduledAt, setScheduledAt] = useState('');
+  useEffect(() => {
+    if (state?.item) {
+      // Data provided via navigation state
+      setData(formatContentData(state.item));
+      setLoading(false);
+    } else if (id) {
+      // Fetch from API if direct link/refresh
+      fetchContent(id);
+    }
+  }, [id, state]);
 
   // Update scheduledAt when data loads
   useEffect(() => {
@@ -93,6 +83,15 @@ export default function EditContent() {
       setSaving(false);
     }
   };
+
+  if (loading) return <div className="p-12 text-center">Loading content...</div>;
+
+  if (!data)
+    return (
+      <div className="p-8">
+        No content found. <button onClick={() => navigate('/dashboard')} className="text-blue-500 underline">Go Back home</button>
+      </div>
+    );
 
   const handleSchedule = async () => {
     if (!scheduledAt) return;
@@ -129,14 +128,7 @@ export default function EditContent() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
-        <header className="flex items-center justify-between mb-8">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Back
-          </button>
+        <header className="flex items-center justify-end mb-8">
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500">
               Generated: {new Date(data.Timestamp).toLocaleDateString()}

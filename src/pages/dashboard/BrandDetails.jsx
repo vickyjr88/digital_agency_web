@@ -90,13 +90,6 @@ export default function BrandDetails() {
 		<div className="bg-gray-50 p-8 font-sans min-h-full">
 			<div className="max-w-6xl mx-auto">
 				<div className="mb-8">
-					<button
-						onClick={() => navigate('/my-brands')}
-						className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-4 transition-colors"
-					>
-						<ArrowLeft size={18} /> Back to Brands
-					</button>
-
 					<div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
 						<div className="flex gap-4">
 							<div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">

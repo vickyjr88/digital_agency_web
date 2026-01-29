@@ -85,13 +85,6 @@ export default function EditBrand() {
     return (
         <div className="bg-gray-50 p-8 font-sans flex justify-center h-full">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl">
-                <button
-                    onClick={() => navigate(`/brand/${id}`)}
-                    className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-6 transition-colors"
-                >
-                    <ArrowLeft size={18} /> Back to Brand
-                </button>
-
                 <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
                     <div className="p-8 border-b border-gray-100 bg-gray-50/50">
                         <div className="flex items-center gap-4">

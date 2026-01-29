@@ -142,34 +142,58 @@ function App() {
                 <Layout><Dashboard defaultTab="profile" /></Layout>
               </ProtectedRoute>
             } />
+            {/* Admin Dashboard */}
             <Route path="/admin" element={
-              <ProtectedRoute>
-                <Layout><Dashboard defaultTab="admin" /></Layout>
-              </ProtectedRoute>
+              <AdminRoute>
+                <Layout><AdminDashboard /></Layout>
+              </AdminRoute>
             } />
+            {/* Admin User Details with Sidebar */}
             <Route path="/admin/user/:id" element={
-              <ProtectedRoute>
-                <Layout><UserDetails /></Layout>
-              </ProtectedRoute>
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard defaultTab="users">
+                    <UserDetails />
+                  </AdminDashboard>
+                </Layout>
+              </AdminRoute>
             } />
+
+            {/* Brand Pages wrapped in Dashboard for Sidebar */}
             <Route path="/dashboard/brands/new" element={
               <ProtectedRoute>
-                <Layout><CreateBrand /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <CreateBrand />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/dashboard/brands/:id" element={
               <ProtectedRoute>
-                <Layout><BrandDetails /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <BrandDetails />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/dashboard/brands/:id/edit" element={
               <ProtectedRoute>
-                <Layout><EditBrand /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <EditBrand />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/dashboard/content/:id/edit" element={
               <ProtectedRoute>
-                <Layout><EditContent /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <EditContent />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/dashboard/billing/callback" element={
@@ -270,19 +294,32 @@ function App() {
 
             {/* Add direct brand routes for public/legacy links */}
             {/* Add direct brand routes for public/legacy links to match user expectation */}
+            {/* Add direct brand routes for public/legacy links to match user expectation */}
             <Route path="/brand/:id" element={
               <ProtectedRoute>
-                <Layout><BrandDetails /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <BrandDetails />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/brand/:id/edit" element={
               <ProtectedRoute>
-                <Layout><EditBrand /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <EditBrand />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/brands/new" element={
               <ProtectedRoute>
-                <Layout><CreateBrand /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <CreateBrand />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
           </Routes>

@@ -10,9 +10,9 @@ import { influencerApi, packageApi, campaignApi } from '../../services/marketpla
 import './AdminDashboard.css';
 import { toast } from 'sonner';
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ defaultTab = 'users', children }) {
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('users');
+    const [activeTab, setActiveTab] = useState(defaultTab);
     const [data, setData] = useState({
         users: [],
         brands: [],
@@ -123,21 +123,25 @@ export default function AdminDashboard() {
                         <button onClick={fetchAdminData} className="p-2 hover:bg-gray-100 rounded-full" title="Refresh">🔄</button>
                     </div>
 
-                    {loading ? (
-                        <div className="loading-state py-12">
-                            <div className="spinner"></div>
-                            <p className="mt-4 text-gray-500">Loading data...</p>
-                        </div>
+                    {children ? (
+                        children
                     ) : (
-                        <>
-                            {activeTab === 'users' && <UserManagement users={data.users} />}
-                            {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
-                            {activeTab === 'content' && <ContentManagement content={data.content} />}
-                            {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
-                            {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
-                            {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
-                            {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
-                        </>
+                        loading ? (
+                            <div className="loading-state py-12">
+                                <div className="spinner"></div>
+                                <p className="mt-4 text-gray-500">Loading data...</p>
+                            </div>
+                        ) : (
+                            <>
+                                {activeTab === 'users' && <UserManagement users={data.users} />}
+                                {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
+                                {activeTab === 'content' && <ContentManagement content={data.content} />}
+                                {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
+                                {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}
+                                {activeTab === 'packages' && <PackageManagement packages={data.packages} formatPrice={formatPrice} />}
+                                {activeTab === 'campaigns' && <CampaignManagement campaigns={data.campaigns} formatPrice={formatPrice} />}
+                            </>
+                        )
                     )}
                 </main>
             </div>
