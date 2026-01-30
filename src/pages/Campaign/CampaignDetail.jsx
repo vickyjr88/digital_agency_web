@@ -277,9 +277,18 @@ export default function CampaignDetail() {
                             <span className="role">Brand</span>
                             <div className="party-info">
                                 <div className="party-avatar">
-                                    {campaign.brand?.name?.charAt(0) || 'B'}
+                                    {campaign.brand_entity?.logo_url ? (
+                                        <img src={campaign.brand_entity.logo_url} alt={campaign.brand_entity.name} />
+                                    ) : (
+                                        (campaign.brand_entity?.name || campaign.brand?.name || 'B').charAt(0)
+                                    )}
                                 </div>
-                                <span className="party-name">{campaign.brand?.name || 'Brand'}</span>
+                                <div className="party-details">
+                                    <span className="party-name">{campaign.brand_entity?.name || campaign.brand?.name || 'Brand'}</span>
+                                    {campaign.brand_entity?.industry && (
+                                        <span className="party-subtext">{campaign.brand_entity.industry}</span>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
@@ -557,7 +566,7 @@ function ActionsCard({ campaign, isInfluencer, onAction, onUpdate }) {
                 </div>
             )}
 
-            {isInfluencer && ['open', 'accepted', 'in_progress', 'revision_requested'].includes(campaign.status) && (
+            {isInfluencer && ['open', 'accepted', 'in_progress', 'revision_requested', 'draft_submitted', 'draft_approved'].includes(campaign.status) && (
                 <>
                     <button className="btn-secondary full" onClick={() => onAction('generate')} style={{ marginBottom: '12px' }}>
                         ✨ Create Content with AI

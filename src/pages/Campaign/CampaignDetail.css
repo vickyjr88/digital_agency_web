@@ -664,10 +664,29 @@
     font-weight: 700;
     font-size: 1.125rem;
     border: 2px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.party-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .party-name {
     font-weight: 700;
+    color: #111827;
+}
+
+.party-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.party-subtext {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.125rem;
 }
 
 /* Package Info Card */
