@@ -959,6 +959,68 @@ export default function OpenCampaignDetail() {
                     />
                 )
             }
+
+            {/* Dispute Form Modal */}
+            {showDisputeForm && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+                        <div className="p-6 border-b flex justify-between items-center">
+                            <h3 className="text-lg font-bold flex items-center gap-2">
+                                <ShieldAlert className="text-red-500" size={20} />
+                                Raise a Dispute
+                            </h3>
+                            <button onClick={() => setShowDisputeForm(false)} className="text-gray-400 hover:text-gray-600">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleRaiseDispute} className="p-6 space-y-4">
+                            <div className="bg-red-50 p-3 rounded-lg text-xs text-red-700">
+                                <strong>Warning:</strong> Disputes are reviewed by the Dexter team. Please provide as much detail as possible.
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Reason for Dispute</label>
+                                <textarea
+                                    className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-red-500 outline-none min-h-[120px]"
+                                    placeholder="Explain why you are raising this dispute..."
+                                    value={disputeReason}
+                                    onChange={(e) => setDisputeReason(e.target.value)}
+                                    required
+                                />
+                                <span className="text-xs text-gray-400">{disputeReason.length}/2000 (min 20)</span>
+                            </div>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    className="flex-1 py-2 px-4 border rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+                                    onClick={() => setShowDisputeForm(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 py-2 px-4 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50"
+                                    disabled={submittingDispute || disputeReason.length < 20}
+                                >
+                                    {submittingDispute ? <Loader2 className="animate-spin mx-auto" size={18} /> : 'Raise Dispute'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Content Generator Modal */}
+            {activeAction === 'generate' && (
+                <ContentGeneratorModal
+                    campaignId={campaignId}
+                    bidId={selectedBidId}
+                    onClose={() => setActiveAction(null)}
+                    onSuccess={() => {
+                        setActiveAction(null);
+                        fetchCampaign();
+                    }}
+                />
+            )}
         </div >
     );
 }
@@ -1212,66 +1274,7 @@ function ReviewDeliverableModal({ campaign, deliverable, onClose, onSuccess }) {
                 .btn-primary.success:hover { background-color: #059669; }
             `}</style>
 
-            {/* Dispute Form Modal */}
-            {showDisputeForm && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
-                        <div className="p-6 border-b flex justify-between items-center">
-                            <h3 className="text-lg font-bold flex items-center gap-2">
-                                <ShieldAlert className="text-red-500" size={20} />
-                                Raise a Dispute
-                            </h3>
-                            <button onClick={() => setShowDisputeForm(false)} className="text-gray-400 hover:text-gray-600">
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <form onSubmit={handleRaiseDispute} className="p-6 space-y-4">
-                            <div className="bg-red-50 p-3 rounded-lg text-xs text-red-700">
-                                <strong>Warning:</strong> Disputes are reviewed by the Dexter team. Please provide as much detail as possible.
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Reason for Dispute</label>
-                                <textarea
-                                    className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-red-500 outline-none min-h-[120px]"
-                                    placeholder="Explain why you are raising this dispute..."
-                                    value={disputeReason}
-                                    onChange={(e) => setDisputeReason(e.target.value)}
-                                    required
-                                />
-                                <span className="text-xs text-gray-400">{disputeReason.length}/2000 (min 20)</span>
-                            </div>
-                            <div className="flex gap-3">
-                                <button
-                                    type="button"
-                                    className="flex-1 py-2 px-4 border rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
-                                    onClick={() => setShowDisputeForm(false)}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 py-2 px-4 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50"
-                                    disabled={submittingDispute || disputeReason.length < 20}
-                                >
-                                    {submittingDispute ? <Loader2 className="animate-spin mx-auto" size={18} /> : 'Raise Dispute'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
 
-            {/* Content Generator Modal */}
-            {activeAction === 'generate' && (
-                <ContentGeneratorModal
-                    campaignId={campaign.id}
-                    onClose={() => setActiveAction(null)}
-                    onSuccess={() => {
-                        setActiveAction(null);
-                        fetchCampaign();
-                    }}
-                />
-            )}
         </div>
     );
 }

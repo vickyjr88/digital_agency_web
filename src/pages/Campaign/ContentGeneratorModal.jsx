@@ -5,7 +5,7 @@ import { api } from '../../services/api';
 // Assuming we have a service for campaign-content, or likely adding it to api.js
 // If not, we'll assume we can use api.post('/campaign-content/...')
 
-export default function ContentGeneratorModal({ campaignId, onClose, onSuccess }) {
+export default function ContentGeneratorModal({ campaignId, bidId, onClose, onSuccess }) {
     const navigate = useNavigate();
     const [step, setStep] = useState('trend'); // trend, generate, review
     const [loading, setLoading] = useState(false);
@@ -37,6 +37,7 @@ export default function ContentGeneratorModal({ campaignId, onClose, onSuccess }
         try {
             const response = await api.generateCampaignContent({
                 campaign_id: campaignId,
+                bid_id: bidId,
                 trend_id: selectedTrend?.id,
                 trend_topic: topic,
                 platform,
