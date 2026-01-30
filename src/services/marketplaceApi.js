@@ -311,9 +311,10 @@ export const campaignApi = {
     },
 
     // Complete campaign
-    complete: async (campaignId) => {
+    complete: async (campaignId, bidId = null) => {
         const { api } = await import('./api');
-        return api.request(`/v2/campaigns/${campaignId}/complete`, {
+        const url = bidId ? `/v2/campaigns/${campaignId}/complete?bid_id=${bidId}` : `/v2/campaigns/${campaignId}/complete`;
+        return api.request(url, {
             method: 'POST',
         });
     },
@@ -484,25 +485,26 @@ export const bidApi = {
     },
 
     // Accept a bid (brand)
-    accept: async (bidId) => {
+    accept: async (campaignId, bidId) => {
         const { api } = await import('./api');
-        return api.request(`/v2/bids/${bidId}/accept`, {
-            method: 'PATCH',
+        return api.request(`/v2/open-campaigns/${campaignId}/bids/${bidId}/accept`, {
+            method: 'POST',
         });
     },
 
     // Reject a bid (brand)
-    reject: async (bidId) => {
+    reject: async (campaignId, bidId, reason = '') => {
         const { api } = await import('./api');
-        return api.request(`/v2/bids/${bidId}/reject`, {
-            method: 'PATCH',
+        return api.request(`/v2/open-campaigns/${campaignId}/bids/${bidId}/reject`, {
+            method: 'POST',
+            body: JSON.stringify({ reason }),
         });
     },
 
     // Withdraw a bid (influencer)
-    withdraw: async (bidId) => {
+    withdraw: async (campaignId, bidId) => {
         const { api } = await import('./api');
-        return api.request(`/v2/bids/${bidId}`, {
+        return api.request(`/v2/open-campaigns/${campaignId}/bids/${bidId}`, {
             method: 'DELETE',
         });
     },

@@ -13,7 +13,7 @@ import {
     Users, Check, X, MessageSquare, Star, Award,
     Send, Loader2, ChevronDown, ChevronUp, Lock, Eye, Sparkles, CheckCircle, XCircle
 } from 'lucide-react';
-import { campaignApi } from '../../services/marketplaceApi';
+import { campaignApi, bidApi } from '../../services/marketplaceApi';
 import './OpenCampaigns.css';
 
 export default function OpenCampaignDetail() {
@@ -122,7 +122,7 @@ export default function OpenCampaignDetail() {
         if (!confirm('Accept this bid? Funds will be moved to escrow.')) return;
 
         try {
-            await api.acceptBid(campaignId, bidId);
+            await bidApi.accept(campaignId, bidId);
             toast.success('Bid accepted! Funds moved to escrow.');
             fetchCampaign();
         } catch (error) {
@@ -135,7 +135,7 @@ export default function OpenCampaignDetail() {
         if (!confirm('Reject this bid?')) return;
 
         try {
-            await api.rejectBid(campaignId, bidId);
+            await bidApi.reject(campaignId, bidId);
             toast.success('Bid rejected');
             fetchCampaign();
         } catch (error) {
@@ -144,11 +144,19 @@ export default function OpenCampaignDetail() {
         }
     };
 
-    const handleWithdrawBid = async () => {
+    const handleAction = (action, deliverable = null, bidId = null) => {
+        setSelectedDeliverable(deliverable);
+        setActiveAction(action);
+        if (bidId) setSelectedBidId(bidId);
+    };
+
+    const [selectedBidId, setSelectedBidId] = useState(null);
+
+    const handleWithdrawBid = async (bidId) => {
         if (!confirm('Withdraw your bid?')) return;
 
         try {
-            await api.withdrawBid(campaignId, campaign.user_bid.id);
+            await bidApi.withdraw(campaignId, bidId);
             toast.success('Bid withdrawn');
             fetchCampaign();
         } catch (error) {
@@ -177,7 +185,7 @@ export default function OpenCampaignDetail() {
     };
 
     const handleComplete = async () => {
-        if (!confirm('Mark as complete and release payment?')) return;
+        if (!confirm('Mark as complete and release all pending payments?')) return;
         setReviewing(true);
         try {
             await campaignApi.complete(campaignId);
@@ -185,7 +193,22 @@ export default function OpenCampaignDetail() {
             fetchCampaign();
         } catch (error) {
             console.error('Failed to complete campaign', error);
-            toast.error('Failed to complete campaign');
+            toast.error(error.message || 'Failed to complete campaign');
+        } finally {
+            setReviewing(false);
+        }
+    };
+
+    const handleReleasePayment = async (bidId) => {
+        if (!confirm('Mark this influencer\'s work as complete and release payment?')) return;
+        setReviewing(true);
+        try {
+            await campaignApi.complete(campaignId, bidId);
+            toast.success('Payment released to influencer!');
+            fetchCampaign();
+        } catch (error) {
+            console.error('Failed to release payment', error);
+            toast.error(error.message || 'Failed to release payment');
         } finally {
             setReviewing(false);
         }
@@ -213,8 +236,8 @@ export default function OpenCampaignDetail() {
     const isInfluencer = user && user.user_type === 'influencer';
     const isAdmin = user && user.user_type === 'admin';
     const isBrandOwner = campaign.is_owner || isAdmin;
-    const canBid = user && isInfluencer && campaign.status === 'open' && !campaign.user_bid;
-    const hasPendingBid = campaign.user_bid?.status === 'pending';
+    const canBid = user && isInfluencer && campaign.status === 'open';
+    const hasActiveBids = campaign.user_bids?.length > 0;
 
     return (
         <div className="campaign-detail-page">
@@ -423,9 +446,58 @@ export default function OpenCampaignDetail() {
                                                     )}
 
                                                     {bid.status === 'accepted' && (
-                                                        <div className="accepted-notice">
-                                                            <Lock size={16} />
-                                                            <span>Bid accepted - Funds in escrow</span>
+                                                        <div className="accepted-notice-container">
+                                                            <div className="accepted-notice">
+                                                                <Lock size={16} />
+                                                                <span>Bid accepted - Funds in escrow</span>
+                                                            </div>
+
+                                                            {/* Show deliverables for this bid */}
+                                                            {campaign.deliverables?.filter(d => d.bid_id === bid.id).length > 0 && (
+                                                                <div className="bid-deliverables mt-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                                                    <h5 className="font-bold text-sm mb-2 flex items-center gap-2">
+                                                                        <CheckCircle size={14} className="text-green-500" />
+                                                                        Submitted Deliverables
+                                                                    </h5>
+                                                                    <div className="space-y-2">
+                                                                        {campaign.deliverables.filter(d => d.bid_id === bid.id).map(d => (
+                                                                            <div key={d.id} className="flex justify-between items-center bg-white p-2 rounded border border-gray-50 text-xs">
+                                                                                <span>{d.platform} • {d.content_type}</span>
+                                                                                <div className="flex gap-2">
+                                                                                    <span className={`status-tag ${d.status}`}>{d.status}</span>
+                                                                                    {d.status === 'submitted' && (
+                                                                                        <button
+                                                                                            className="text-blue-600 hover:text-blue-800 font-bold"
+                                                                                            onClick={() => {
+                                                                                                setSelectedDeliverable(d);
+                                                                                                setActiveAction('review');
+                                                                                            }}
+                                                                                        >
+                                                                                            Review
+                                                                                        </button>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            <button
+                                                                className="btn-primary success full-width mt-3"
+                                                                style={{ background: '#10b981' }}
+                                                                onClick={() => handleReleasePayment(bid.id)}
+                                                                disabled={reviewing}
+                                                            >
+                                                                {reviewing ? <Loader2 className="animate-spin mx-auto" size={18} /> : '🎉 Release Payment'}
+                                                            </button>
+                                                        </div>
+                                                    )}
+
+                                                    {bid.status === 'paid' && (
+                                                        <div className="paid-notice text-center p-3 bg-green-50 rounded-lg border border-green-100 text-green-700 font-bold">
+                                                            <CheckCircle size={18} className="inline mr-2" />
+                                                            Work Completed & Payment Released
                                                         </div>
                                                     )}
                                                 </div>
@@ -438,36 +510,51 @@ export default function OpenCampaignDetail() {
                     )}
 
                     {/* User's Bid (Influencer View) */}
-                    {!campaign.is_owner && campaign.user_bid && (
-                        <div className="your-bid-section">
-                            <h3>Your Bid</h3>
-                            <div className={`your-bid-card ${campaign.user_bid.status}`}>
-                                <div className="bid-status-badge">
-                                    {campaign.user_bid.status}
-                                </div>
-                                <div className="bid-info">
-                                    <span className="amount">{formatCurrency(campaign.user_bid.amount * 100)}</span>
-                                    <p className="proposal-preview">{campaign.user_bid.proposal}</p>
-                                </div>
-                                {campaign.user_bid.status === 'pending' && (
-                                    <button className="btn-secondary" onClick={handleWithdrawBid}>
-                                        Withdraw Bid
-                                    </button>
-                                )}
+                    {/* User's Bids (Influencer View) */}
+                    {!campaign.is_owner && campaign.user_bids?.length > 0 && (
+                        <div className="your-bids-section">
+                            <h3>Your Bids</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {campaign.user_bids.map(bid => (
+                                    <div key={bid.id} className={`your-bid-card ${bid.status}`}>
+                                        <div className="bid-status-badge">
+                                            {bid.status}
+                                        </div>
+                                        <div className="bid-info">
+                                            <span className="amount">{formatCurrency(bid.amount)}</span>
+                                            <p className="proposal-preview">{bid.proposal}</p>
+                                        </div>
+                                        {bid.status === 'pending' && (
+                                            <button className="btn-secondary mt-3 full-width" onClick={() => handleWithdrawBid(bid.id)}>
+                                                Withdraw Bid
+                                            </button>
+                                        )}
+                                        {bid.status === 'accepted' && (
+                                            <button className="btn-primary mt-3 full-width" onClick={() => handleAction('submit', null, bid.id)}>
+                                                📤 Submit Proof of Work
+                                            </button>
+                                        )}
+                                        {bid.status === 'paid' && (
+                                            <div className="paid-status-text text-green-600 font-bold mt-3 text-center">
+                                                ✅ Work Completed & Payment Received
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}
 
                     {/* Bid Form */}
                     {canBid && (
-                        <>
+                        <div className="mt-8 pt-8 border-t">
                             {!showBidForm ? (
                                 <button
                                     className="btn-primary large full-width"
                                     onClick={() => setShowBidForm(true)}
                                 >
                                     <Send size={18} />
-                                    Submit Your Bid
+                                    Submit Another Bid
                                 </button>
                             ) : (
                                 <form className="bid-form" onSubmit={handleSubmitBid}>
@@ -588,7 +675,7 @@ export default function OpenCampaignDetail() {
                                     </div>
                                 </form>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
 
@@ -653,46 +740,16 @@ export default function OpenCampaignDetail() {
                                 </button>
                             )}
 
-                            {campaign.status === 'draft_submitted' && (
-                                <div className="space-y-2">
-                                    <div className="bg-yellow-50 border border-yellow-100 p-3 rounded-lg text-sm text-yellow-800 mb-3">
-                                        <Clock size={16} className="inline mr-2" />
-                                        Deliverables awaiting review
-                                    </div>
-                                    <button
-                                        className="btn-primary full-width"
-                                        onClick={() => {
-                                            const firstSub = campaign.deliverables?.find(d => d.status === 'submitted');
-                                            if (firstSub) {
-                                                setSelectedDeliverable(firstSub);
-                                                setActiveAction('review');
-                                            } else {
-                                                toast.error('No pending deliverables found');
-                                            }
-                                        }}
-                                    >
-                                        👀 Review Proof of Work
-                                    </button>
-                                </div>
-                            )}
-
-                            {campaign.status === 'draft_approved' && (
-                                <button
-                                    className="btn-primary full-width success"
-                                    onClick={handleComplete}
-                                    disabled={reviewing}
-                                    style={{ background: '#10b981' }}
-                                >
-                                    {reviewing ? <Loader2 className="animate-spin" /> : '🎉 Mark Complete & Release'}
-                                </button>
-                            )}
-
-                            {campaign.status === 'completed' && (
+                            {(campaign.status === 'completed' || campaign.status === 'closed') && (
                                 <div className="flex items-center gap-2 text-green-600 font-bold p-3 bg-green-50 rounded-lg justify-center">
                                     <CheckCircle size={20} />
-                                    Campaign Completed
+                                    Campaign {campaign.status === 'closed' ? 'Closed' : 'Completed'}
                                 </div>
                             )}
+
+                            <div className="mt-4 text-xs text-gray-500 italic p-3 border rounded-lg bg-gray-50">
+                                Payments are handled per-bid for open campaigns. Click on an "Accepted" bid above to manage deliverables and release funds.
+                            </div>
                         </div>
                     )}
                 </div>
@@ -710,13 +767,126 @@ export default function OpenCampaignDetail() {
                     onSuccess={handleReviewSuccess}
                 />
             )}
+
+            {activeAction === 'submit' && (
+                <SubmitDeliverableModal
+                    campaign={campaign}
+                    bidId={selectedBidId}
+                    onClose={() => {
+                        setActiveAction(null);
+                        setSelectedBidId(null);
+                    }}
+                    onSuccess={handleReviewSuccess}
+                />
+            )}
         </div>
     );
 }
 
+
 /**
  * Sub-components
  */
+
+
+function SubmitDeliverableModal({ campaign, bidId, onClose, onSuccess }) {
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        content_type: 'post',
+        platform: campaign.platforms?.[0] || 'instagram',
+        draft_url: '',
+        draft_description: '',
+        bid_id: bidId || campaign.user_bids?.[0]?.id
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await campaignApi.submitDeliverable(campaign.id, formData);
+            toast.success('Deliverable submitted successfully!');
+            onSuccess();
+            onClose();
+        } catch (error) {
+            console.error('Failed to submit deliverable', error);
+            toast.error(error.message || 'Failed to submit deliverable');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                <div className="modal-header">
+                    <h2>📤 Submit Proof of Work</h2>
+                    <button className="close-btn" onClick={onClose}>&times;</button>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+                    <div className="modal-body">
+                        <div className="form-group">
+                            <label>Content Platform</label>
+                            <select
+                                value={formData.platform}
+                                onChange={(e) => setFormData(prev => ({ ...prev, platform: e.target.value }))}
+                            >
+                                {campaign.platforms?.map(p => (
+                                    <option key={p} value={p}>{p}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label>Content Type</label>
+                            <select
+                                value={formData.content_type}
+                                onChange={(e) => setFormData(prev => ({ ...prev, content_type: e.target.value }))}
+                            >
+                                <option value="post">Post</option>
+                                <option value="story">Story</option>
+                                <option value="reel">Reel</option>
+                                <option value="video">Video</option>
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label>URL / Link to Content *</label>
+                            <input
+                                type="url"
+                                required
+                                value={formData.draft_url}
+                                onChange={(e) => setFormData(prev => ({ ...prev, draft_url: e.target.value }))}
+                                placeholder="https://..."
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Description / Notes</label>
+                            <textarea
+                                value={formData.draft_description}
+                                onChange={(e) => setFormData(prev => ({ ...prev, draft_description: e.target.value }))}
+                                placeholder="Any notes about this deliverable..."
+                                rows={3}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="modal-footer">
+                        <button type="button" className="btn-secondary" onClick={onClose}>Cancel</button>
+                        <button
+                            type="submit"
+                            className="btn-primary"
+                            disabled={loading || !formData.draft_url}
+                        >
+                            {loading ? 'Submitting...' : 'Submit Deliverable'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
 
 function ReviewDeliverableModal({ campaign, deliverable, onClose, onSuccess }) {
     const [action, setAction] = useState(null); // approve, revision
