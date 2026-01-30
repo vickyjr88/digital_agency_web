@@ -34,6 +34,7 @@ export default function OpenCampaignDetail() {
     const [showDisputeForm, setShowDisputeForm] = useState(false);
     const [disputeReason, setDisputeReason] = useState('');
     const [submittingDispute, setSubmittingDispute] = useState(false);
+    const [editingBidId, setEditingBidId] = useState(null);
 
     const [bidData, setBidData] = useState({
         amount: '',
@@ -148,9 +149,15 @@ export default function OpenCampaignDetail() {
                 timeline_days: parseInt(bidData.timeline_days)
             };
 
-            await api.submitBid(campaignId, payload);
-            toast.success('Bid submitted successfully!');
+            if (editingBidId) {
+                await bidApi.update(editingBidId, payload);
+                toast.success('Bid updated successfully!');
+            } else {
+                await api.submitBid(campaignId, payload);
+                toast.success('Bid submitted successfully!');
+            }
             setShowBidForm(false);
+            setEditingBidId(null);
             fetchCampaign();
         } catch (error) {
             console.error('Error submitting bid:', error);
@@ -158,6 +165,21 @@ export default function OpenCampaignDetail() {
         } finally {
             setBidding(false);
         }
+    };
+
+    const handleEditBid = (bid) => {
+        setBidData({
+            amount: (bid.amount / 100).toString(),
+            platform: bid.platform || '',
+            content_type: bid.content_type || '',
+            deliverables_count: bid.deliverables_count || 1,
+            deliverables_description: bid.deliverables_description || '',
+            timeline_days: bid.timeline_days || 7,
+            proposal: bid.proposal || '',
+            package_id: bid.package_id || ''
+        });
+        setEditingBidId(bid.id);
+        setShowBidForm(true);
     };
 
     const handleAcceptBid = async (bidId) => {
@@ -635,9 +657,14 @@ export default function OpenCampaignDetail() {
                                             <p className="proposal-preview">{bid.proposal}</p>
                                         </div>
                                         {bid.status === 'pending' && (
-                                            <button className="btn-secondary mt-3 full-width" onClick={() => handleWithdrawBid(bid.id)}>
-                                                Withdraw Bid
-                                            </button>
+                                            <div className="flex gap-2 mt-3 w-full">
+                                                <button className="bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 py-2 px-4 rounded-lg flex-1 text-sm font-medium transition-colors" onClick={() => handleEditBid(bid)}>
+                                                    Edit Bid
+                                                </button>
+                                                <button className="bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 py-2 px-4 rounded-lg flex-1 text-sm font-medium transition-colors" onClick={() => handleWithdrawBid(bid.id)}>
+                                                    Withdraw
+                                                </button>
+                                            </div>
                                         )}
                                         {bid.status === 'accepted' && (
                                             <div className="flex flex-col gap-2 mt-3 w-full">
@@ -685,7 +712,7 @@ export default function OpenCampaignDetail() {
                                 </button>
                             ) : (
                                 <form className="bid-form" onSubmit={handleSubmitBid}>
-                                    <h3>Submit Your Bid</h3>
+                                    <h3>{editingBidId ? 'Edit Your Bid' : 'Submit Your Bid'}</h3>
 
                                     <div className="form-row">
                                         <div className="form-group">
@@ -783,21 +810,31 @@ export default function OpenCampaignDetail() {
                                     </div>
 
                                     <div className="form-actions">
-                                        <button type="button" className="btn-secondary" onClick={() => setShowBidForm(false)}>
+                                        <button
+                                            type="button"
+                                            className="btn-secondary"
+                                            onClick={() => {
+                                                setShowBidForm(false);
+                                                setEditingBidId(null);
+                                                setBidData({
+                                                    amount: '',
+                                                    platform: '',
+                                                    content_type: '',
+                                                    deliverables_count: 1,
+                                                    deliverables_description: '',
+                                                    timeline_days: 7,
+                                                    proposal: ''
+                                                });
+                                            }}
+                                        >
                                             Cancel
                                         </button>
-                                        <button type="submit" className="btn-primary" disabled={bidding}>
-                                            {bidding ? (
-                                                <>
-                                                    <Loader2 className="animate-spin" size={16} />
-                                                    Submitting...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Send size={16} />
-                                                    Submit Bid
-                                                </>
-                                            )}
+                                        <button
+                                            type="submit"
+                                            className="btn-primary"
+                                            disabled={bidding}
+                                        >
+                                            {bidding ? <Loader2 className="animate-spin" size={20} /> : (editingBidId ? 'Update Bid' : 'Submit Bid')}
                                         </button>
                                     </div>
                                 </form>
@@ -883,30 +920,34 @@ export default function OpenCampaignDetail() {
             </div>
 
             {/* Modals */}
-            {activeAction === 'review' && selectedDeliverable && (
-                <ReviewDeliverableModal
-                    campaign={campaign}
-                    deliverable={selectedDeliverable}
-                    onClose={() => {
-                        setActiveAction(null);
-                        setSelectedDeliverable(null);
-                    }}
-                    onSuccess={handleReviewSuccess}
-                />
-            )}
+            {
+                activeAction === 'review' && selectedDeliverable && (
+                    <ReviewDeliverableModal
+                        campaign={campaign}
+                        deliverable={selectedDeliverable}
+                        onClose={() => {
+                            setActiveAction(null);
+                            setSelectedDeliverable(null);
+                        }}
+                        onSuccess={handleReviewSuccess}
+                    />
+                )
+            }
 
-            {activeAction === 'submit' && (
-                <SubmitDeliverableModal
-                    campaign={campaign}
-                    bidId={selectedBidId}
-                    onClose={() => {
-                        setActiveAction(null);
-                        setSelectedBidId(null);
-                    }}
-                    onSuccess={handleReviewSuccess}
-                />
-            )}
-        </div>
+            {
+                activeAction === 'submit' && (
+                    <SubmitDeliverableModal
+                        campaign={campaign}
+                        bidId={selectedBidId}
+                        onClose={() => {
+                            setActiveAction(null);
+                            setSelectedBidId(null);
+                        }}
+                        onSuccess={handleReviewSuccess}
+                    />
+                )
+            }
+        </div >
     );
 }
 

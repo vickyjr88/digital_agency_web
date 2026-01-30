@@ -470,6 +470,15 @@ export const bidApi = {
         });
     },
 
+    // Update a bid
+    update: async (bidId, bidData) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/bids/${bidId}`, {
+            method: 'PATCH',
+            body: JSON.stringify(bidData),
+        });
+    },
+
     // Get my bids (influencer)
     getMyBids: async (params = {}) => {
         const { api } = await import('./api');
