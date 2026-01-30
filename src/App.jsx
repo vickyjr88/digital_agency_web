@@ -55,6 +55,7 @@ import CampaignInvites from './pages/Bids/CampaignInvites';
 // Admin Pages
 import AdminCampaigns from './pages/Admin/AdminCampaigns';
 import AdminBids from './pages/Admin/AdminBids';
+import AdminDisputes from './pages/Admin/AdminDisputes';
 
 
 // Protected Route Component (Simplified for now)
@@ -255,6 +256,17 @@ function App() {
                 <Layout>
                   <AdminDashboard defaultTab="bids">
                     <AdminBids />
+                  </AdminDashboard>
+                </Layout>
+              </AdminRoute>
+            } />
+
+            {/* Admin Disputes */}
+            <Route path="/admin/disputes" element={
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard defaultTab="disputes">
+                    <AdminDisputes />
                   </AdminDashboard>
                 </Layout>
               </AdminRoute>

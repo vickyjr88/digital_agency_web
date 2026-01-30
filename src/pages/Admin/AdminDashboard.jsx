@@ -4,13 +4,15 @@ import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
-import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight } from 'lucide-react';
+import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight, ShieldAlert } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import AdminWithdrawals from './AdminWithdrawals';
 import AdminSubscriptionTransactions from './AdminSubscriptionTransactions';
 import AdminWalletTransactions from './AdminWalletTransactions';
+import AdminDisputes from './AdminDisputes';
+import { disputeApi } from '../../services/marketplaceApi';
 
 export default function AdminDashboard({ defaultTab = 'overview', children }) {
     const [loading, setLoading] = useState(true);
@@ -49,6 +51,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
         if (path.startsWith('/admin/packages')) return 'packages';
         if (path.startsWith('/admin/campaigns')) return 'campaigns';
         if (path.startsWith('/admin/bids')) return 'bids';
+        if (path.startsWith('/admin/disputes')) return 'disputes';
         return defaultTab;
     };
 
@@ -96,6 +99,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                     api.getUserGrowthChart()
                 ]);
                 setData(d => ({ ...d, analytics: { ...dashboard, revenueChart: revenue, userChart: users } }));
+            } else if (activeTab === 'disputes') {
+                const res = await disputeApi.getAll();
+                setData(d => ({ ...d, disputes: res || [] }));
             } else if (activeTab === 'overview') {
                 const [stats, latest] = await Promise.all([
                     api.getAdminStats(),
@@ -216,6 +222,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 <Link to="/admin/bids" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'bids' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Briefcase size={20} /> Bids & Invites
                 </Link>
+                <Link to="/admin/disputes" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'disputes' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <ShieldAlert size={20} className={activeTab === 'disputes' ? 'text-indigo-600' : 'text-red-400'} /> Disputes
+                </Link>
             </nav>
 
             <div className="p-4 border-t border-gray-100">
@@ -313,6 +322,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                     {activeTab === 'subscriptions' && <AdminSubscriptionTransactions />}
                                     {activeTab === 'wallet_transactions' && <AdminWalletTransactions />}
                                     {activeTab === 'withdrawals' && <AdminWithdrawals />}
+                                    {activeTab === 'disputes' && <AdminDisputes />}
                                 </div>
                             </div>
                         )

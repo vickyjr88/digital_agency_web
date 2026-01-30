@@ -543,6 +543,43 @@ export const bidApi = {
 
 
 // ============================================================================
+// DISPUTE API METHODS
+// ============================================================================
+
+export const disputeApi = {
+    // Get all disputes (handles admin filter automatically based on user type)
+    getAll: async (status = null) => {
+        const { api } = await import('./api');
+        const params = status ? `?status_filter=${status}` : '';
+        return api.request(`/v2/disputes${params}`);
+    },
+
+    // Get dispute by ID
+    getById: async (disputeId) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/disputes/${disputeId}`);
+    },
+
+    // Resolve dispute (Admin)
+    resolve: async (disputeId, resolutionData) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/disputes/admin/${disputeId}/resolve`, {
+            method: 'POST',
+            body: JSON.stringify(resolutionData),
+        });
+    },
+
+    // Close dispute (Admin)
+    close: async (disputeId, reason) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/disputes/admin/${disputeId}/close?reason=${encodeURIComponent(reason)}`, {
+            method: 'POST',
+        });
+    },
+};
+
+
+// ============================================================================
 // BRAND API METHODS
 // ============================================================================
 
@@ -580,5 +617,6 @@ export default {
     notification: notificationApi,
     bid: bidApi,
     brand: brandApi,
+    dispute: disputeApi,
     getConfig,
 };
