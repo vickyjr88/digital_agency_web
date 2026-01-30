@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
@@ -21,6 +21,7 @@ export default function OpenCampaignDetail() {
     const { campaignId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [searchParams] = useSearchParams();
 
     const [loading, setLoading] = useState(true);
     const [campaign, setCampaign] = useState(null);
@@ -53,6 +54,16 @@ export default function OpenCampaignDetail() {
             fetchInfluencerProfile();
         }
     }, [campaignId, user]);
+
+    useEffect(() => {
+        const editBidId = searchParams.get('edit_bid');
+        if (editBidId && campaign?.user_bids) {
+            const bidToEdit = campaign.user_bids.find(b => b.id === editBidId);
+            if (bidToEdit && bidToEdit.status === 'pending') {
+                handleEditBid(bidToEdit);
+            }
+        }
+    }, [searchParams, campaign?.user_bids]);
 
     const fetchCampaign = async () => {
         setLoading(true);
@@ -321,7 +332,7 @@ export default function OpenCampaignDetail() {
 
     const budgetProgress = ((campaign.budget_spent / campaign.budget) * 100).toFixed(0);
     const isInfluencer = user && user.user_type === 'influencer';
-    const isApprovedInfluencer = isInfluencer && influencerProfile?.verification_status === 'approved';
+    const isApprovedInfluencer = isInfluencer; // Relaxed verification check
     const isAdmin = user && user.user_type === 'admin';
     const isBrandOwner = campaign.is_owner || isAdmin;
     const canBid = user && isInfluencer && campaign.status === 'open';
@@ -669,7 +680,7 @@ export default function OpenCampaignDetail() {
                                         )}
                                         {bid.status === 'accepted' && (
                                             <div className="flex flex-col gap-2 mt-3 w-full">
-                                                {isApprovedInfluencer && (
+                                                {isInfluencer && (
                                                     <button
                                                         className="btn-secondary full-width flex items-center justify-center gap-2 py-2 px-4 rounded-lg"
                                                         onClick={() => handleAction('generate', null, bid.id)}

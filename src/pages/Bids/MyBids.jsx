@@ -154,8 +154,8 @@ export default function MyBids() {
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filter === f
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                                 }`}
                         >
                             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -240,31 +240,36 @@ export default function MyBids() {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-right">
+                                        <div className="flex items-center gap-2">
+                                            <div className="text-right mr-4">
                                                 <p className="text-sm text-gray-500 mb-1">Bid Amount</p>
                                                 <p className="text-xl font-bold text-gray-900">
                                                     {formatPrice(bid.amount)}
                                                 </p>
                                             </div>
 
-                                            {bid.status === 'pending' && (
-                                                <button
-                                                    onClick={() => handleWithdraw(bid.id)}
-                                                    className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                >
-                                                    Withdraw
-                                                </button>
-                                            )}
+                                            <button
+                                                onClick={() => navigate(`/campaigns/${bid.campaign_id}`)}
+                                                className="px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50 border border-indigo-200 rounded-lg transition-colors"
+                                            >
+                                                View
+                                            </button>
 
-                                            {bid.status === 'accepted' && (
-                                                <button
-                                                    onClick={() => navigate(`/campaigns/${bid.campaign_id}`)}
-                                                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
-                                                >
-                                                    View Campaign
-                                                    <ArrowRight size={16} />
-                                                </button>
+                                            {bid.status === 'pending' && (
+                                                <>
+                                                    <button
+                                                        onClick={() => navigate(`/campaigns/${bid.campaign_id}?edit_bid=${bid.id}`)}
+                                                        className="px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleWithdraw(bid.id)}
+                                                        className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    >
+                                                        Withdraw
+                                                    </button>
+                                                </>
                                             )}
                                         </div>
                                     </div>

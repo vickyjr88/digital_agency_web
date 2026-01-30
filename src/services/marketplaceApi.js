@@ -511,9 +511,16 @@ export const bidApi = {
     },
 
     // Withdraw a bid (influencer)
-    withdraw: async (campaignId, bidId) => {
+    withdraw: async (arg1, arg2) => {
         const { api } = await import('./api');
-        return api.request(`/v2/open-campaigns/${campaignId}/bids/${bidId}`, {
+        if (arg2) {
+            // Called with (campaignId, bidId)
+            return api.request(`/v2/open-campaigns/${arg1}/bids/${arg2}`, {
+                method: 'DELETE',
+            });
+        }
+        // Called with just (bidId)
+        return api.request(`/v2/bids/${arg1}`, {
             method: 'DELETE',
         });
     },
