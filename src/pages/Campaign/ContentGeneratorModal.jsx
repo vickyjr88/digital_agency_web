@@ -20,9 +20,7 @@ export default function ContentGeneratorModal({ campaignId, onClose, onSuccess }
 
     const fetchTrends = async () => {
         try {
-            // Check if getTrends exists, if not we might need to add it or use raw fetch
-            // Using a generic api call pattern here
-            const response = await api.get('/campaign-content/trends');
+            const response = await api.getAvailableTrends();
             setTrends(response.trends || []);
         } catch (error) {
             console.error('Failed to fetch trends', error);
@@ -35,7 +33,7 @@ export default function ContentGeneratorModal({ campaignId, onClose, onSuccess }
 
         setLoading(true);
         try {
-            const response = await api.post('/campaign-content/generate', {
+            const response = await api.generateCampaignContent({
                 campaign_id: campaignId,
                 trend_id: selectedTrend?.id,
                 trend_topic: topic,
@@ -57,7 +55,7 @@ export default function ContentGeneratorModal({ campaignId, onClose, onSuccess }
 
         setLoading(true);
         try {
-            await api.post(`/campaign-content/${generatedContent.id}/submit`);
+            await api.submitContentForApproval(generatedContent.id);
             onSuccess();
             onClose();
         } catch (error) {
