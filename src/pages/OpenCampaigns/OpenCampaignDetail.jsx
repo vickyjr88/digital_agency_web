@@ -35,6 +35,7 @@ export default function OpenCampaignDetail() {
     const [disputeReason, setDisputeReason] = useState('');
     const [submittingDispute, setSubmittingDispute] = useState(false);
     const [editingBidId, setEditingBidId] = useState(null);
+    const [activeAction, setActiveAction] = useState(null);
 
     const [bidData, setBidData] = useState({
         amount: '',
