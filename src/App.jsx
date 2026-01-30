@@ -35,6 +35,7 @@ import CreateCampaign from './pages/OpenCampaigns/CreateCampaign';
 import OpenCampaignsList from './pages/OpenCampaigns/OpenCampaignsList';
 import OpenCampaignDetail from './pages/OpenCampaigns/OpenCampaignDetail';
 import ContentGenerator from './pages/OpenCampaigns/ContentGenerator';
+import EditGeneratedContent from './pages/Campaign/EditGeneratedContent';
 
 // Proof of Work
 import SubmitProof from './pages/ProofOfWork/SubmitProof';
@@ -427,6 +428,11 @@ function App() {
             <Route path="/content/generate" element={
               <ProtectedRoute>
                 <Layout><ContentGenerator /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaign-content/:contentId/edit" element={
+              <ProtectedRoute>
+                <Layout><EditGeneratedContent /></Layout>
               </ProtectedRoute>
             } />
 

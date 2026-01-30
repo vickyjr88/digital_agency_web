@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Loader2, Sparkles, RefreshCw, Send, Check } from 'lucide-react';
 import { api } from '../../services/api';
 // Assuming we have a service for campaign-content, or likely adding it to api.js
 // If not, we'll assume we can use api.post('/campaign-content/...')
 
 export default function ContentGeneratorModal({ campaignId, onClose, onSuccess }) {
+    const navigate = useNavigate();
     const [step, setStep] = useState('trend'); // trend, generate, review
     const [loading, setLoading] = useState(false);
     const [trends, setTrends] = useState([]);
@@ -40,8 +42,11 @@ export default function ContentGeneratorModal({ campaignId, onClose, onSuccess }
                 platform,
                 content_type: contentType
             });
-            setGeneratedContent(response.content);
-            setStep('review');
+
+            // Navigate to edit page immediately
+            onClose(); // Close modal
+            navigate(`/campaign-content/${response.content.id}/edit`);
+
         } catch (error) {
             console.error('Generation failed', error);
             // alert('Failed to generate content: ' + error.message);
