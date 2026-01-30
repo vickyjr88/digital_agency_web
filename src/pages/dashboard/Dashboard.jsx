@@ -95,8 +95,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/trends');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-						}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<TrendingUp size={20} />
 					Trends
@@ -107,8 +106,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/my-brands');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-						}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<LayoutGrid size={20} />
 					My Brands
@@ -119,8 +117,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/billing');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-						}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<CreditCard size={20} />
 					Subscription
@@ -131,8 +128,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/profile');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-						}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<Settings size={20} />
 					Profile
@@ -147,8 +143,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/campaigns/create');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/create' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-							}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/create' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Plus size={20} />
 						Start Campaign
@@ -158,8 +153,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/my-campaigns');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-campaigns' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-							}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-campaigns' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Target size={20} />
 						My Campaigns
@@ -169,8 +163,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/campaign-invites');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaign-invites' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-							}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaign-invites' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Mail size={20} />
 						Invites
@@ -180,8 +173,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/my-bids');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-bids' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-							}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-bids' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<FileText size={20} />
 						My Bids
@@ -198,8 +190,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 								navigate('/influencer/dashboard');
 								if (isMobile) closeMobileSidebar();
 							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencer' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-								}`}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencer' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 						>
 							<Star size={20} />
 							My Services
@@ -209,8 +200,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 								navigate('/payment-methods');
 								if (isMobile) closeMobileSidebar();
 							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'payment-methods' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-								}`}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'payment-methods' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 						>
 							<CreditCard size={20} />
 							Payout Settings
@@ -224,8 +214,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/admin');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'admin' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
-							}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'admin' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Shield size={20} />
 						Admin Panel
