@@ -1264,7 +1264,7 @@ function ReviewDeliverableModal({ campaign, deliverable, onClose, onSuccess }) {
             {/* Content Generator Modal */}
             {activeAction === 'generate' && (
                 <ContentGeneratorModal
-                    campaign={campaign}
+                    campaignId={campaign.id}
                     onClose={() => setActiveAction(null)}
                     onSuccess={() => {
                         setActiveAction(null);
