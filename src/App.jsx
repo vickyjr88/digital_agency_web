@@ -25,6 +25,7 @@ import InfluencerProfile from './pages/Influencer/InfluencerProfile';
 import CreatePackage from './pages/Influencer/CreatePackage';
 import PackageDetail from './pages/Package/PackageDetail';
 import CampaignDetail from './pages/Campaign/CampaignDetail';
+import CampaignDetailRouter from './pages/Campaign/CampaignDetailRouter';
 import BrandDashboard from './pages/Brand/BrandDashboard';
 import Wallet from './pages/Wallet/Wallet';
 import AdminDashboard from './pages/Admin/AdminDashboard';
@@ -361,9 +362,7 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/campaigns/:campaignId" element={
-              <ProtectedRoute>
-                <Layout><CampaignDetail /></Layout>
-              </ProtectedRoute>
+              <Layout><CampaignDetailRouter /></Layout>
             } />
 
             {/* Open Campaign Creation */}
