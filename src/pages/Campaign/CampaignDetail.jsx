@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { campaignApi } from '../../services/marketplaceApi';
 import { useAuth } from '../../context/AuthContext';
+import ContentGeneratorModal from './ContentGeneratorModal';
 import './CampaignDetail.css';
 
 const STATUS_CONFIG = {
@@ -257,6 +258,16 @@ export default function CampaignDetail() {
                     }}
                 />
             )}
+            {activeAction === 'generate' && (
+                <ContentGeneratorModal
+                    campaignId={campaign.id}
+                    onClose={() => setActiveAction(null)}
+                    onSuccess={() => {
+                        setActiveAction(null);
+                        fetchCampaign();
+                    }}
+                />
+            )}
             {activeAction === 'review' && (
                 <ReviewDeliverableModal
                     campaign={campaign}
@@ -460,10 +471,15 @@ function ActionsCard({ campaign, isInfluencer, onAction, onUpdate }) {
                 </div>
             )}
 
-            {isInfluencer && ['accepted', 'in_progress', 'revision_requested'].includes(campaign.status) && (
-                <button className="btn-primary full" onClick={() => onAction('submit')}>
-                    📤 Submit Deliverable
-                </button>
+            {isInfluencer && ['open', 'accepted', 'in_progress', 'revision_requested'].includes(campaign.status) && (
+                <>
+                    <button className="btn-secondary full" onClick={() => onAction('generate')} style={{ marginBottom: '12px' }}>
+                        ✨ Create Content with AI
+                    </button>
+                    <button className="btn-primary full" onClick={() => onAction('submit')}>
+                        📤 Submit Deliverable
+                    </button>
+                </>
             )}
 
             {/* Brand Actions */}
