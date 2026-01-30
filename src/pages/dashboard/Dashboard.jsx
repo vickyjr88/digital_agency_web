@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star, Target, Mail, FileText } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
@@ -17,6 +17,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 	const [activeTab, setActiveTab] = useState(defaultTab);
 	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		setActiveTab(defaultTab);
