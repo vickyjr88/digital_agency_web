@@ -66,8 +66,8 @@ export default function CampaignDetail() {
         });
     };
 
-    const isInfluencer = user?.user_type === 'influencer' || campaign?.influencer_id === user?.id;
-    const isBrand = !isInfluencer;
+    const isInfluencer = user?.id === campaign?.influencer?.user_id || user?.user_type === 'influencer';
+    const isBrand = !isInfluencer || user?.id === campaign?.brand_id;
 
     const getStatusConfig = (status) => STATUS_CONFIG[status] || STATUS_CONFIG.pending;
 
@@ -137,18 +137,76 @@ export default function CampaignDetail() {
                     {/* Progress Timeline */}
                     <CampaignTimeline status={campaign.status} />
 
+                    {/* Deliverables Section (Moved up for visibility) */}
+                    <div className="campaign-section">
+                        <div className="section-header">
+                            <h3>📦 Deliverables</h3>
+                            <div className="deliverable-requirements">
+                                {campaign.platforms?.map(p => (
+                                    <span key={p} className="req-tag">#{p}</span>
+                                ))}
+                                {campaign.content_types?.map(t => (
+                                    <span key={t} className="req-tag">@{t}</span>
+                                ))}
+                            </div>
+                        </div>
+                        <DeliverablesSection
+                            campaign={campaign}
+                            isInfluencer={isInfluencer}
+                            onUpdate={fetchCampaign}
+                        />
+                    </div>
+
                     {/* Brief Section */}
                     <div className="campaign-section">
                         <h3>📋 Campaign Brief</h3>
                         <div className="brief-content">
                             <div className="brief-item">
                                 <span className="label">Brand</span>
-                                <span className="value">{campaign.brand_entity?.name || campaign.brief?.brand_name || 'N/A'}</span>
+                                <span className="value">
+                                    {campaign.brand_entity?.name || campaign.brand?.name || 'Brand'}
+                                </span>
                             </div>
                             <div className="brief-item">
-                                <span className="label">Objective</span>
-                                <span className="value">{campaign.brief?.campaign_objective?.replace('_', ' ') || 'N/A'}</span>
+                                <span className="label">Industry</span>
+                                <span className="value">
+                                    {campaign.brand_entity?.industry || 'N/A'}
+                                </span>
                             </div>
+                            <div className="brief-item full">
+                                <span className="label">Brand Description</span>
+                                <span className="value">
+                                    {campaign.brand_entity?.description || 'N/A'}
+                                </span>
+                            </div>
+
+                            <div className="brief-item full">
+                                <span className="label">Campaign Description / Objective</span>
+                                <span className="value">{campaign.description || campaign.brief?.campaign_objective?.replace('_', ' ') || 'N/A'}</span>
+                            </div>
+
+                            {(campaign.product_name || campaign.product_description) && (
+                                <div className="brief-item full">
+                                    <span className="label">Product / Service</span>
+                                    <span className="value">
+                                        <strong>{campaign.product_name}</strong>
+                                        {campaign.product_description && <p>{campaign.product_description}</p>}
+                                        {campaign.product_url && (
+                                            <a href={campaign.product_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                                View Product
+                                            </a>
+                                        )}
+                                    </span>
+                                </div>
+                            )}
+
+                            {campaign.custom_requirements && (
+                                <div className="brief-item full">
+                                    <span className="label">Requirements / Instructions</span>
+                                    <span className="value">{campaign.custom_requirements}</span>
+                                </div>
+                            )}
+
                             {campaign.brief?.target_audience && (
                                 <div className="brief-item full">
                                     <span className="label">Target Audience</span>
@@ -167,29 +225,37 @@ export default function CampaignDetail() {
                                     <span className="value">{campaign.brief.content_guidelines}</span>
                                 </div>
                             )}
-                            {campaign.brief?.special_requirements && (
-                                <div className="brief-item full">
-                                    <span className="label">Special Requirements</span>
-                                    <span className="value">{campaign.brief.special_requirements}</span>
+                            {campaign.platforms && (
+                                <div className="brief-item">
+                                    <span className="label">Platforms</span>
+                                    <div className="flex gap-2 flex-wrap">
+                                        {campaign.platforms.map(p => (
+                                            <span key={p} className="px-2 py-1 bg-gray-100 rounded text-sm capitalize">{p}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {campaign.content_types && (
+                                <div className="brief-item">
+                                    <span className="label">Content Types</span>
+                                    <div className="flex gap-2 flex-wrap">
+                                        {campaign.content_types.map(t => (
+                                            <span key={t} className="px-2 py-1 bg-gray-100 rounded text-sm capitalize">{t}</span>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Deliverables Section */}
-                    <div className="campaign-section">
-                        <h3>📦 Deliverables</h3>
-                        <DeliverablesSection
-                            campaign={campaign}
-                            isInfluencer={isInfluencer}
-                            onUpdate={fetchCampaign}
-                        />
-                    </div>
-
                     {/* Messages/Activity */}
                     <div className="campaign-section">
-                        <h3>💬 Activity Log</h3>
-                        <ActivityLog activities={campaign.activities || []} formatDate={formatDate} />
+                        <h3>� Activity Log</h3>
+                        <ActivityLog
+                            activities={campaign.activities || []}
+                            campaign={campaign}
+                            formatDate={formatDate}
+                        />
                     </div>
                 </div>
 
@@ -250,7 +316,7 @@ export default function CampaignDetail() {
             {/* Action Modals */}
             {activeAction === 'submit' && (
                 <SubmitDeliverableModal
-                    campaignId={campaign.id}
+                    campaign={campaign}
                     onClose={() => setActiveAction(null)}
                     onSuccess={() => {
                         setActiveAction(null);
@@ -271,6 +337,7 @@ export default function CampaignDetail() {
             {activeAction === 'review' && (
                 <ReviewDeliverableModal
                     campaign={campaign}
+                    deliverable={campaign.deliverables?.find(d => d.status === 'submitted')}
                     onClose={() => setActiveAction(null)}
                     onSuccess={() => {
                         setActiveAction(null);
@@ -355,20 +422,25 @@ function DeliverablesSection({ campaign, isInfluencer, onUpdate }) {
             {deliverables.map((del, i) => (
                 <div key={i} className={`deliverable-item ${del.status}`}>
                     <div className="del-header">
-                        <span className="del-type">{del.type}</span>
+                        <span className="del-type">{del.platform} - {del.content_type}</span>
                         <span className={`del-status ${del.status}`}>{del.status}</span>
                     </div>
 
-                    {del.url && (
-                        <a href={del.url} target="_blank" rel="noopener noreferrer" className="del-preview">
-                            {del.type === 'image' && <img src={del.url} alt="Deliverable" />}
-                            {del.type === 'video' && <span className="video-icon">▶️ View Video</span>}
-                            {del.type === 'link' && <span className="link-icon">🔗 {del.url}</span>}
+                    {(del.draft_url || del.published_url) && (
+                        <a href={del.published_url || del.draft_url} target="_blank" rel="noopener noreferrer" className="del-preview">
+                            {del.published_url ? (
+                                <span className="link-icon">📢 View Published Content</span>
+                            ) : (
+                                <span className="link-icon">🔗 View Draft</span>
+                            )}
                         </a>
                     )}
 
-                    {del.description && (
-                        <p className="del-description">{del.description}</p>
+                    {(del.draft_description || del.draft_caption) && (
+                        <div className="del-description">
+                            {del.draft_caption && <strong>{del.draft_caption}</strong>}
+                            {del.draft_description && <p>{del.draft_description}</p>}
+                        </div>
                     )}
 
                     {del.feedback && (
@@ -378,7 +450,7 @@ function DeliverablesSection({ campaign, isInfluencer, onUpdate }) {
                         </div>
                     )}
 
-                    <span className="del-date">Submitted {new Date(del.submitted_at).toLocaleDateString()}</span>
+                    <span className="del-date">Submitted {new Date(del.created_at).toLocaleDateString()}</span>
                 </div>
             ))}
         </div>
@@ -386,18 +458,32 @@ function DeliverablesSection({ campaign, isInfluencer, onUpdate }) {
 }
 
 // Activity Log
-function ActivityLog({ activities, formatDate }) {
-    if (!activities || activities.length === 0) {
+function ActivityLog({ activities, campaign, formatDate }) {
+    // Synthesize milestones if activities is empty
+    const synthesized = [...(activities || [])];
+
+    if (synthesized.length === 0 && campaign) {
+        if (campaign.created_at) synthesized.push({ icon: '🎯', message: 'Campaign created', created_at: campaign.created_at });
+        if (campaign.started_at) synthesized.push({ icon: '🚀', message: 'Campaign started', created_at: campaign.started_at });
+        if (campaign.draft_submitted_at) synthesized.push({ icon: '📤', message: 'Draft submitted for review', created_at: campaign.draft_submitted_at });
+        if (campaign.published_at) synthesized.push({ icon: '📢', message: 'Content published', created_at: campaign.published_at });
+        if (campaign.completed_at) synthesized.push({ icon: '🎉', message: 'Campaign completed', created_at: campaign.completed_at });
+
+        // Sort descending
+        synthesized.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+    if (synthesized.length === 0) {
         return (
             <div className="no-activities">
-                <p>No activity yet</p>
+                <p>No activity recorded yet</p>
             </div>
         );
     }
 
     return (
         <div className="activity-list">
-            {activities.map((activity, i) => (
+            {synthesized.map((activity, i) => (
                 <div key={i} className="activity-item">
                     <div className="activity-icon">{activity.icon || '📌'}</div>
                     <div className="activity-content">
@@ -522,17 +608,19 @@ function ActionsCard({ campaign, isInfluencer, onAction, onUpdate }) {
 }
 
 // Submit Deliverable Modal
-function SubmitDeliverableModal({ campaignId, onClose, onSuccess }) {
+function SubmitDeliverableModal({ campaign, onClose, onSuccess }) {
+    const campaignId = campaign.id;
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
-        type: 'link',
-        url: '',
-        description: '',
+        content_type: campaign.content_types?.[0] || 'post',
+        platform: campaign.platforms?.[0] || (campaign.package?.platform?.toLowerCase()) || 'twitter',
+        draft_url: '',
+        draft_description: '',
     });
 
     const handleSubmit = async () => {
-        if (!formData.url) {
+        if (!formData.draft_url) {
             setError('Please provide a URL or file');
             return;
         }
@@ -559,25 +647,58 @@ function SubmitDeliverableModal({ campaignId, onClose, onSuccess }) {
                 <div className="modal-body">
                     {error && <div className="error-message">{error}</div>}
 
-                    <div className="form-group">
-                        <label>Type</label>
-                        <select
-                            value={formData.type}
-                            onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
-                        >
-                            <option value="link">Link (Instagram, TikTok, etc.)</option>
-                            <option value="image">Image URL</option>
-                            <option value="video">Video URL</option>
-                            <option value="file">File URL</option>
-                        </select>
+                    <div className="form-row">
+                        <div className="form-group half">
+                            <label>Platform *</label>
+                            <select
+                                value={formData.platform}
+                                onChange={(e) => setFormData(prev => ({ ...prev, platform: e.target.value }))}
+                            >
+                                {campaign.platforms && campaign.platforms.length > 0 ? (
+                                    campaign.platforms.map(p => (
+                                        <option key={p} value={p.toLowerCase()}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
+                                    ))
+                                ) : (
+                                    <>
+                                        <option value="instagram">Instagram</option>
+                                        <option value="tiktok">TikTok</option>
+                                        <option value="twitter">Twitter</option>
+                                        <option value="facebook">Facebook</option>
+                                        <option value="youtube">YouTube</option>
+                                    </>
+                                )}
+                            </select>
+                        </div>
+
+                        <div className="form-group half">
+                            <label>Content Type *</label>
+                            <select
+                                value={formData.content_type}
+                                onChange={(e) => setFormData(prev => ({ ...prev, content_type: e.target.value }))}
+                            >
+                                {campaign.content_types && campaign.content_types.length > 0 ? (
+                                    campaign.content_types.map(t => (
+                                        <option key={t} value={t.toLowerCase()}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                                    ))
+                                ) : (
+                                    <>
+                                        <option value="post">Post</option>
+                                        <option value="reel">Reel</option>
+                                        <option value="story">Story</option>
+                                        <option value="tweet">Tweet</option>
+                                        <option value="video">Video</option>
+                                    </>
+                                )}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="form-group">
-                        <label>URL *</label>
+                        <label>Draft URL *</label>
                         <input
                             type="url"
-                            value={formData.url}
-                            onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                            value={formData.draft_url}
+                            onChange={(e) => setFormData(prev => ({ ...prev, draft_url: e.target.value }))}
                             placeholder="https://..."
                         />
                     </div>
@@ -585,8 +706,8 @@ function SubmitDeliverableModal({ campaignId, onClose, onSuccess }) {
                     <div className="form-group">
                         <label>Description / Notes</label>
                         <textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                            value={formData.draft_description}
+                            onChange={(e) => setFormData(prev => ({ ...prev, draft_description: e.target.value }))}
                             placeholder="Any notes about this deliverable..."
                             rows={3}
                         />
@@ -598,7 +719,7 @@ function SubmitDeliverableModal({ campaignId, onClose, onSuccess }) {
                     <button
                         className="btn-primary"
                         onClick={handleSubmit}
-                        disabled={loading || !formData.url}
+                        disabled={loading || !formData.draft_url}
                     >
                         {loading ? 'Submitting...' : 'Submit Deliverable'}
                     </button>
@@ -609,13 +730,18 @@ function SubmitDeliverableModal({ campaignId, onClose, onSuccess }) {
 }
 
 // Review Deliverable Modal
-function ReviewDeliverableModal({ campaign, onClose, onSuccess }) {
+function ReviewDeliverableModal({ campaign, deliverable, onClose, onSuccess }) {
+    const activeDeliverable = deliverable || campaign.deliverables?.find(d => d.status === 'submitted');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [action, setAction] = useState('');
     const [feedback, setFeedback] = useState('');
 
     const handleReview = async () => {
+        if (!activeDeliverable) {
+            setError('No deliverable found to review');
+            return;
+        }
         if (!action) {
             setError('Please select an action');
             return;
@@ -624,9 +750,9 @@ function ReviewDeliverableModal({ campaign, onClose, onSuccess }) {
         setLoading(true);
         try {
             if (action === 'approve') {
-                await campaignApi.approveDeliverable(campaign.id);
+                await campaignApi.approveDeliverable(campaign.id, activeDeliverable.id);
             } else {
-                await campaignApi.requestRevision(campaign.id, { feedback });
+                await campaignApi.requestRevision(campaign.id, activeDeliverable.id, feedback);
             }
             onSuccess();
         } catch (err) {
@@ -646,6 +772,18 @@ function ReviewDeliverableModal({ campaign, onClose, onSuccess }) {
 
                 <div className="modal-body">
                     {error && <div className="error-message">{error}</div>}
+
+                    {activeDeliverable && (
+                        <div className="review-target-info">
+                            <span className="label">Reviewing:</span>
+                            <span className="value">{activeDeliverable.platform} {activeDeliverable.content_type}</span>
+                            {activeDeliverable.draft_url && (
+                                <a href={activeDeliverable.draft_url} target="_blank" rel="noopener noreferrer" className="view-link">
+                                    🔗 View Content
+                                </a>
+                            )}
+                        </div>
+                    )}
 
                     <div className="review-options">
                         <button

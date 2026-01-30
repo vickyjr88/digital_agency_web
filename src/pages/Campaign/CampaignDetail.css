@@ -948,3 +948,110 @@
         border-radius: 0;
     }
 }
+
+/* Section Header */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h3 {
+    margin-bottom: 0 !important;
+}
+
+.deliverable-requirements {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.req-tag {
+    padding: 0.25rem 0.75rem;
+    background: #fdf2f8;
+    color: #db2777;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Review Info */
+.review-target-info {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.review-target-info .label {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.review-target-info .value {
+    font-weight: 700;
+    color: #0f172a;
+    text-transform: capitalize;
+}
+
+.review-target-info .view-link {
+    margin-left: auto;
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* Utility Classes */
+.px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.bg-gray-100 {
+    background-color: #f3f4f6;
+}
+
+.rounded {
+    border-radius: 0.25rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.flex {
+    display: flex;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.text-blue-600 {
+    color: #2563eb;
+}
+
+.hover\:underline:hover {
+    text-decoration: underline;
+}
