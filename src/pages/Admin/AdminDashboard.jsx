@@ -280,7 +280,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                     </button>
                                 </div>
                                 <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${['analytics', 'overview'].includes(activeTab) ? '' : 'overflow-hidden'}`}>
-                                    {activeTab === 'overview' && <OverviewDashboard stats={data.stats} latest={data.latest} navigate={navigate} />}
+                                    {activeTab === 'overview' && <OverviewDashboard stats={data.stats} latest={data.latest} navigate={navigate} formatPrice={formatPrice} />}
                                     {activeTab === 'users' && <UserManagement users={data.users} onFund={(user) => { setFundingUser(user); setShowFundModal(true); }} />}
                                     {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
                                     {activeTab === 'content' && <ContentManagement content={data.content} />}
@@ -570,24 +570,24 @@ function CampaignManagement({ campaigns, formatPrice }) {
     );
 }
 
-function OverviewDashboard({ stats, latest, navigate }) {
+function OverviewDashboard({ stats, latest, navigate, formatPrice }) {
     if (!stats) return <div className="p-8 text-center text-gray-500">Loading overview...</div>;
 
     return (
         <div className="p-6 space-y-8">
             {/* Financial Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <StatsCard icon={Shield} title="Total Revenue" value={stats?.total_revenue} color="bg-green-50 text-green-600" />
-                <StatsCard icon={Shield} title="Active Subscriptions" value={stats?.active_subscriptions} color="bg-indigo-50 text-indigo-600" />
-                <StatsCard icon={Clock} title="Pending Transactions" value={stats?.pending_transactions} color="bg-yellow-50 text-yellow-600" />
+                <StatsCard icon={Shield} title="Total Revenue" value={formatPrice(stats?.revenue?.total)} color="bg-green-50 text-green-600" />
+                <StatsCard icon={Shield} title="Active Subscriptions" value={stats?.revenue?.active_subscriptions} color="bg-indigo-50 text-indigo-600" />
+                {/* Note: Pending transactions not yet in API */}
             </div>
 
             {/* Usage Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatsCard icon={Users} title="Total Users" value={stats?.users} color="bg-blue-50 text-blue-600" />
-                <StatsCard icon={Briefcase} title="Total Brands" value={stats?.brands} color="bg-purple-50 text-purple-600" />
-                <StatsCard icon={TrendingUp} title="Total Trends" value={stats?.trends} color="bg-teal-50 text-teal-600" />
-                <StatsCard icon={FileText} title="Content Generated" value={stats?.content_generated} color="bg-orange-50 text-orange-600" />
+                <StatsCard icon={Users} title="Total Users" value={stats?.users?.total} color="bg-blue-50 text-blue-600" />
+                <StatsCard icon={Briefcase} title="Total Brands" value={stats?.users?.brands} color="bg-purple-50 text-purple-600" />
+                <StatsCard icon={UserCheck} title="Influencers" value={stats?.users?.influencers} color="bg-teal-50 text-teal-600" />
+                <StatsCard icon={FileText} title="Content Generated" value={stats?.content} color="bg-orange-50 text-orange-600" />
             </div>
 
             {/* Recent Transactions Table */}
