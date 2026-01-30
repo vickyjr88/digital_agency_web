@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
@@ -32,17 +32,34 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Determine active tab from current route
+    const getActiveTabFromPath = (path) => {
+        if (path === '/admin') return 'overview';
+        if (path.startsWith('/admin/users')) return 'users';
+        if (path.startsWith('/admin/brands')) return 'brands';
+        if (path.startsWith('/admin/content')) return 'content';
+        if (path.startsWith('/admin/analytics')) return 'analytics';
+        if (path.startsWith('/admin/failures')) return 'failures';
+        if (path.startsWith('/admin/subscriptions')) return 'subscriptions';
+        if (path.startsWith('/admin/wallet-transactions')) return 'wallet_transactions';
+        if (path.startsWith('/admin/withdrawals')) return 'withdrawals';
+        if (path.startsWith('/admin/influencers')) return 'influencers';
+        if (path.startsWith('/admin/packages')) return 'packages';
+        if (path.startsWith('/admin/campaigns')) return 'campaigns';
+        return defaultTab;
+    };
 
     useEffect(() => {
-        if (!children) {
-            setActiveTab(defaultTab);
-        }
-    }, [defaultTab, children]);
+        const currentTab = getActiveTabFromPath(location.pathname);
+        setActiveTab(currentTab);
+    }, [location.pathname, defaultTab]);
 
     useEffect(() => {
         if (!children) {
             // Only fetch data if the tab requires data loading at this level
-            if (activeTab === 'subscriptions' || activeTab === 'wallet_transactions') return;
+            if (activeTab === 'subscriptions' || activeTab === 'wallet_transactions' || activeTab === 'campaigns') return;
             fetchAdminData();
         }
     }, [activeTab, children]);

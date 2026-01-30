@@ -192,6 +192,60 @@ function App() {
                 </Layout>
               </AdminRoute>
             } />
+            {/* Admin Users */}
+            <Route path="/admin/users" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="users" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Brands */}
+            <Route path="/admin/brands" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="brands" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Content */}
+            <Route path="/admin/content" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="content" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Analytics */}
+            <Route path="/admin/analytics" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="analytics" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Failures */}
+            <Route path="/admin/failures" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="failures" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Subscriptions */}
+            <Route path="/admin/subscriptions" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="subscriptions" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Wallet Transactions */}
+            <Route path="/admin/wallet-transactions" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="wallet_transactions" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Influencers */}
+            <Route path="/admin/influencers" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="influencers" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Packages */}
+            <Route path="/admin/packages" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="packages" /></Layout>
+              </AdminRoute>
+            } />
 
             {/* Brand Pages wrapped in Dashboard for Sidebar */}
             <Route path="/dashboard/brands/new" element={
