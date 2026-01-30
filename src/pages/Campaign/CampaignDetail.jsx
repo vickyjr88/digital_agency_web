@@ -6,8 +6,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { campaignApi } from '../../services/marketplaceApi';
+import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import ContentGeneratorModal from './ContentGeneratorModal';
+import { PartiesCard, PackageInfoCard } from './CampaignSidebarComponents';
 import './CampaignDetail.css';
 
 const STATUS_CONFIG = {
@@ -32,6 +34,7 @@ export default function CampaignDetail() {
     const [campaign, setCampaign] = useState(null);
     const [error, setError] = useState(null);
     const [activeAction, setActiveAction] = useState(null);
+    const [generatedContents, setGeneratedContents] = useState([]);
 
     useEffect(() => {
         fetchCampaign();
@@ -42,6 +45,14 @@ export default function CampaignDetail() {
         try {
             const response = await campaignApi.getById(campaignId);
             setCampaign(response);
+
+            // Try to fetch generated contents
+            try {
+                const contentData = await api.getMyGeneratedContent({ campaign_id: campaignId });
+                setGeneratedContents(contentData.contents || []);
+            } catch (err) {
+                console.error('Failed to fetch generated contents:', err);
+            }
         } catch (err) {
             console.error('Error fetching campaign:', err);
             setError('Campaign not found');
@@ -66,8 +77,10 @@ export default function CampaignDetail() {
         });
     };
 
-    const isInfluencer = user?.id === campaign?.influencer?.user_id || user?.user_type === 'influencer';
-    const isBrand = !isInfluencer || user?.id === campaign?.brand_id;
+    const isInfluencer = user?.id === campaign?.influencer?.user_id;
+    const isBrand = user?.id === campaign?.brand_id;
+    const isAdmin = user?.user_type === 'admin';
+    const isParticipant = isInfluencer || isBrand || isAdmin;
 
     const getStatusConfig = (status) => STATUS_CONFIG[status] || STATUS_CONFIG.pending;
 
@@ -136,6 +149,24 @@ export default function CampaignDetail() {
                 <div className="campaign-main">
                     {/* Progress Timeline */}
                     <CampaignTimeline status={campaign.status} />
+
+                    {/* AI Generated Content Section */}
+                    {generatedContents.length > 0 && (
+                        <div className="campaign-section">
+                            <div className="section-header">
+                                <h3>✨ AI Generated Content</h3>
+                                <div className="deliverable-requirements">
+                                    <span className="req-tag">{generatedContents.length} items</span>
+                                </div>
+                            </div>
+                            <GeneratedContentSection
+                                contents={generatedContents}
+                                isInfluencer={isInfluencer}
+                                isBrand={isBrand}
+                                isAdmin={isAdmin}
+                            />
+                        </div>
+                    )}
 
                     {/* Deliverables Section (Moved up for visibility) */}
                     <div className="campaign-section">
@@ -270,55 +301,10 @@ export default function CampaignDetail() {
                     />
 
                     {/* Parties Card */}
-                    <div className="parties-card">
-                        <h4>👥 Parties</h4>
+                    <PartiesCard campaign={campaign} />
 
-                        <div className="party">
-                            <span className="role">Brand</span>
-                            <div className="party-info">
-                                <div className="party-avatar">
-                                    {campaign.brand_entity?.logo_url ? (
-                                        <img src={campaign.brand_entity.logo_url} alt={campaign.brand_entity.name} />
-                                    ) : (
-                                        (campaign.brand_entity?.name || campaign.brand?.name || 'B').charAt(0)
-                                    )}
-                                </div>
-                                <div className="party-details">
-                                    <span className="party-name">{campaign.brand_entity?.name || campaign.brand?.name || 'Brand'}</span>
-                                    {campaign.brand_entity?.industry && (
-                                        <span className="party-subtext">{campaign.brand_entity.industry}</span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="party">
-                            <span className="role">Influencer</span>
-                            <Link to={`/marketplace/influencer/${campaign.influencer?.id}`} className="party-info">
-                                <div className="party-avatar">
-                                    {campaign.influencer?.display_name?.charAt(0) || 'I'}
-                                </div>
-                                <span className="party-name">{campaign.influencer?.display_name || 'Influencer'}</span>
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Package Info */}
-                    {campaign.package && (
-                        <div className="package-info-card">
-                            <h4>📦 Package Details</h4>
-                            <Link to={`/marketplace/package/${campaign.package.id}`} className="package-link">
-                                <span className="pkg-name">{campaign.package.name}</span>
-                                <ul className="pkg-includes">
-                                    <li>📍 {campaign.package.platform}</li>
-                                    <li>📦 {campaign.package.deliverables_count}x Deliverables</li>
-                                    <li>⏱️ {campaign.package.timeline_days} days</li>
-                                    <li>🔄 {campaign.package.revisions_included} revisions</li>
-                                </ul>
-                                <span className="pkg-price">{formatPrice(campaign.package.price)}</span>
-                            </Link>
-                        </div>
-                    )}
+                    {/* Package Info Card */}
+                    <PackageInfoCard campaign={campaign} formatPrice={formatPrice} />
                 </div>
             </div>
 
@@ -406,6 +392,58 @@ function CampaignTimeline({ status }) {
                     </div>
                 );
             })}
+        </div>
+    );
+}
+
+// Generated Content Section
+function GeneratedContentSection({ contents, isInfluencer, isBrand, isAdmin }) {
+    const navigate = useNavigate();
+
+    return (
+        <div className="generated-contents-list">
+            {contents.map((item) => (
+                <div key={item.id} className="generated-item">
+                    <div className="item-main">
+                        <div className="item-info">
+                            <div className="item-meta">
+                                <span className={`platform-tag ${item.platform}`}>{item.platform}</span>
+                                <span className="type-tag">{item.content_type}</span>
+                            </div>
+                            <h4 className="item-topic">{item.trend_topic}</h4>
+                            <p className="item-date">Generated {new Date(item.generated_at).toLocaleDateString()}</p>
+                        </div>
+                        <div className="item-status">
+                            <span className={`status-pill ${item.status}`}>{item.status.replace('_', ' ')}</span>
+                        </div>
+                    </div>
+                    <div className="item-actions">
+                        {isInfluencer && item.status === 'draft' ? (
+                            <button
+                                onClick={() => navigate(`/campaign-content/${item.id}/edit`)}
+                                className="btn-secondary sm"
+                            >
+                                ✏️ Edit & Submit
+                            </button>
+                        ) : (isBrand || isAdmin) && item.status === 'pending_approval' ? (
+                            <button
+                                onClick={() => navigate(`/campaign-content/${item.id}/edit`)}
+                                className="btn-secondary sm"
+                                style={{ background: '#4f46e5', color: 'white' }}
+                            >
+                                👀 Review & Approve
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => navigate(`/campaign-content/${item.id}/edit`)}
+                                className="btn-secondary sm"
+                            >
+                                👁️ View Content
+                            </button>
+                        )}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }
@@ -578,7 +616,7 @@ function ActionsCard({ campaign, isInfluencer, onAction, onUpdate }) {
             )}
 
             {/* Brand Actions */}
-            {!isInfluencer && campaign.status === 'draft_submitted' && (
+            {(isBrand || isAdmin) && campaign.status === 'draft_submitted' && (
                 <div className="action-buttons">
                     <button className="btn-primary full" onClick={() => onAction('review')}>
                         👀 Review Deliverable
@@ -586,7 +624,7 @@ function ActionsCard({ campaign, isInfluencer, onAction, onUpdate }) {
                 </div>
             )}
 
-            {!isInfluencer && campaign.status === 'draft_approved' && (
+            {(isBrand || isAdmin) && campaign.status === 'draft_approved' && (
                 <button className="btn-complete full" onClick={handleComplete} disabled={loading}>
                     🎉 Mark Complete & Release Payment
                 </button>

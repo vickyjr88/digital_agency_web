@@ -1,26 +1,43 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
+import { campaignApi } from '../../services/marketplaceApi';
 import { toast } from 'sonner';
-import { ArrowLeft, Save, Send, Loader2, Sparkles } from 'lucide-react';
+import { ArrowLeft, Save, Send, Loader2, Sparkles, CheckCircle, XCircle, MessageSquare } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { PartiesCard, PackageInfoCard } from './CampaignSidebarComponents';
+import './CampaignDetail.css';
 
 export default function EditGeneratedContent() {
     const { contentId } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [reviewing, setReviewing] = useState(false);
     const [content, setContent] = useState(null);
+    const [campaign, setCampaign] = useState(null);
     const [formData, setFormData] = useState({});
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [reviewAction, setReviewAction] = useState(null); // 'approve' or 'revision'
+    const [feedback, setFeedback] = useState('');
 
     useEffect(() => {
         fetchContent();
     }, [contentId]);
 
     const fetchContent = async () => {
+        setLoading(true);
         try {
             const data = await api.getCampaignContentDetail(contentId);
             setContent(data);
+
+            // Fetch campaign details for the sidebar
+            if (data.campaign?.id) {
+                const campaignData = await campaignApi.getById(data.campaign.id);
+                setCampaign(campaignData);
+            }
 
             // Initialize form data based on content type
             setFormData({
@@ -28,7 +45,6 @@ export default function EditGeneratedContent() {
                 facebook_post: data.facebook_post || '',
                 instagram_caption: data.instagram_caption || '',
                 linkedin_post: data.linkedin_post || '',
-                // Complex objects need careful handling
                 instagram_reel_script: data.instagram_reel_script || { visuals: '', audio: '', caption: '' },
                 tiktok_idea: data.tiktok_idea || { hook: '', action: '', sound: '' }
             });
@@ -38,6 +54,14 @@ export default function EditGeneratedContent() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('en-KE', {
+            style: 'currency',
+            currency: 'KES',
+            minimumFractionDigits: 0,
+        }).format((price || 0) / 100);
     };
 
     const handleChange = (field, value) => {
@@ -54,44 +78,12 @@ export default function EditGeneratedContent() {
         }));
     };
 
-    const handleSave = async () => {
-        // Since we don't have a direct "update content" endpoint in the original spec,
-        // we might strictly strictly speaking need one. However, often 'save' implies updating the draft.
-        // If the backend doesn't support update, we might need to rely on the fact that this is a "Review" step
-        // But the user asked for "Further manipulation".
-        // Let's assume for now we can't update without a new endpoint or reusing generate?
-        // Wait, normally an editor implies saving changes.
-        // I will check if there is an update endpoint in campaign_content.py
-
-        // Checking campaign_content.py ... 
-        // It does NOT have an update/PUT endpoint.
-        // It has generate, get, delete, submit, approve.
-
-        // This is a missing backend feature for "Editing".
-        // For now, I will implement the UI but treating "Submit" as the action that effectively finalizes it.
-        // OR better yet, I should add the update endpoint to the backend?
-        // The user instructions are "save the content on the database".
-        // If I can't update, I can't really "save" edits.
-
-        // PLAN B: I will add a PATCH/PUT endpoint to campaign_content.py.
-        // But first let's build the UI.
-
-        toast.info("Saving draft functionality coming soon (requires backend update)");
-    };
-
     const handleSubmit = async () => {
         setSubmitting(true);
         try {
-            // In a real scenario we'd want to save the edits first. 
-            // Since we can't save edits yet (missing endpoint), we can only submit the ID.
-            // This implies the edits made in UI won't be persisted unless we add that endpoint.
-            // I will assume for this step I should just enable the flow, and maybe I'll add the backend endpoint next?
-            // Actually, the user asked to "save the content on the database".
-
-            // Let's try to submit for now.
             await api.submitContentForApproval(contentId);
             toast.success('Content submitted for approval!');
-            navigate(`/campaigns/${content.campaign.id}`);
+            navigate(`/campaigns/${campaign.id}`);
         } catch (error) {
             console.error('Failed to submit', error);
             toast.error('Failed to submit');
@@ -100,177 +92,281 @@ export default function EditGeneratedContent() {
         }
     };
 
-    if (loading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
-    if (!content) return <div className="p-8 text-center">Content not found</div>;
+    const handleReview = async () => {
+        if (reviewAction === 'revision' && !feedback) {
+            toast.error('Please provide feedback for revisions');
+            return;
+        }
+
+        setReviewing(true);
+        try {
+            await api.approveContent(contentId, {
+                approved: reviewAction === 'approve',
+                feedback: feedback || (reviewAction === 'approve' ? 'Approved!' : '')
+            });
+            toast.success(reviewAction === 'approve' ? 'Content approved!' : 'Revision requested');
+            navigate(`/campaigns/${campaign.id}`);
+        } catch (error) {
+            console.error('Failed to review content', error);
+            toast.error('Failed to process review');
+        } finally {
+            setReviewing(false);
+            setShowReviewModal(false);
+        }
+    };
+
+    const isInfluencer = user?.id === content?.influencer_id;
+    const isBrand = user?.id === campaign?.brand_id;
+    const isAdmin = user?.user_type === 'admin';
+    const canReview = (isBrand || isAdmin) && content?.status === 'pending_approval';
+    const canEdit = isInfluencer && content?.status === 'draft';
+
+    if (loading) return (
+        <div className="campaign-loading">
+            <div className="spinner"></div>
+            <p>Loading content editor...</p>
+        </div>
+    );
+
+    if (!content) return (
+        <div className="campaign-error">
+            <h2>Content not found</h2>
+            <button className="back-btn" onClick={() => navigate(-1)}>Go Back</button>
+        </div>
+    );
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            <div className="flex items-center justify-between mb-6">
-                <button onClick={() => navigate(-1)} className="flex items-center text-gray-600 hover:text-gray-900">
-                    <ArrowLeft size={20} className="mr-2" />
-                    Back
+        <div className="campaign-detail-page">
+            {/* Navigation */}
+            <div className="page-nav">
+                <button onClick={() => navigate(-1)} className="back-btn">
+                    ← Back to Campaign
                 </button>
-                <div className="flex gap-3">
-                    {/* <button 
-                        onClick={handleSave} 
-                        disabled={saving}
-                        className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-50"
-                    >
-                        <Save size={18} className="mr-2" />
-                        Save Draft
-                    </button> */}
-                    <button
-                        onClick={handleSubmit}
-                        disabled={submitting}
-                        className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-                    >
-                        {submitting ? <Loader2 className="animate-spin mr-2" /> : <Send size={18} className="mr-2" />}
-                        Submit for Approval
-                    </button>
+                <div className="status-badge" style={{ background: '#e0e7ff', color: '#3730a3' }}>
+                    AI Content: {content.status}
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-                <div className="flex items-start justify-between mb-4">
-                    <div>
-                        <h1 className="text-2xl font-bold mb-1">Edit Content</h1>
-                        <p className="text-gray-500">
-                            Campaign: <span className="font-medium text-gray-900">{content.campaign.title}</span>
+            {/* Header */}
+            <header className="campaign-header">
+                <h1>Edit AI Generated Content</h1>
+                <div className="header-meta">
+                    <div className="meta-item">
+                        <span>Campaign:</span>
+                        <strong>{content.campaign.title}</strong>
+                    </div>
+                    <div className="meta-item">
+                        <span className={`platform-tag ${content.platform}`}>{content.platform}</span>
+                        <span className="type-tag">{content.content_type}</span>
+                    </div>
+                </div>
+            </header>
+
+            <div className="campaign-content">
+                {/* Main Content */}
+                <div className="campaign-main">
+                    <div className="campaign-section">
+                        <h3>✍️ Editor</h3>
+                        <div className="space-y-6">
+                            {content.tweet && (
+                                <div className="form-group">
+                                    <label>Tweet</label>
+                                    <textarea
+                                        value={formData.tweet}
+                                        onChange={(e) => handleChange('tweet', e.target.value)}
+                                        className="w-full p-3 border rounded-lg min-h-[100px]"
+                                    />
+                                    <p className="text-right text-xs text-gray-400 mt-1">{formData.tweet.length}/280</p>
+                                </div>
+                            )}
+
+                            {content.instagram_caption && (
+                                <div className="form-group">
+                                    <label>Instagram Caption</label>
+                                    <textarea
+                                        value={formData.instagram_caption}
+                                        onChange={(e) => handleChange('instagram_caption', e.target.value)}
+                                        className="w-full p-3 border rounded-lg min-h-[150px]"
+                                    />
+                                </div>
+                            )}
+
+                            {content.instagram_reel_script && (
+                                <div className="space-y-4 border p-4 rounded-lg bg-gray-50">
+                                    <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }} className="font-medium flex items-center gap-2">
+                                        <Sparkles size={16} className="text-purple-500" />
+                                        Reel Script
+                                    </h3>
+                                    <div className="form-group">
+                                        <label className="text-xs">Visuals</label>
+                                        <textarea
+                                            value={formData.instagram_reel_script.visuals}
+                                            onChange={(e) => handleNestedChange('instagram_reel_script', 'visuals', e.target.value)}
+                                            rows={3}
+                                            className="w-full p-2 border rounded text-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-xs">Audio/Voiceover</label>
+                                        <textarea
+                                            value={formData.instagram_reel_script.audio}
+                                            onChange={(e) => handleNestedChange('instagram_reel_script', 'audio', e.target.value)}
+                                            rows={2}
+                                            className="w-full p-2 border rounded text-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-xs">Caption</label>
+                                        <textarea
+                                            value={formData.instagram_reel_script.caption}
+                                            onChange={(e) => handleNestedChange('instagram_reel_script', 'caption', e.target.value)}
+                                            rows={3}
+                                            className="w-full p-2 border rounded text-sm"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {content.tiktok_idea && (
+                                <div className="space-y-4 border p-4 rounded-lg bg-gray-50">
+                                    <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }} className="font-medium flex items-center gap-2">
+                                        <Sparkles size={16} className="text-pink-500" />
+                                        TikTok Concept
+                                    </h3>
+                                    <div className="form-group">
+                                        <label className="text-xs">Hook (0-3s)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.tiktok_idea.hook}
+                                            onChange={(e) => handleNestedChange('tiktok_idea', 'hook', e.target.value)}
+                                            className="w-full p-2 border rounded text-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-xs">Main Action</label>
+                                        <textarea
+                                            value={formData.tiktok_idea.action}
+                                            onChange={(e) => handleNestedChange('tiktok_idea', 'action', e.target.value)}
+                                            rows={3}
+                                            className="w-full p-2 border rounded text-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-xs">Sound/Audio</label>
+                                        <input
+                                            type="text"
+                                            value={formData.tiktok_idea.sound}
+                                            onChange={(e) => handleNestedChange('tiktok_idea', 'sound', e.target.value)}
+                                            className="w-full p-2 border rounded text-sm"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Sidebar */}
+                <div className="campaign-sidebar">
+                    <div className="actions-card">
+                        <h4>⚡ Actions</h4>
+                        <div className="action-buttons">
+                            {canEdit && (
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={submitting}
+                                    className="btn-primary full"
+                                >
+                                    {submitting ? <Loader2 className="animate-spin" /> : <Send size={18} className="mr-2" />}
+                                    Submit for Approval
+                                </button>
+                            )}
+
+                            {canReview && (
+                                <div className="space-y-3">
+                                    <button
+                                        onClick={() => { setReviewAction('approve'); setShowReviewModal(true); }}
+                                        className="btn-primary full"
+                                        style={{ background: '#10b981' }}
+                                    >
+                                        <CheckCircle size={18} className="mr-2" />
+                                        Approve Content
+                                    </button>
+                                    <button
+                                        onClick={() => { setReviewAction('revision'); setShowReviewModal(true); }}
+                                        className="btn-reject full"
+                                    >
+                                        <XCircle size={18} className="mr-2" />
+                                        Request Revision
+                                    </button>
+                                </div>
+                            )}
+
+                            {content.status === 'approved' && (
+                                <div className="completed-message" style={{ color: '#059669', background: '#ecfdf5', padding: '12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <CheckCircle size={20} />
+                                    <span className="font-bold">Content Approved!</span>
+                                </div>
+                            )}
+
+                            {content.status === 'rejected' && (
+                                <div className="completed-message" style={{ color: '#dc2626', background: '#fef2f2', padding: '12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <XCircle size={20} />
+                                    <span className="font-bold">Revision Requested</span>
+                                </div>
+                            )}
+
+                            <button onClick={() => navigate(`/campaigns/${campaign?.id}`)} className="btn-secondary full" style={{ marginTop: '12px' }}>
+                                Back to Campaign
+                            </button>
+                        </div>
+                    </div>
+
+                    {campaign && <PartiesCard campaign={campaign} />}
+                    {campaign && <PackageInfoCard campaign={campaign} formatPrice={formatPrice} />}
+                </div>
+            </div>
+
+            {/* Simple Review Modal */}
+            {showReviewModal && (
+                <div className="modal-overlay" onClick={() => setShowReviewModal(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()} style={{ background: 'white', padding: '24px', borderRadius: '16px', width: '100%', maxWidth: '400px' }}>
+                        <h3>{reviewAction === 'approve' ? 'Approve Content' : 'Request Revision'}</h3>
+                        <p className="text-sm text-gray-500 mb-4">
+                            {reviewAction === 'approve'
+                                ? 'Are you sure you want to approve this content? The influencer will be notified.'
+                                : 'Please describe what changes are needed to the content.'}
                         </p>
-                    </div>
-                    <div className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium capitalize">
-                        {content.platform} • {content.content_type}
+
+                        <div className="form-group mb-4">
+                            <label className="text-xs font-bold uppercase text-gray-400">Feedback (Optional for approval)</label>
+                            <textarea
+                                value={feedback}
+                                onChange={(e) => setFeedback(e.target.value)}
+                                className="w-full p-3 border rounded-lg min-h-[100px] mt-2"
+                                placeholder="Write your feedback here..."
+                            />
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowReviewModal(false)}
+                                className="btn-secondary flex-1"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleReview}
+                                disabled={reviewing}
+                                className={`flex-1 ${reviewAction === 'approve' ? 'btn-primary' : 'btn-reject'}`}
+                                style={reviewAction === 'approve' ? { background: '#10b981', color: 'white' } : { background: '#ef4444', color: 'white' }}
+                            >
+                                {reviewing ? <Loader2 className="animate-spin" /> : 'Confirm'}
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div className="space-y-6">
-                    {/* Render fields based on what was generated */}
-
-                    {content.tweet && (
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Tweet</label>
-                            <textarea
-                                value={formData.tweet}
-                                onChange={(e) => handleChange('tweet', e.target.value)}
-                                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 min-h-[100px]"
-                            />
-                            <p className="text-right text-xs text-gray-400 mt-1">{formData.tweet.length}/280</p>
-                        </div>
-                    )}
-
-                    {content.instagram_caption && (
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Instagram Caption</label>
-                            <textarea
-                                value={formData.instagram_caption}
-                                onChange={(e) => handleChange('instagram_caption', e.target.value)}
-                                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 min-h-[150px]"
-                            />
-                        </div>
-                    )}
-
-                    {content.facebook_post && (
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Facebook Post</label>
-                            <textarea
-                                value={formData.facebook_post}
-                                onChange={(e) => handleChange('facebook_post', e.target.value)}
-                                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 min-h-[150px]"
-                            />
-                        </div>
-                    )}
-
-                    {content.linkedin_post && (
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn Post</label>
-                            <textarea
-                                value={formData.linkedin_post}
-                                onChange={(e) => handleChange('linkedin_post', e.target.value)}
-                                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 min-h-[150px]"
-                            />
-                        </div>
-                    )}
-
-                    {/* Complex types */}
-                    {content.instagram_reel_script && (
-                        <div className="space-y-4 border p-4 rounded-lg bg-gray-50">
-                            <h3 className="font-medium flex items-center gap-2">
-                                <Sparkles size={16} className="text-purple-500" />
-                                Reel Script
-                            </h3>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">Visuals</label>
-                                <textarea
-                                    value={formData.instagram_reel_script.visuals}
-                                    onChange={(e) => handleNestedChange('instagram_reel_script', 'visuals', e.target.value)}
-                                    className="w-full p-2 border rounded focus:ring-1 focus:ring-purple-500 text-sm"
-                                    rows={3}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">Audio/Voiceover</label>
-                                <textarea
-                                    value={formData.instagram_reel_script.audio}
-                                    onChange={(e) => handleNestedChange('instagram_reel_script', 'audio', e.target.value)}
-                                    className="w-full p-2 border rounded focus:ring-1 focus:ring-purple-500 text-sm"
-                                    rows={2}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">Caption</label>
-                                <textarea
-                                    value={formData.instagram_reel_script.caption}
-                                    onChange={(e) => handleNestedChange('instagram_reel_script', 'caption', e.target.value)}
-                                    className="w-full p-2 border rounded focus:ring-1 focus:ring-purple-500 text-sm"
-                                    rows={3}
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {content.tiktok_idea && (
-                        <div className="space-y-4 border p-4 rounded-lg bg-gray-50">
-                            <h3 className="font-medium flex items-center gap-2">
-                                <Sparkles size={16} className="text-pink-500" />
-                                TikTok Concept
-                            </h3>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">Hook (0-3s)</label>
-                                <input
-                                    type="text"
-                                    value={formData.tiktok_idea.hook}
-                                    onChange={(e) => handleNestedChange('tiktok_idea', 'hook', e.target.value)}
-                                    className="w-full p-2 border rounded focus:ring-1 focus:ring-purple-500 text-sm"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">Main Action</label>
-                                <textarea
-                                    value={formData.tiktok_idea.action}
-                                    onChange={(e) => handleNestedChange('tiktok_idea', 'action', e.target.value)}
-                                    className="w-full p-2 border rounded focus:ring-1 focus:ring-purple-500 text-sm"
-                                    rows={3}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">Sound/Audio</label>
-                                <input
-                                    type="text"
-                                    value={formData.tiktok_idea.sound}
-                                    onChange={(e) => handleNestedChange('tiktok_idea', 'sound', e.target.value)}
-                                    className="w-full p-2 border rounded focus:ring-1 focus:ring-purple-500 text-sm"
-                                />
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
+            )}
         </div>
     );
 }
