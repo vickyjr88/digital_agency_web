@@ -46,6 +46,10 @@ import PaymentMethods from './pages/Wallet/PaymentMethods';
 // Admin
 import AdminWithdrawals from './pages/Admin/AdminWithdrawals';
 
+// Bids
+import MyBids from './pages/Bids/MyBids';
+import CampaignInvites from './pages/Bids/CampaignInvites';
+
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -295,27 +299,43 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* Open Campaigns (Bidding System) */}
+            {/* Open Campaign Creation */}
             <Route path="/campaigns/create" element={
               <ProtectedRoute>
-                <Layout><CreateCampaign /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <CreateCampaign />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
 
             {/* Direct Links for Sidebar */}
             <Route path="/my-campaigns" element={
               <ProtectedRoute>
-                <MinimalLayout><BrandDashboard /></MinimalLayout>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <BrandDashboard />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/campaign-invites" element={
               <ProtectedRoute>
-                <Layout><Dashboard defaultTab="influencer" /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <CampaignInvites />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
             <Route path="/my-bids" element={
               <ProtectedRoute>
-                <Layout><Dashboard defaultTab="influencer" /></Layout>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <MyBids />
+                  </Dashboard>
+                </Layout>
               </ProtectedRoute>
             } />
 

@@ -425,6 +425,60 @@ export const notificationApi = {
 
 
 // ============================================================================
+// BID API METHODS
+// ============================================================================
+
+export const bidApi = {
+    // Create a bid on an open campaign
+    create: async (bidData) => {
+        const { api } = await import('./api');
+        return api.request('/v2/bids', {
+            method: 'POST',
+            body: JSON.stringify(bidData),
+        });
+    },
+
+    // Get my bids (influencer)
+    getMyBids: async (params = {}) => {
+        const { api } = await import('./api');
+        const queryString = new URLSearchParams(params).toString();
+        return api.request(`/v2/bids/my-bids?${queryString}`);
+    },
+
+    // Get bids for a campaign (brand owner)
+    getCampaignBids: async (campaignId, params = {}) => {
+        const { api } = await import('./api');
+        const queryString = new URLSearchParams(params).toString();
+        return api.request(`/v2/bids/campaign/${campaignId}?${queryString}`);
+    },
+
+    // Accept a bid (brand)
+    accept: async (bidId) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/bids/${bidId}/accept`, {
+            method: 'PATCH',
+        });
+    },
+
+    // Reject a bid (brand)
+    reject: async (bidId) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/bids/${bidId}/reject`, {
+            method: 'PATCH',
+        });
+    },
+
+    // Withdraw a bid (influencer)
+    withdraw: async (bidId) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/bids/${bidId}`, {
+            method: 'DELETE',
+        });
+    },
+};
+
+
+// ============================================================================
 // BRAND API METHODS
 // ============================================================================
 
@@ -460,6 +514,7 @@ export default {
     campaign: campaignApi,
     review: reviewApi,
     notification: notificationApi,
+    bid: bidApi,
     brand: brandApi,
     getConfig,
 };

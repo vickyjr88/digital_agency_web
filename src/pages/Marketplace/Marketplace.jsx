@@ -535,13 +535,13 @@ function CampaignCard({ campaign, formatPrice }) {
             <div className="p-6 pb-4">
                 <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
                     <Briefcase size={16} />
-                    <span>{campaign.brand?.name || "Unknown Brand"}</span>
+                    <span>{campaign.brand_entity?.name || campaign.brand?.name || "Unknown Brand"}</span>
                 </div>
                 <h3 className="font-bold text-xl text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-1">
                     {campaign.title || "Untitled Campaign"}
                 </h3>
                 <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed mb-6">
-                    {campaign.brief}
+                    {campaign.description || "No description provided"}
                 </p>
 
                 <div className="flex gap-4">
@@ -554,7 +554,7 @@ function CampaignCard({ campaign, formatPrice }) {
                     <div className="flex-1 bg-gray-50 rounded-lg p-3 text-center">
                         <span className="block text-xs uppercase text-gray-400 font-bold mb-1">Platform</span>
                         <span className="block font-bold text-gray-900 capitalize">
-                            {campaign.platform || 'Multi'}
+                            {campaign.platforms?.length > 0 ? campaign.platforms.join(', ') : (campaign.platform || 'Multi')}
                         </span>
                     </div>
                 </div>
