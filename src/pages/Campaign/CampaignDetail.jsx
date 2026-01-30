@@ -296,6 +296,8 @@ export default function CampaignDetail() {
                     <ActionsCard
                         campaign={campaign}
                         isInfluencer={isInfluencer}
+                        isBrand={isBrand}
+                        isAdmin={isAdmin}
                         onAction={setActiveAction}
                         onUpdate={fetchCampaign}
                     />
@@ -544,7 +546,7 @@ function ActivityLog({ activities, campaign, formatDate }) {
 }
 
 // Actions Card
-function ActionsCard({ campaign, isInfluencer, onAction, onUpdate }) {
+function ActionsCard({ campaign, isInfluencer, isBrand, isAdmin, onAction, onUpdate }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 

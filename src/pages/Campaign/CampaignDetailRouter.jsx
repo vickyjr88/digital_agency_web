@@ -27,10 +27,10 @@ export default function CampaignDetailRouter() {
 
         try {
             // Try to fetch as open campaign first (public endpoint)
-            const data = await api.getOpenCampaign(campaignId);
+            await api.getOpenCampaign(campaignId);
             setIsOpenCampaign(true);
         } catch (err) {
-            // If it fails, it's a regular campaign
+            // If it fails (403 or 404), it's likely a regular campaign
             setIsOpenCampaign(false);
         } finally {
             setLoading(false);
