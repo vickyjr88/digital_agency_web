@@ -175,8 +175,8 @@ export default function OpenCampaignDetail() {
     }
 
     const budgetProgress = ((campaign.budget_spent / campaign.budget) * 100).toFixed(0);
-    const isInfluencer = user?.user_type === 'influencer';
-    const canBid = isInfluencer && campaign.status === 'open' && !campaign.user_bid;
+    const isInfluencer = user && user.user_type === 'influencer';
+    const canBid = user && isInfluencer && campaign.status === 'open' && !campaign.user_bid;
     const hasPendingBid = campaign.user_bid?.status === 'pending';
 
     return (

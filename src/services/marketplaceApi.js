@@ -342,6 +342,37 @@ export const campaignApi = {
             body: JSON.stringify({ decision, resolution_notes: resolutionNotes }),
         });
     },
+
+    // Admin: Update campaign
+    updateAdmin: async (campaignId, updates) => {
+        const { api } = await import('./api');
+        const queryParams = new URLSearchParams();
+        if (updates.title !== undefined) queryParams.append('title', updates.title);
+        if (updates.description !== undefined) queryParams.append('description', updates.description);
+        if (updates.budget !== undefined) queryParams.append('budget', updates.budget.toString());
+        if (updates.status !== undefined) queryParams.append('status', updates.status);
+        if (updates.deadline !== undefined) queryParams.append('deadline', updates.deadline);
+
+        return api.request(`/v2/campaigns/admin/${campaignId}?${queryParams.toString()}`, {
+            method: 'PUT',
+        });
+    },
+
+    // Admin: Delete campaign
+    deleteAdmin: async (campaignId) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/campaigns/admin/${campaignId}`, {
+            method: 'DELETE',
+        });
+    },
+
+    // Admin: Disassociate influencer from campaign
+    disassociateInfluencer: async (campaignId) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/campaigns/admin/${campaignId}/disassociate-influencer`, {
+            method: 'POST',
+        });
+    },
 };
 
 

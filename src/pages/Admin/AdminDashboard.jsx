@@ -150,51 +150,51 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Core Platform</span>
                 </div>
 
-                <button onClick={() => { setActiveTab('overview'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                <Link to="/admin" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Shield size={20} /> Overview
-                </button>
-                <button onClick={() => { setActiveTab('users'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/users" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Users size={20} /> Users
-                </button>
-                <button onClick={() => { setActiveTab('brands'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/brands" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Building2 size={20} /> Brands
-                </button>
-                <button onClick={() => { setActiveTab('content'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'content' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/content" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'content' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <FileText size={20} /> Content
-                </button>
-                <button onClick={() => { setActiveTab('analytics'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'analytics' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/analytics" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'analytics' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <TrendingUp size={20} /> Analytics
-                </button>
-                <button onClick={() => { setActiveTab('failures'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'failures' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/failures" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'failures' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <AlertTriangle size={20} /> Failures/Logs
-                </button>
+                </Link>
 
                 <div className="px-4 py-2 border-b border-gray-100 mb-2 mt-4">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Financials</span>
                 </div>
-                <button onClick={() => { setActiveTab('subscriptions'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'subscriptions' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                <Link to="/admin/subscriptions" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'subscriptions' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Clock size={20} /> Subscription Txs
-                </button>
-                <button onClick={() => { setActiveTab('wallet_transactions'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet_transactions' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/wallet-transactions" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet_transactions' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Briefcase size={20} /> Wallet Txs
-                </button>
-                <button onClick={() => { setActiveTab('withdrawals'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'withdrawals' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/withdrawals" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'withdrawals' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <ArrowUpRight size={20} /> Withdrawals
-                </button>
+                </Link>
 
                 <div className="px-4 py-2 border-b border-gray-100 mb-2 mt-4">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Marketplace</span>
                 </div>
 
-                <button onClick={() => { setActiveTab('influencers'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencers' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                <Link to="/admin/influencers" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencers' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <UserCheck size={20} /> Influencers
-                </button>
-                <button onClick={() => { setActiveTab('packages'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'packages' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/packages" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'packages' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Package size={20} /> Packages
-                </button>
-                <button onClick={() => { setActiveTab('campaigns'); if (isMobile) closeMobileSidebar(); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'campaigns' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                </Link>
+                <Link to="/admin/campaigns" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'campaigns' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Target size={20} /> Campaigns
-                </button>
+                </Link>
             </nav>
 
             <div className="p-4 border-t border-gray-100">

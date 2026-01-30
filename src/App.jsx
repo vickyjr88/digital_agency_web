@@ -50,6 +50,9 @@ import AdminWithdrawals from './pages/Admin/AdminWithdrawals';
 import MyBids from './pages/Bids/MyBids';
 import CampaignInvites from './pages/Bids/CampaignInvites';
 
+// Admin Pages
+import AdminCampaigns from './pages/Admin/AdminCampaigns';
+
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -175,6 +178,16 @@ function App() {
                 <Layout>
                   <AdminDashboard defaultTab="users">
                     <UserDetails />
+                  </AdminDashboard>
+                </Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Campaigns Management */}
+            <Route path="/admin/campaigns" element={
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard defaultTab="campaigns">
+                    <AdminCampaigns />
                   </AdminDashboard>
                 </Layout>
               </AdminRoute>
@@ -345,9 +358,7 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/campaigns/open/:campaignId" element={
-              <ProtectedRoute>
-                <Layout><OpenCampaignDetail /></Layout>
-              </ProtectedRoute>
+              <Layout><OpenCampaignDetail /></Layout>
             } />
             <Route path="/content/generate" element={
               <ProtectedRoute>

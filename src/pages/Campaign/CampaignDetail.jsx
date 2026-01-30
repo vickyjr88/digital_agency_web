@@ -85,7 +85,7 @@ export default function CampaignDetail() {
                 <span className="error-icon">🎯</span>
                 <h2>Campaign Not Found</h2>
                 <p>This campaign doesn't exist or you don't have access.</p>
-                <button className="btn-primary" onClick={() => navigate(-1)}>← Go Back</button>
+                <button className="back-btn" onClick={() => navigate(-1)}>← Go Back</button>
             </div>
         );
     }
