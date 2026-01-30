@@ -322,9 +322,9 @@ export const campaignApi = {
     // Raise dispute
     dispute: async (campaignId, reason, evidenceUrls = []) => {
         const { api } = await import('./api');
-        return api.request(`/v2/campaigns/${campaignId}/dispute`, {
+        return api.request('/v2/disputes', {
             method: 'POST',
-            body: JSON.stringify({ reason, evidence_urls: evidenceUrls }),
+            body: JSON.stringify({ campaign_id: campaignId, reason, evidence_urls: evidenceUrls }),
         });
     },
 

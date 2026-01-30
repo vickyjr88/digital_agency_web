@@ -11,9 +11,10 @@ import { toast } from 'sonner';
 import {
     ArrowLeft, Briefcase, DollarSign, Calendar, Clock,
     Users, Check, X, MessageSquare, Star, Award,
-    Send, Loader2, ChevronDown, ChevronUp, Lock, Eye, Sparkles, CheckCircle, XCircle
+    Send, Loader2, ChevronDown, ChevronUp, Lock, Eye, Sparkles, CheckCircle, XCircle, ShieldAlert
 } from 'lucide-react';
-import { campaignApi, bidApi } from '../../services/marketplaceApi';
+import { campaignApi, bidApi, influencerApi } from '../../services/marketplaceApi';
+import ContentGeneratorModal from '../Campaign/ContentGeneratorModal';
 import './OpenCampaigns.css';
 
 export default function OpenCampaignDetail() {
@@ -26,14 +27,18 @@ export default function OpenCampaignDetail() {
     const [showBidForm, setShowBidForm] = useState(false);
     const [bidding, setBidding] = useState(false);
     const [expandedBid, setExpandedBid] = useState(null);
-    const [activeAction, setActiveAction] = useState(null);
     const [selectedDeliverable, setSelectedDeliverable] = useState(null);
     const [reviewing, setReviewing] = useState(false);
+    const [influencerProfile, setInfluencerProfile] = useState(null);
+    const [generatedContents, setGeneratedContents] = useState([]);
+    const [showDisputeForm, setShowDisputeForm] = useState(false);
+    const [disputeReason, setDisputeReason] = useState('');
+    const [submittingDispute, setSubmittingDispute] = useState(false);
 
     const [bidData, setBidData] = useState({
         amount: '',
-        platform: 'instagram',
-        content_type: 'post',
+        platform: '',
+        content_type: '',
         deliverables_count: 1,
         deliverables_description: '',
         timeline_days: 7,
@@ -42,18 +47,55 @@ export default function OpenCampaignDetail() {
 
     useEffect(() => {
         fetchCampaign();
-    }, [campaignId]);
+        if (user?.user_type === 'influencer') {
+            fetchInfluencerProfile();
+        }
+    }, [campaignId, user]);
 
     const fetchCampaign = async () => {
         setLoading(true);
         try {
             const data = await api.getOpenCampaign(campaignId);
             setCampaign(data);
+
+            // Fetch generated contents
+            if (user) {
+                try {
+                    const contentData = await api.getMyGeneratedContent({ campaign_id: campaignId });
+                    setGeneratedContents(contentData.contents || []);
+                } catch (err) {
+                    console.error('Failed to fetch generated contents:', err);
+                }
+            }
+
+            // Set default platform and content type from campaign data
+            if (data.platforms && data.platforms.length > 0) {
+                setBidData(prev => ({
+                    ...prev,
+                    platform: data.platforms[0],
+                    content_type: data.content_types?.[0] || 'post'
+                }));
+            } else {
+                setBidData(prev => ({
+                    ...prev,
+                    platform: 'instagram',
+                    content_type: 'post'
+                }));
+            }
         } catch (error) {
             console.error('Error fetching campaign:', error);
             toast.error('Failed to load campaign');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchInfluencerProfile = async () => {
+        try {
+            const profile = await influencerApi.getMyProfile();
+            setInfluencerProfile(profile);
+        } catch (error) {
+            console.error('Error fetching influencer profile:', error);
         }
     };
 
@@ -214,6 +256,28 @@ export default function OpenCampaignDetail() {
         }
     };
 
+    const handleRaiseDispute = async (e) => {
+        e.preventDefault();
+        if (disputeReason.length < 20) {
+            toast.error('Please provide a detailed reason (at least 20 characters)');
+            return;
+        }
+
+        setSubmittingDispute(true);
+        try {
+            await campaignApi.dispute(campaignId, disputeReason);
+            toast.success('Dispute raised successfully. Our team will review it.');
+            setShowDisputeForm(false);
+            setDisputeReason('');
+            fetchCampaign();
+        } catch (error) {
+            console.error('Error raising dispute:', error);
+            toast.error(error.message || 'Failed to raise dispute');
+        } finally {
+            setSubmittingDispute(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="campaign-detail-page loading-state">
@@ -234,6 +298,7 @@ export default function OpenCampaignDetail() {
 
     const budgetProgress = ((campaign.budget_spent / campaign.budget) * 100).toFixed(0);
     const isInfluencer = user && user.user_type === 'influencer';
+    const isApprovedInfluencer = isInfluencer && influencerProfile?.verification_status === 'approved';
     const isAdmin = user && user.user_type === 'admin';
     const isBrandOwner = campaign.is_owner || isAdmin;
     const canBid = user && isInfluencer && campaign.status === 'open';
@@ -293,6 +358,44 @@ export default function OpenCampaignDetail() {
                             ))}
                         </div>
                     </div>
+
+                    {/* AI Generated Content Section */}
+                    {generatedContents.length > 0 && (
+                        <div className="info-card">
+                            <div className="section-header">
+                                <h3 className="flex items-center gap-2">
+                                    <Sparkles size={20} className="text-purple-500" />
+                                    AI Generated Content
+                                </h3>
+                                <span className="status-badge sm draft">{generatedContents.length} items</span>
+                            </div>
+                            <div className="deliverables-list mt-4 grid gap-4">
+                                {generatedContents.map((content) => (
+                                    <div key={content.id} className="deliverable-item p-4 border rounded-xl bg-purple-50 flex items-center justify-between">
+                                        <div className="del-info">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className="font-semibold capitalize">{content.platform}</span>
+                                                <span className="text-gray-400">•</span>
+                                                <span className="text-gray-600 font-medium capitalize">{content.content_type?.replace('_', ' ')}</span>
+                                                <span className={`status-tag text-xs px-2 py-0.5 rounded ${content.status}`}>
+                                                    {content.status}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-gray-600 line-clamp-1 italic">
+                                                "{content.instagram_caption || content.tweet || content.facebook_post || 'Content Script/Idea'}"
+                                            </p>
+                                        </div>
+                                        <button
+                                            className="btn-secondary btn-sm"
+                                            onClick={() => navigate(`/content/${content.id}`)}
+                                        >
+                                            <Eye size={14} /> View
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Deliverables Section */}
                     {campaign.deliverables && campaign.deliverables.length > 0 && (
@@ -491,6 +594,13 @@ export default function OpenCampaignDetail() {
                                                             >
                                                                 {reviewing ? <Loader2 className="animate-spin mx-auto" size={18} /> : '🎉 Release Payment'}
                                                             </button>
+
+                                                            <button
+                                                                className="text-red-500 text-xs font-medium mt-3 flex items-center justify-center gap-1 hover:underline w-full"
+                                                                onClick={() => setShowDisputeForm(true)}
+                                                            >
+                                                                <ShieldAlert size={14} /> Raise a Dispute
+                                                            </button>
                                                         </div>
                                                     )}
 
@@ -530,9 +640,26 @@ export default function OpenCampaignDetail() {
                                             </button>
                                         )}
                                         {bid.status === 'accepted' && (
-                                            <button className="btn-primary mt-3 full-width" onClick={() => handleAction('submit', null, bid.id)}>
-                                                📤 Submit Proof of Work
-                                            </button>
+                                            <div className="flex flex-col gap-2 mt-3 w-full">
+                                                {isApprovedInfluencer && (
+                                                    <button
+                                                        className="btn-secondary full-width flex items-center justify-center gap-2 py-2 px-4 rounded-lg"
+                                                        onClick={() => handleAction('generate', null, bid.id)}
+                                                    >
+                                                        <Sparkles size={16} className="text-purple-500" />
+                                                        Generate AI Content
+                                                    </button>
+                                                )}
+                                                <button className="btn-primary full-width" onClick={() => handleAction('submit', null, bid.id)}>
+                                                    📤 Submit Proof of Work
+                                                </button>
+                                                <button
+                                                    className="text-red-500 text-xs font-medium mt-1 flex items-center justify-center gap-1 hover:underline"
+                                                    onClick={() => setShowDisputeForm(true)}
+                                                >
+                                                    <ShieldAlert size={14} /> Raise Dispute
+                                                </button>
+                                            </div>
                                         )}
                                         {bid.status === 'paid' && (
                                             <div className="paid-status-text text-green-600 font-bold mt-3 text-center">
@@ -1031,6 +1158,67 @@ function ReviewDeliverableModal({ campaign, deliverable, onClose, onSuccess }) {
                 .btn-primary.success { background-color: #10b981; border-color: #10b981; }
                 .btn-primary.success:hover { background-color: #059669; }
             `}</style>
+
+            {/* Dispute Form Modal */}
+            {showDisputeForm && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+                        <div className="p-6 border-b flex justify-between items-center">
+                            <h3 className="text-lg font-bold flex items-center gap-2">
+                                <ShieldAlert className="text-red-500" size={20} />
+                                Raise a Dispute
+                            </h3>
+                            <button onClick={() => setShowDisputeForm(false)} className="text-gray-400 hover:text-gray-600">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleRaiseDispute} className="p-6 space-y-4">
+                            <div className="bg-red-50 p-3 rounded-lg text-xs text-red-700">
+                                <strong>Warning:</strong> Disputes are reviewed by the Dexter team. Please provide as much detail as possible.
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Reason for Dispute</label>
+                                <textarea
+                                    className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-red-500 outline-none min-h-[120px]"
+                                    placeholder="Explain why you are raising this dispute..."
+                                    value={disputeReason}
+                                    onChange={(e) => setDisputeReason(e.target.value)}
+                                    required
+                                />
+                                <span className="text-xs text-gray-400">{disputeReason.length}/2000 (min 20)</span>
+                            </div>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    className="flex-1 py-2 px-4 border rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+                                    onClick={() => setShowDisputeForm(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 py-2 px-4 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50"
+                                    disabled={submittingDispute || disputeReason.length < 20}
+                                >
+                                    {submittingDispute ? <Loader2 className="animate-spin mx-auto" size={18} /> : 'Raise Dispute'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Content Generator Modal */}
+            {activeAction === 'generate' && (
+                <ContentGeneratorModal
+                    campaign={campaign}
+                    onClose={() => setActiveAction(null)}
+                    onSuccess={() => {
+                        setActiveAction(null);
+                        fetchCampaign();
+                    }}
+                />
+            )}
         </div>
     );
 }
