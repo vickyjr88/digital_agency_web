@@ -83,6 +83,16 @@ export default function OpenCampaignDetail() {
             return;
         }
 
+        if (bidData.proposal.length < 20) {
+            toast.error('Proposal must be at least 20 characters long');
+            return;
+        }
+
+        if (bidData.deliverables_description.length < 20) {
+            toast.error('Deliverables description must be at least 20 characters long');
+            return;
+        }
+
         setBidding(true);
         try {
             const payload = {
@@ -394,7 +404,7 @@ export default function OpenCampaignDetail() {
                                                 onChange={handleBidChange}
                                                 placeholder="15000"
                                                 required
-                                                min={100}
+                                                min={10}
                                                 max={(campaign.budget_remaining || campaign.budget) / 100}
                                             />
                                             <span className="hint">
@@ -448,27 +458,35 @@ export default function OpenCampaignDetail() {
                                     </div>
 
                                     <div className="form-group">
-                                        <label>What will you deliver? *</label>
+                                        <label>What will you deliver? * (min. 20 characters)</label>
                                         <textarea
                                             name="deliverables_description"
                                             value={bidData.deliverables_description}
                                             onChange={handleBidChange}
-                                            placeholder="Describe exactly what the brand will receive..."
+                                            placeholder="Describe exactly what the brand will receive... (minimum 20 characters)"
                                             rows={3}
                                             required
+                                            minLength={20}
                                         />
+                                        <span className="hint" style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                                            {bidData.deliverables_description.length}/20 characters minimum
+                                        </span>
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Your Proposal / Cover Letter *</label>
+                                        <label>Your Proposal / Cover Letter * (min. 20 characters)</label>
                                         <textarea
                                             name="proposal"
                                             value={bidData.proposal}
                                             onChange={handleBidChange}
-                                            placeholder="Tell the brand why you're the right fit for this campaign..."
+                                            placeholder="Tell the brand why you're the right fit for this campaign... (minimum 20 characters)"
                                             rows={5}
                                             required
+                                            minLength={20}
                                         />
+                                        <span className="hint" style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                                            {bidData.proposal.length}/20 characters minimum
+                                        </span>
                                     </div>
 
                                     <div className="form-actions">

@@ -506,6 +506,21 @@ export const bidApi = {
             method: 'DELETE',
         });
     },
+
+    // Get all bids (admin only)
+    getAll: async (params = {}) => {
+        const { api } = await import('./api');
+        const queryString = new URLSearchParams(params).toString();
+        return api.request(`/v2/bids/admin/all?${queryString}`);
+    },
+
+    // Update bid status (admin only)
+    updateStatusAdmin: async (bidId, status) => {
+        const { api } = await import('./api');
+        return api.request(`/v2/bids/admin/${bidId}/status?status=${status}`, {
+            method: 'PATCH',
+        });
+    },
 };
 
 

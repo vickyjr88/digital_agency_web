@@ -315,7 +315,7 @@ export default function CreateCampaign() {
                                 onChange={handleChange}
                                 placeholder="50000"
                                 required
-                                min={100}
+                                min={10}
                             />
                         </div>
                         {formData.budget && (

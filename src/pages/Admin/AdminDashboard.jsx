@@ -48,6 +48,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
         if (path.startsWith('/admin/influencers')) return 'influencers';
         if (path.startsWith('/admin/packages')) return 'packages';
         if (path.startsWith('/admin/campaigns')) return 'campaigns';
+        if (path.startsWith('/admin/bids')) return 'bids';
         return defaultTab;
     };
 
@@ -59,7 +60,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
     useEffect(() => {
         if (!children) {
             // Only fetch data if the tab requires data loading at this level
-            if (activeTab === 'subscriptions' || activeTab === 'wallet_transactions' || activeTab === 'campaigns') return;
+            if (activeTab === 'subscriptions' || activeTab === 'wallet_transactions' || activeTab === 'campaigns' || activeTab === 'bids') return;
             fetchAdminData();
         }
     }, [activeTab, children]);
@@ -211,6 +212,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 </Link>
                 <Link to="/admin/campaigns" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'campaigns' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Target size={20} /> Campaigns
+                </Link>
+                <Link to="/admin/bids" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'bids' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Briefcase size={20} /> Bids & Invites
                 </Link>
             </nav>
 
