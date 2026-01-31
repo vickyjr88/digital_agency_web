@@ -67,7 +67,7 @@ export default function TrendsDashboard({ brands, user }) {
 
       // Navigate to edit content
       if (result && result.id) {
-        navigate(`/dashboard/content/${result.id}/edit`);
+        navigate(`/dashboard/content/${result.id}/edit`, { state: { item: result } });
       }
     } catch (error) {
       console.error('Generation error:', error);

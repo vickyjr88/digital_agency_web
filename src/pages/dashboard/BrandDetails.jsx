@@ -64,7 +64,7 @@ export default function BrandDetails() {
 		setGenerating(true);
 		const toastId = toast.loading('Generating content...');
 		try {
-			await api.request(`/generate/${id}`, {
+			const result = await api.request(`/generate/${id}`, {
 				method: 'POST',
 				body: JSON.stringify({
 					trend: selectedTrend.topic,
@@ -73,8 +73,13 @@ export default function BrandDetails() {
 			});
 			setShowTrendModal(false);
 			setSelectedTrend(null);
-			await fetchBrandData();
 			toast.success('Content generated successfully!', { id: toastId });
+
+			if (result && result.id) {
+				navigate(`/dashboard/content/${result.id}/edit`, { state: { item: result } });
+			} else {
+				await fetchBrandData();
+			}
 		} catch (error) {
 			toast.error('Generation failed. Please try again.', { id: toastId });
 			console.error('Generation failed:', error);
