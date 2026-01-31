@@ -80,7 +80,7 @@ export default function TrendsDashboard({ brands, user }) {
   if (loading) return <div className="p-8 text-center">Loading trends...</div>;
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-6 sm:space-y-8" id="trends-section">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -142,10 +142,18 @@ export default function TrendsDashboard({ brands, user }) {
                 {new Date(trend.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
-            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 line-clamp-2">{trend.topic}</h3>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <TrendingUp size={14} />
-              <span>{trend.volume || 'High Volume'}</span>
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-4 line-clamp-2">{trend.topic}</h3>
+
+            <div className="flex items-center justify-between mt-auto">
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <TrendingUp size={14} />
+                <span>{trend.volume || 'Trending'}</span>
+              </div>
+
+              <div className="flex items-center gap-1 text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                <Zap size={12} />
+                Generate
+              </div>
             </div>
           </motion.div>
         ))}

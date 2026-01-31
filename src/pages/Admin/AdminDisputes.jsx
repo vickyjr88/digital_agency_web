@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
     ShieldAlert, Clock, CheckCircle, XCircle,
@@ -232,6 +233,33 @@ export default function AdminDisputes() {
                     {/* Sidebar: Context */}
                     <div className="space-y-6">
                         <section className="bg-white p-6 rounded-2xl shadow-sm border">
+                            <h3 className="font-bold mb-4">Dispute Reporter</h3>
+                            {selectedDispute.raiser_details ? (
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg">
+                                        {selectedDispute.raiser_details.name?.[0] || 'U'}
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-gray-900 leading-tight">{selectedDispute.raiser_details.name}</p>
+                                        <p className="text-xs text-gray-500 mb-1">{selectedDispute.raiser_details.email}</p>
+                                        <p className="inline-block px-2 py-0.5 bg-gray-100 rounded text-[10px] uppercase font-bold text-gray-500 mb-2">
+                                            {selectedDispute.raiser_details.user_type}
+                                        </p>
+                                        <br />
+                                        <Link
+                                            to={selectedDispute.raiser_details.profile_url}
+                                            className="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1"
+                                        >
+                                            View User Profile <ExternalLink size={12} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p className="text-sm text-gray-400 italic">Reporter details unavailable</p>
+                            )}
+                        </section>
+
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border">
                             <h3 className="font-bold mb-4">Campaign Context</h3>
                             {campaignDetails ? (
                                 <div className="space-y-4 text-sm">
@@ -450,6 +478,17 @@ export default function AdminDisputes() {
                             <h3 className="font-bold text-gray-900 mb-2 line-clamp-1">
                                 Campaign Dispute #{dispute.id.substring(0, 8)}
                             </h3>
+
+                            {dispute.raiser_details && (
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500">
+                                        {dispute.raiser_details.name?.[0]}
+                                    </div>
+                                    <span className="text-xs text-gray-500">
+                                        Raised by <span className="font-bold text-gray-700">{dispute.raiser_details.name}</span>
+                                    </span>
+                                </div>
+                            )}
 
                             <p className="text-sm text-gray-600 line-clamp-3 mb-4 min-h-[60px]">
                                 {dispute.reason}

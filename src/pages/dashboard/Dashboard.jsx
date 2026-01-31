@@ -9,6 +9,8 @@ import ProfileSettings from '../../features/profile/ProfileSettings';
 import SubscriptionManager from '../../features/billing/SubscriptionManager';
 import Wallet from '../Wallet/Wallet';
 import InfluencerDashboard from '../Influencer/InfluencerDashboard';
+import NextActionWidget from '../../components/NextActionWidget';
+import MarketplaceActionWidget from '../../components/MarketplaceActionWidget';
 
 export default function Dashboard({ defaultTab = 'trends', onLogout, children }) {
 	const [user, setUser] = useState(null);
@@ -319,6 +321,8 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 					<>
 						{activeTab === 'trends' && (
 							<div className="max-w-6xl mx-auto">
+								{user && <NextActionWidget user={user} brands={brands} />}
+								{user && <MarketplaceActionWidget user={user} brands={brands} />}
 								<TrendsDashboard brands={brands} user={user} />
 							</div>
 						)}
