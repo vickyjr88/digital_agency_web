@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star, Target, Mail, FileText, Globe, Wallet, ShoppingBag, Package, ClipboardCheck, Camera } from 'lucide-react';
+import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star, Target, Mail, FileText, Globe, Wallet as WalletIcon, ShoppingBag, Package, ClipboardCheck, Camera } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
 import ProfileSettings from '../../features/profile/ProfileSettings';
@@ -204,7 +204,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						}}
 						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet' || location.pathname === '/wallet' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
-						<Wallet size={20} />
+						<WalletIcon size={20} />
 						My Wallet
 					</button>
 				</>
