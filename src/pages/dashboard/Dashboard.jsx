@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star, Target, Mail, FileText } from 'lucide-react';
+import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star, Target, Mail, FileText, Globe, Wallet, ShoppingBag, Package, ClipboardCheck, Camera } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
 import ProfileSettings from '../../features/profile/ProfileSettings';
@@ -152,6 +152,16 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 					</button>
 					<button
 						onClick={() => {
+							navigate('/campaigns/open');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/open' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					>
+						<Globe size={20} />
+						Browse Campaigns
+					</button>
+					<button
+						onClick={() => {
 							navigate('/my-campaigns');
 							if (isMobile) closeMobileSidebar();
 						}}
@@ -182,6 +192,70 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 					</button>
 				</>
 
+				{/* Wallet Section */}
+				<>
+					<div className="pt-4 pb-2 px-4">
+						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Financials</span>
+					</div>
+					<button
+						onClick={() => {
+							navigate('/wallet');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet' || location.pathname === '/wallet' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					>
+						<Wallet size={20} />
+						My Wallet
+					</button>
+				</>
+
+				{/* Affiliate Commerce Section */}
+				<>
+					<div className="pt-4 pb-2 px-4">
+						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Affiliate Commerce</span>
+					</div>
+					<button
+						onClick={() => {
+							navigate('/affiliate/marketplace');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/marketplace' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					>
+						<ShoppingBag size={20} />
+						Browse Products
+					</button>
+					<button
+						onClick={() => {
+							navigate('/affiliate/products');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/products') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					>
+						<Package size={20} />
+						My Products
+					</button>
+					<button
+						onClick={() => {
+							navigate('/affiliate/orders');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/orders' || location.pathname === '/affiliate/my-orders' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					>
+						<ClipboardCheck size={20} />
+						Orders
+					</button>
+					<button
+						onClick={() => {
+							navigate('/affiliate/analytics');
+							if (isMobile) closeMobileSidebar();
+						}}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/analytics') || location.pathname.startsWith('/affiliate/my-dashboard') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					>
+						<BarChart2 size={20} />
+						Affiliate Stats
+					</button>
+				</>
+
 				{user?.user_type === 'influencer' && (
 					<>
 						<div className="pt-4 pb-2 px-4">
@@ -206,6 +280,26 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						>
 							<CreditCard size={20} />
 							Payout Settings
+						</button>
+						<button
+							onClick={() => {
+								navigate('/proof-of-work/submit');
+								if (isMobile) closeMobileSidebar();
+							}}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/submit' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						>
+							<Camera size={20} />
+							Submit Proof
+						</button>
+						<button
+							onClick={() => {
+								navigate('/proof-of-work/my-submissions');
+								if (isMobile) closeMobileSidebar();
+							}}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/my-submissions' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						>
+							<ClipboardCheck size={20} />
+							My Submissions
 						</button>
 					</>
 				)}

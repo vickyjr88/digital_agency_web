@@ -57,6 +57,18 @@ import AdminCampaigns from './pages/Admin/AdminCampaigns';
 import AdminBids from './pages/Admin/AdminBids';
 import AdminDisputes from './pages/Admin/AdminDisputes';
 
+// Affiliate Commerce Pages
+import BrandProfileSetup from './pages/AffiliateCommerce/BrandProfile/BrandProfileSetup';
+import ProductsList from './pages/AffiliateCommerce/Products/ProductsList';
+import CreateProduct from './pages/AffiliateCommerce/Products/CreateProduct';
+import EditProduct from './pages/AffiliateCommerce/Products/EditProduct';
+import ProductMarketplace from './pages/AffiliateCommerce/Products/ProductMarketplace';
+import BrandOrders from './pages/AffiliateCommerce/Orders/BrandOrders';
+import InfluencerOrders from './pages/AffiliateCommerce/Orders/InfluencerOrders';
+import PlaceOrder from './pages/AffiliateCommerce/Orders/PlaceOrder';
+import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDashboard';
+import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
+
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -101,12 +113,22 @@ function Layout({ children }) {
             <Link to="/" className="text-gray-600 hover:text-purple-600 font-medium">
               Home
             </Link>
+            {isAuthenticated && (
+              <Link to="/dashboard" className="text-gray-600 hover:text-purple-600 font-medium">
+                📊 Dashboard
+              </Link>
+            )}
             <FeatureGate flag="marketplace_enabled">
               <Link to="/marketplace" className="text-gray-600 hover:text-purple-600 font-medium">
                 🎯 Marketplace
               </Link>
             </FeatureGate>
-            {user?.user_type === 'admin' && (
+            {isAuthenticated && (
+              <Link to="/campaigns/open" className="text-gray-600 hover:text-purple-600 font-medium">
+                📢 Campaigns
+              </Link>
+            )}
+            {(user?.user_type === 'admin' || user?.role === 'admin') && (
               <Link to="/admin" className="text-gray-600 hover:text-purple-600 font-medium">
                 🛡️ Staff
               </Link>
@@ -332,6 +354,64 @@ function App() {
 
 
 
+
+            {/* =================================================================== */}
+            {/* AFFILIATE COMMERCE ROUTES */}
+            {/* =================================================================== */}
+
+            {/* Brand Affiliate Commerce */}
+            <Route path="/affiliate/brand-profile" element={
+              <ProtectedRoute>
+                <Layout><BrandProfileSetup /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/products" element={
+              <ProtectedRoute>
+                <Layout><ProductsList /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/products/create" element={
+              <ProtectedRoute>
+                <Layout><CreateProduct /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/products/edit/:id" element={
+              <ProtectedRoute>
+                <Layout><EditProduct /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/orders" element={
+              <ProtectedRoute>
+                <Layout><BrandOrders /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/analytics" element={
+              <ProtectedRoute>
+                <Layout><BrandAffiliateDashboard /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Influencer Affiliate Commerce */}
+            <Route path="/affiliate/marketplace" element={
+              <ProtectedRoute>
+                <Layout><ProductMarketplace /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/my-orders" element={
+              <ProtectedRoute>
+                <Layout><InfluencerOrders /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/my-dashboard" element={
+              <ProtectedRoute>
+                <Layout><InfluencerAffiliateDashboard /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Public Affiliate Commerce (Customer Order Page) */}
+            <Route path="/shop/p/:slug" element={
+              <MinimalLayout><PlaceOrder /></MinimalLayout>
+            } />
 
             {/* Influencer Onboarding */}
             <Route path="/influencer/onboarding" element={
