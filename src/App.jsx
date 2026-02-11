@@ -66,6 +66,7 @@ import ProductMarketplace from './pages/AffiliateCommerce/Products/ProductMarket
 import BrandOrders from './pages/AffiliateCommerce/Orders/BrandOrders';
 import InfluencerOrders from './pages/AffiliateCommerce/Orders/InfluencerOrders';
 import PlaceOrder from './pages/AffiliateCommerce/Orders/PlaceOrder';
+import DigitalLibrary from './pages/AffiliateCommerce/Orders/DigitalLibrary';
 import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDashboard';
 import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
 
@@ -411,6 +412,11 @@ function App() {
             {/* Public Affiliate Commerce (Customer Order Page) */}
             <Route path="/shop/p/:slug" element={
               <MinimalLayout><PlaceOrder /></MinimalLayout>
+            } />
+
+            {/* Digital Library (Customer Downloads) */}
+            <Route path="/shop/digital-library" element={
+              <MinimalLayout><DigitalLibrary /></MinimalLayout>
             } />
 
             {/* Influencer Onboarding */}

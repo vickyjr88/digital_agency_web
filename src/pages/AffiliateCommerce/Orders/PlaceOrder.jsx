@@ -13,9 +13,11 @@ import {
   MessageCircle,
   ExternalLink,
   AlertCircle,
-  Loader
+  Loader,
+  Download,
+  FileText
 } from 'lucide-react';
-import { productsApi, ordersApi, affiliateApi, brandProfileApi } from '../../../services/affiliateApi';
+import { productsApi, ordersApi, affiliateApi, brandProfileApi, digitalProductsApi } from '../../../services/affiliateApi';
 
 export default function PlaceOrder() {
   const { slug } = useParams();
@@ -27,6 +29,8 @@ export default function PlaceOrder() {
   const [product, setProduct] = useState(null);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [brandContact, setBrandContact] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [orderResponse, setOrderResponse] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [formData, setFormData] = useState({
@@ -80,26 +84,46 @@ export default function PlaceOrder() {
     setSubmitting(true);
 
     try {
+      const isDigital = product.is_digital;
+
       const orderData = {
         product_id: product.id,
         quantity: quantity,
         variant_id: selectedVariant?.id || null,
         customer_name: formData.customer_name,
         customer_email: formData.customer_email,
-        customer_phone: formData.customer_phone,
-        delivery_address: formData.delivery_address || null,
-        notes: formData.notes || null,
-        affiliate_code: affiliateCode || null
+        customer_phone: isDigital ? '' : formData.customer_phone,
+        customer_notes: formData.notes || null,
+        affiliate_code: affiliateCode || null,
+        is_digital: isDigital
       };
 
       const response = await ordersApi.placeOrder(orderData);
+      setOrderResponse(response.data);
 
-      // Load brand contact info
-      const contactResponse = await brandProfileApi.getContactInfo(product.brand_id);
-      setBrandContact(contactResponse.data);
+      if (isDigital) {
+        // For digital products, get the access token from digital purchase
+        try {
+          const purchasesRes = await digitalProductsApi.lookupPurchases(formData.customer_email);
+          const latestPurchase = purchasesRes.data?.[0];
+          if (latestPurchase) {
+            setAccessToken(latestPurchase.access_token);
+          }
+        } catch (err) {
+          console.error('Failed to get access token:', err);
+        }
+      } else {
+        // For physical products, load brand contact info
+        try {
+          const contactResponse = await brandProfileApi.getContactInfo(product.brand_id);
+          setBrandContact(contactResponse.data);
+        } catch (err) {
+          console.error('Failed to load brand contact:', err);
+        }
+      }
 
       setOrderPlaced(true);
-      toast.success('Order placed successfully!');
+      toast.success(isDigital ? 'Purchase complete! Access your download below.' : 'Order placed successfully!');
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to place order');
       console.error(error);
@@ -131,7 +155,78 @@ export default function PlaceOrder() {
     );
   }
 
-  if (orderPlaced && brandContact) {
+  if (orderPlaced) {
+    // === DIGITAL PRODUCT SUCCESS ===
+    if (product.is_digital) {
+      const downloadUrl = accessToken ? digitalProductsApi.getDownloadUrl(accessToken) : null;
+      return (
+        <div className="min-h-screen bg-gray-50 py-12">
+          <div className="max-w-2xl mx-auto px-4">
+            <div className="bg-white rounded-lg shadow-lg p-8 text-center mb-6">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Download className="w-10 h-10 text-green-600" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Download Ready!</h1>
+              <p className="text-gray-600 mb-6">
+                Your digital product is ready for download.
+              </p>
+
+              {/* Product summary */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-4">
+                  {product.thumbnail ? (
+                    <img src={product.thumbnail} alt={product.name} className="w-20 h-20 object-cover rounded" />
+                  ) : (
+                    <div className="w-20 h-20 bg-purple-100 rounded flex items-center justify-center">
+                      <FileText className="w-8 h-8 text-purple-500" />
+                    </div>
+                  )}
+                  <div className="flex-1 text-left">
+                    <h3 className="font-semibold text-gray-900">{product.name}</h3>
+                    <p className="text-sm text-gray-500">📥 Digital Download</p>
+                    <p className="text-lg font-bold text-purple-600">
+                      KES {calculateTotal().toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Download button */}
+              {downloadUrl && (
+                <a
+                  href={downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold text-lg mb-4"
+                >
+                  <Download className="w-5 h-5" />
+                  Download Now
+                </a>
+              )}
+
+              <p className="text-sm text-gray-500 mt-4">
+                A download link has also been sent to <strong>{formData.customer_email}</strong>.
+                You can access your downloads anytime from your <a href="/shop/digital-library" className="text-purple-600 underline">Digital Library</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // === PHYSICAL PRODUCT SUCCESS (existing behavior) ===
+    if (!brandContact) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Order Placed!</h1>
+            <p className="text-gray-600">Loading seller contact info...</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-2xl mx-auto px-4">
@@ -178,7 +273,6 @@ export default function PlaceOrder() {
             </h2>
 
             <div className="space-y-4 mb-8">
-              {/* WhatsApp */}
               {brandContact.whatsapp_number && (
                 <div className="flex items-start gap-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <MessageCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
@@ -199,7 +293,6 @@ export default function PlaceOrder() {
                 </div>
               )}
 
-              {/* Phone */}
               {brandContact.phone_number && (
                 <div className="flex items-start gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <Phone className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
@@ -217,7 +310,6 @@ export default function PlaceOrder() {
                 </div>
               )}
 
-              {/* Email */}
               {brandContact.business_email && (
                 <div className="flex items-start gap-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
                   <Mail className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
@@ -235,7 +327,6 @@ export default function PlaceOrder() {
                 </div>
               )}
 
-              {/* Location */}
               {brandContact.business_location && (
                 <div className="flex items-start gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
                   <MapPin className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
@@ -246,7 +337,6 @@ export default function PlaceOrder() {
                 </div>
               )}
 
-              {/* Business Hours */}
               {brandContact.business_hours && (
                 <div className="flex items-start gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
                   <Clock className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
@@ -322,10 +412,19 @@ export default function PlaceOrder() {
               </div>
             )}
 
-            {product.shipping_info && (
+            {!product.is_digital && product.shipping_info && (
               <div className="border-t pt-4">
                 <h3 className="font-semibold text-gray-900 mb-2">Shipping Information</h3>
                 <p className="text-gray-600 text-sm">{product.shipping_info}</p>
+              </div>
+            )}
+
+            {product.is_digital && (
+              <div className="border-t pt-4">
+                <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
+                  <Download className="w-5 h-5 text-purple-600" />
+                  <span className="text-sm font-medium text-purple-700">📥 Digital Download — Instant Access</span>
+                </div>
               </div>
             )}
           </div>
@@ -386,38 +485,42 @@ export default function PlaceOrder() {
                 />
               </div>
 
-              {/* Phone */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  Phone Number *
-                </label>
-                <input
-                  type="tel"
-                  name="customer_phone"
-                  value={formData.customer_phone}
-                  onChange={handleChange}
-                  placeholder="+254712345678"
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+              {/* Phone — only for physical products */}
+              {!product.is_digital && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="customer_phone"
+                    value={formData.customer_phone}
+                    onChange={handleChange}
+                    placeholder="+254712345678"
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+              )}
 
-              {/* Delivery Address */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  Delivery Address (Optional)
-                </label>
-                <textarea
-                  name="delivery_address"
-                  value={formData.delivery_address}
-                  onChange={handleChange}
-                  placeholder="123 Main Street, Nairobi"
-                  rows="2"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+              {/* Delivery Address — only for physical products */}
+              {!product.is_digital && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    Delivery Address (Optional)
+                  </label>
+                  <textarea
+                    name="delivery_address"
+                    value={formData.delivery_address}
+                    onChange={handleChange}
+                    placeholder="123 Main Street, Nairobi"
+                    rows="2"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+              )}
 
               {/* Notes */}
               <div>
@@ -452,10 +555,12 @@ export default function PlaceOrder() {
 
               {/* Info Notice */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-                <p className="font-medium mb-1">What happens next?</p>
+                <p className="font-medium mb-1">{product.is_digital ? '⚡ Instant Access' : 'What happens next?'}</p>
                 <p>
-                  After placing your order, you'll receive the seller's contact information.
-                  Contact them directly to complete your purchase.
+                  {product.is_digital
+                    ? 'After placing your order, you\'ll get instant download access to the product.'
+                    : 'After placing your order, you\'ll receive the seller\'s contact information. Contact them directly to complete your purchase.'
+                  }
                 </p>
               </div>
 
