@@ -1,0 +1,581 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Signup from './pages/auth/Signup';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { FeatureFlagProvider } from './context/FeatureFlagContext';
+import { Toaster } from 'sonner';
+import AppLayout from './components/layout/AppLayout';
+
+// Pages
+import Dashboard from './pages/dashboard/Dashboard';
+import CreateBrand from './pages/dashboard/CreateBrand';
+import BrandDetails from './pages/dashboard/BrandDetails';
+import EditBrand from './pages/dashboard/EditBrand';
+
+import EditContent from './pages/dashboard/EditContent';
+import BillingCallback from './pages/dashboard/BillingCallback';
+import Login from './pages/auth/Login';
+import LandingPage from './pages/home/LandingPage';
+import UserDetails from './features/admin/UserDetails';
+
+// Marketplace Pages
+import Marketplace from './pages/Marketplace/Marketplace';
+import InfluencerOnboarding from './pages/Influencer/InfluencerOnboarding';
+import InfluencerDashboard from './pages/Influencer/InfluencerDashboard';
+import InfluencerProfile from './pages/Influencer/InfluencerProfile';
+import CreatePackage from './pages/Influencer/CreatePackage';
+import PackageDetail from './pages/Package/PackageDetail';
+import CampaignDetail from './pages/Campaign/CampaignDetail';
+import CampaignDetailRouter from './pages/Campaign/CampaignDetailRouter';
+import BrandDashboard from './pages/Brand/BrandDashboard';
+import Wallet from './pages/Wallet/Wallet';
+import AdminDashboard from './pages/Admin/AdminDashboard';
+
+// Open Campaigns (Bidding System)
+import CreateCampaign from './pages/OpenCampaigns/CreateCampaign';
+import OpenCampaignsList from './pages/OpenCampaigns/OpenCampaignsList';
+import OpenCampaignDetail from './pages/OpenCampaigns/OpenCampaignDetail';
+import ContentGenerator from './pages/OpenCampaigns/ContentGenerator';
+import EditGeneratedContent from './pages/Campaign/EditGeneratedContent';
+
+// Proof of Work
+import SubmitProof from './pages/ProofOfWork/SubmitProof';
+import MySubmissions from './pages/ProofOfWork/MySubmissions';
+import ReviewProof from './pages/ProofOfWork/ReviewProof';
+
+// Wallet & Payments
+import PaymentMethods from './pages/Wallet/PaymentMethods';
+
+// Admin
+import AdminWithdrawals from './pages/Admin/AdminWithdrawals';
+
+// Bids
+import MyBids from './pages/Bids/MyBids';
+import CampaignInvites from './pages/Bids/CampaignInvites';
+
+// Admin Pages
+import AdminCampaigns from './pages/Admin/AdminCampaigns';
+import AdminBids from './pages/Admin/AdminBids';
+import AdminDisputes from './pages/Admin/AdminDisputes';
+
+// Affiliate Commerce Pages
+import BrandProfileSetup from './pages/AffiliateCommerce/BrandProfile/BrandProfileSetup';
+import ProductsList from './pages/AffiliateCommerce/Products/ProductsList';
+import CreateProduct from './pages/AffiliateCommerce/Products/CreateProduct';
+import EditProduct from './pages/AffiliateCommerce/Products/EditProduct';
+import ProductMarketplace from './pages/AffiliateCommerce/Products/ProductMarketplace';
+import BrandOrders from './pages/AffiliateCommerce/Orders/BrandOrders';
+import InfluencerOrders from './pages/AffiliateCommerce/Orders/InfluencerOrders';
+import PlaceOrder from './pages/AffiliateCommerce/Orders/PlaceOrder';
+import PaymentVerify from './pages/AffiliateCommerce/Orders/PaymentVerify';
+import DigitalLibrary from './pages/AffiliateCommerce/Orders/DigitalLibrary';
+import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDashboard';
+import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
+import PublicShop from './pages/AffiliateCommerce/Shop/PublicShop';
+
+
+// Protected Route Component (Simplified for now)
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return (
+    <div className="initial-loader">
+      <div className="spinner"></div>
+      <p>Verifying Access...</p>
+    </div>
+  );
+  return isAuthenticated ? children : <Navigate to="/login" />;
+}
+
+// Admin Route Component
+function AdminRoute({ children }) {
+  const { user, isAuthenticated, loading } = useAuth();
+  if (loading) return (
+    <div className="initial-loader">
+      <div className="spinner"></div>
+      <p>Verifying Admin...</p>
+    </div>
+  );
+  if (!isAuthenticated || user?.role !== 'admin') {
+    return <Navigate to="/dashboard" />;
+  }
+  return children;
+}
+
+// Wrapper component for pages that need padding/max-width
+function PageContainer({ children }) {
+  return (
+    <div className="p-4 sm:p-6 md:p-8">
+      {children}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <FeatureFlagProvider>
+        <Toaster richColors position="top-right" />
+        <Router>
+          <Routes>
+            {/* Auth routes - no layout */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
+            {/* All other routes wrapped in AppLayout */}
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <PageContainer><Dashboard defaultTab="trends" /></PageContainer>
+                </ProtectedRoute>
+              } />
+              <Route path="/trends" element={
+                <ProtectedRoute>
+                  <PageContainer><Dashboard defaultTab="trends" /></PageContainer>
+                </ProtectedRoute>
+              } />
+              <Route path="/my-brands" element={
+                <ProtectedRoute>
+                  <PageContainer><Dashboard defaultTab="brands" /></PageContainer>
+                </ProtectedRoute>
+              } />
+              <Route path="/billing" element={
+                <ProtectedRoute>
+                  <PageContainer><Dashboard defaultTab="billing" /></PageContainer>
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <PageContainer><Dashboard defaultTab="profile" /></PageContainer>
+                </ProtectedRoute>
+              } />
+            {/* Admin Dashboard */}
+            <Route path="/admin" element={
+              <AdminRoute>
+                <Layout><AdminDashboard /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin User Details with Sidebar */}
+            <Route path="/admin/user/:id" element={
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard defaultTab="users">
+                    <UserDetails />
+                  </AdminDashboard>
+                </Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Campaigns Management */}
+            <Route path="/admin/campaigns" element={
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard defaultTab="campaigns">
+                    <AdminCampaigns />
+                  </AdminDashboard>
+                </Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Users */}
+            <Route path="/admin/users" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="users" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Brands */}
+            <Route path="/admin/brands" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="brands" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Content */}
+            <Route path="/admin/content" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="content" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Analytics */}
+            <Route path="/admin/analytics" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="analytics" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Failures */}
+            <Route path="/admin/failures" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="failures" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Subscriptions */}
+            <Route path="/admin/subscriptions" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="subscriptions" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Wallet Transactions */}
+            <Route path="/admin/wallet-transactions" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="wallet_transactions" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Influencers */}
+            <Route path="/admin/influencers" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="influencers" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Packages */}
+            <Route path="/admin/packages" element={
+              <AdminRoute>
+                <Layout><AdminDashboard defaultTab="packages" /></Layout>
+              </AdminRoute>
+            } />
+            {/* Admin Bids */}
+            <Route path="/admin/bids" element={
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard defaultTab="bids">
+                    <AdminBids />
+                  </AdminDashboard>
+                </Layout>
+              </AdminRoute>
+            } />
+
+            {/* Admin Disputes */}
+            <Route path="/admin/disputes" element={
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard defaultTab="disputes">
+                    <AdminDisputes />
+                  </AdminDashboard>
+                </Layout>
+              </AdminRoute>
+            } />
+
+            {/* Brand Pages wrapped in Dashboard for Sidebar */}
+            <Route path="/dashboard/brands/new" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <CreateBrand />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/brands/:id" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <BrandDetails />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/brands/:id/edit" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <EditBrand />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/content/:id/edit" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <EditContent />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/billing/callback" element={
+              <ProtectedRoute>
+                <Layout><BillingCallback /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* =================================================================== */}
+            {/* MARKETPLACE ROUTES */}
+            {/* =================================================================== */}
+
+            {/* Marketplace Browse (Public, but login recommended) */}
+            <Route path="/marketplace" element={
+              <Layout><Marketplace /></Layout>
+            } />
+            <Route path="/marketplace/influencer/:influencerId" element={
+              <Layout><InfluencerProfile /></Layout>
+            } />
+            <Route path="/marketplace/package/:packageId" element={
+              <Layout><PackageDetail /></Layout>
+            } />
+
+
+
+
+            {/* =================================================================== */}
+            {/* AFFILIATE COMMERCE ROUTES */}
+            {/* =================================================================== */}
+
+            {/* Brand Affiliate Commerce */}
+            <Route path="/affiliate/brand-profile" element={
+              <ProtectedRoute>
+                <Layout><BrandProfileSetup /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/products" element={
+              <ProtectedRoute>
+                <Layout><ProductsList /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/products/create" element={
+              <ProtectedRoute>
+                <Layout><CreateProduct /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/products/edit/:id" element={
+              <ProtectedRoute>
+                <Layout><EditProduct /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/orders" element={
+              <ProtectedRoute>
+                <Layout><BrandOrders /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/analytics" element={
+              <ProtectedRoute>
+                <Layout><BrandAffiliateDashboard /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Influencer Affiliate Commerce */}
+            <Route path="/affiliate/marketplace" element={
+              <ProtectedRoute>
+                <Layout><ProductMarketplace /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/my-orders" element={
+              <ProtectedRoute>
+                <Layout><InfluencerOrders /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/affiliate/my-dashboard" element={
+              <ProtectedRoute>
+                <Layout><InfluencerAffiliateDashboard /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Public Affiliate Commerce (Shop & Customer Order Page) */}
+            <Route path="/shop" element={
+              <MinimalLayout><PublicShop /></MinimalLayout>
+            } />
+            <Route path="/shop/p/:slug" element={
+              <MinimalLayout><PlaceOrder /></MinimalLayout>
+            } />
+            <Route path="/shop/payment/verify" element={
+              <MinimalLayout><PaymentVerify /></MinimalLayout>
+            } />
+
+            {/* Digital Library (Customer Downloads) */}
+            <Route path="/shop/digital-library" element={
+              <MinimalLayout><DigitalLibrary /></MinimalLayout>
+            } />
+
+            {/* Influencer Onboarding */}
+            <Route path="/influencer/onboarding" element={
+              <ProtectedRoute>
+                <Layout><InfluencerOnboarding /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Influencer Dashboard */}
+            <Route path="/influencer/dashboard" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/profile" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/packages" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="influencer" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/packages/new" element={
+              <ProtectedRoute>
+                <Layout><CreatePackage /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/influencer/packages/:packageId/edit" element={
+              <ProtectedRoute>
+                <Layout><CreatePackage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Wallet - Now part of Dashboard */}
+            <Route path="/wallet" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="wallet" /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/wallet/callback" element={
+              <ProtectedRoute>
+                <Layout><Dashboard defaultTab="wallet" /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Campaigns */}
+            <Route path="/campaigns" element={
+              <ProtectedRoute>
+                <MinimalLayout><BrandDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaigns/:campaignId" element={
+              <Layout><CampaignDetailRouter /></Layout>
+            } />
+
+            {/* Open Campaign Creation */}
+            <Route path="/campaigns/create" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <CreateCampaign />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Direct Links for Sidebar */}
+            <Route path="/my-campaigns" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <BrandDashboard />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaign-invites" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <CampaignInvites />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-bids" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="campaigns">
+                    <MyBids />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/campaigns/open" element={
+              <ProtectedRoute>
+                <Layout><OpenCampaignsList /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaigns/open/:campaignId" element={
+              <Layout><OpenCampaignDetail /></Layout>
+            } />
+            <Route path="/content/generate" element={
+              <ProtectedRoute>
+                <Layout><ContentGenerator /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/campaign-content/:contentId/edit" element={
+              <ProtectedRoute>
+                <Layout><EditGeneratedContent /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Proof of Work */}
+            <Route path="/proof-of-work/submit" element={
+              <ProtectedRoute>
+                <Layout><SubmitProof /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/proof-of-work/my-submissions" element={
+              <ProtectedRoute>
+                <Layout><MySubmissions /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/proof-of-work/review" element={
+              <ProtectedRoute>
+                <Layout><ReviewProof /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Payment Methods */}
+            <Route path="/payment-methods" element={
+              <ProtectedRoute>
+                <Layout><PaymentMethods /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Brand Dashboard */}
+            <Route path="/brand-dashboard" element={
+              <ProtectedRoute>
+                <MinimalLayout><BrandDashboard /></MinimalLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Admin Withdrawals */}
+            <Route path="/admin/withdrawals" element={
+              <ProtectedRoute>
+                <Layout><AdminWithdrawals /></Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Admin Routes */}
+            <Route path="/admin" element={
+              <AdminRoute>
+                <Layout><AdminDashboard /></Layout>
+              </AdminRoute>
+            } />
+
+            {/* Add direct brand routes for public/legacy links */}
+            {/* Add direct brand routes for public/legacy links to match user expectation */}
+            {/* Add direct brand routes for public/legacy links to match user expectation */}
+            <Route path="/brand/:id" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <BrandDetails />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/brand/:id/edit" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <EditBrand />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/brands/new" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard defaultTab="brands">
+                    <CreateBrand />
+                  </Dashboard>
+                </Layout>
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </Router>
+      </FeatureFlagProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
+

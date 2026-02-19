@@ -33,6 +33,20 @@ export default function AppLayout() {
 
   const closeMobileSidebar = () => setMobileSidebarOpen(false);
 
+  // Define public routes that should never show sidebar (even when authenticated)
+  const publicRoutes = [
+    '/',
+    '/shop',
+    '/shop/p',
+    '/shop/payment/verify',
+    '/shop/digital-library',
+  ];
+
+  // Check if current route is a public route
+  const isPublicRoute = publicRoutes.some(route =>
+    location.pathname === route || location.pathname.startsWith(route + '/')
+  );
+
   // Define menu items based on user type
   const getMenuItems = () => {
     const baseItems = [
@@ -157,8 +171,8 @@ export default function AppLayout() {
     </>
   );
 
-  // Authenticated layout with sidebar
-  if (isAuthenticated) {
+  // Authenticated layout with sidebar (but not on public routes)
+  if (isAuthenticated && !isPublicRoute) {
     return (
       <div className="min-h-screen bg-gray-50 font-sans">
         {/* Mobile Header */}
