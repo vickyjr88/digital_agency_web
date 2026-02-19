@@ -55,11 +55,11 @@ export default function Integrations() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Plug className="w-16 h-16 mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Integrations</h1>
-          <p className="text-xl text-purple-100 max-w-3xl mx-auto">
+          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
             Connect Dexter with your favorite tools and platforms to streamline your workflow
             and maximize campaign performance.
           </p>
@@ -142,7 +142,7 @@ export default function Integrations() {
           <div className="flex gap-4 justify-center">
             <a
               href="/api"
-              className="px-8 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
             >
               View API Docs
             </a>

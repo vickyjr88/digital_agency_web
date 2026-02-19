@@ -97,7 +97,7 @@ export default function BrandDetails() {
 				<div className="mb-8">
 					<div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 						<div className="flex gap-4 w-full md:w-auto">
-							<div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md shrink-0">
+							<div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md shrink-0">
 								{brand.name[0]}
 							</div>
 							<div>

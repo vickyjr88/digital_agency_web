@@ -64,7 +64,7 @@ export default function AdminAnalytics() {
                 </div>
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
-                    <div className="bg-purple-100 p-3 rounded-lg text-purple-600">
+                    <div className="bg-blue-100 p-3 rounded-lg text-blue-600">
                         <TrendingUp size={24} />
                     </div>
                     <div>

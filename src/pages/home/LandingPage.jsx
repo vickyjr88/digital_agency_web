@@ -85,7 +85,7 @@ export default function LandingPage() {
 	};
 
 	return (
-		<div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+		<div className="bg-gradient-to-br from-indigo-50 via-white to-blue-50">
 
 			{/* ── Navbar ──────────────────────────────────────────────────────── */}
 			<header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -147,7 +147,7 @@ export default function LandingPage() {
 
 					<h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
 						Never Miss a Trend.<br />
-						<span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+						<span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 							Never Run Out of Content.
 						</span>
 					</h1>
@@ -200,7 +200,7 @@ export default function LandingPage() {
 					className="mt-20 relative"
 				>
 					<div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-						<div className="bg-gradient-to-r from-indigo-500 to-purple-500 p-3 flex items-center gap-2">
+						<div className="bg-gradient-to-r from-indigo-500 to-blue-500 p-3 flex items-center gap-2">
 							<div className="flex gap-1.5">
 								<div className="w-3 h-3 rounded-full bg-red-400"></div>
 								<div className="w-3 h-3 rounded-full bg-yellow-400"></div>
@@ -277,7 +277,7 @@ export default function LandingPage() {
 								description: 'Automatically identifies trending topics relevant to your industry and location'
 							},
 							{
-								icon: <Zap className="text-purple-600" size={28} />,
+								icon: <Zap className="text-blue-600" size={28} />,
 								title: 'Multi-Platform Content',
 								description: 'Generate content for Twitter, Facebook, Instagram Reels, and TikTok from one trend'
 							},
@@ -321,11 +321,11 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-			<section id="marketplace" className="py-24 bg-gradient-to-br from-purple-50 to-pink-50">
+			<section id="marketplace" className="py-24 bg-gradient-to-br from-blue-50 to-pink-50">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex flex-col md:flex-row items-center gap-16">
 						<div className="flex-1">
-							<div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+							<div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
 								<Users size={16} />
 								Influencer Marketplace
 							</div>
@@ -340,7 +340,7 @@ export default function LandingPage() {
 							<div className="flex flex-col sm:flex-row gap-4">
 								<button
 									onClick={() => navigate('/marketplace')}
-									className="flex items-center justify-center gap-2 bg-purple-600 text-white px-8 py-4 rounded-xl hover:bg-purple-700 transition-all text-lg font-semibold shadow-lg shadow-purple-200"
+									className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 transition-all text-lg font-semibold shadow-lg shadow-blue-200"
 								>
 									Browse Influencers <ArrowRight size={20} />
 								</button>
@@ -377,7 +377,7 @@ export default function LandingPage() {
 									</div>
 									<div>
 										<h3 className="font-bold text-gray-900 text-lg">Sarah Jenkins</h3>
-										<p className="text-purple-600 text-sm font-medium">Lifestyle & Fashion</p>
+										<p className="text-blue-600 text-sm font-medium">Lifestyle & Fashion</p>
 										<div className="flex items-center gap-1 text-yellow-500 text-sm mt-1">
 											{'⭐'.repeat(5)} (48 reviews)
 										</div>
@@ -397,13 +397,13 @@ export default function LandingPage() {
 									<div className="text-xs font-semibold text-gray-500 uppercase mb-2">Popular Package</div>
 									<div className="font-bold text-gray-900 flex justify-between items-center">
 										<span>Instagram Reel + Story</span>
-										<span className="text-purple-600">KES 15,000</span>
+										<span className="text-blue-600">KES 15,000</span>
 									</div>
 								</div>
 							</div>
 
 							{/* Decorative elements behind */}
-							<div className="absolute top-10 -right-4 w-full h-full bg-purple-200 rounded-2xl -z-10 transform rotate-12 opacity-50"></div>
+							<div className="absolute top-10 -right-4 w-full h-full bg-blue-200 rounded-2xl -z-10 transform rotate-12 opacity-50"></div>
 							<div className="absolute -bottom-10 -left-10 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
 							<div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
 						</div>
@@ -411,7 +411,7 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-			<section id="how-it-works" className="py-24 bg-gradient-to-br from-indigo-50 to-purple-50">
+			<section id="how-it-works" className="py-24 bg-gradient-to-br from-indigo-50 to-blue-50">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-16">
 						<h2 className="text-4xl font-bold text-gray-900 mb-4">How Dexter Works</h2>
@@ -565,7 +565,7 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-			<section className="py-24 bg-gradient-to-r from-indigo-600 to-purple-600">
+			<section className="py-24 bg-gradient-to-r from-indigo-600 to-blue-600">
 				<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						Ready to Transform Your Social Media?

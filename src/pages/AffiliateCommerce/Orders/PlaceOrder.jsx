@@ -155,7 +155,7 @@ export default function PlaceOrder() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+          <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading product...</p>
         </div>
       </div>
@@ -192,7 +192,7 @@ export default function PlaceOrder() {
                 <div className="w-full h-64 bg-gray-100 rounded-lg flex flex-col items-center justify-center gap-2">
                   {product.is_digital ? (
                     <>
-                      <FileText className="w-16 h-16 text-purple-300" />
+                      <FileText className="w-16 h-16 text-blue-300" />
                       <span className="text-sm text-gray-400">Digital Product</span>
                     </>
                   ) : (
@@ -205,14 +205,14 @@ export default function PlaceOrder() {
             <div className="flex items-center gap-2 mb-2">
               <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
               {product.is_digital && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
                   <Zap className="w-3 h-3" /> Instant Download
                 </span>
               )}
             </div>
 
             <div className="flex items-center gap-4 mb-4">
-              <div className="text-3xl font-bold text-purple-600">
+              <div className="text-3xl font-bold text-blue-600">
                 KES {parseFloat(product.price).toLocaleString()}
               </div>
               {product.compare_at_price && parseFloat(product.compare_at_price) > parseFloat(product.price) && (
@@ -231,7 +231,7 @@ export default function PlaceOrder() {
 
             {product.category && (
               <div className="mb-4">
-                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                   {product.category}
                 </span>
               </div>
@@ -245,12 +245,12 @@ export default function PlaceOrder() {
             )}
 
             {product.is_digital && (
-              <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                <div className="flex items-center gap-2 text-purple-700 font-medium mb-1">
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center gap-2 text-blue-700 font-medium mb-1">
                   <Download className="w-4 h-4" />
                   Instant digital delivery
                 </div>
-                <p className="text-sm text-purple-600">
+                <p className="text-sm text-blue-600">
                   Payment required via Paystack. You will receive access after successful payment.
                 </p>
               </div>
@@ -260,7 +260,7 @@ export default function PlaceOrder() {
           {/* Order Form */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6 text-purple-600" />
+              <ShoppingCart className="w-6 h-6 text-blue-600" />
               {product.is_digital ? 'Get Instant Access' : 'Place Your Order'}
             </h2>
 
@@ -274,7 +274,7 @@ export default function PlaceOrder() {
                     value={quantity}
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                     min="1"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               )}
@@ -291,7 +291,7 @@ export default function PlaceOrder() {
                   onChange={handleChange}
                   placeholder="John Doe"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -307,7 +307,7 @@ export default function PlaceOrder() {
                   onChange={handleChange}
                   placeholder="john@example.com"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {product.is_digital && (
                   <p className="text-xs text-gray-400 mt-1">Your order confirmation will be linked to this email.</p>
@@ -326,7 +326,7 @@ export default function PlaceOrder() {
                   onChange={handleChange}
                   placeholder="+254712345678"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -342,7 +342,7 @@ export default function PlaceOrder() {
                     onChange={handleChange}
                     placeholder="123 Main Street, Nairobi"
                     rows="2"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               )}
@@ -358,19 +358,19 @@ export default function PlaceOrder() {
                   onChange={handleChange}
                   placeholder="Any special requests or questions..."
                   rows="2"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               {/* Order Total */}
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-700">Subtotal:</span>
                   <span className="font-semibold text-gray-900">KES {calculateTotal().toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-lg font-bold border-t pt-2">
                   <span className="text-gray-900">Total:</span>
-                  <span className="text-purple-600">KES {calculateTotal().toLocaleString()}</span>
+                  <span className="text-blue-600">KES {calculateTotal().toLocaleString()}</span>
                 </div>
               </div>
 
@@ -389,7 +389,7 @@ export default function PlaceOrder() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center justify-center gap-2 font-semibold text-lg"
+                className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2 font-semibold text-lg"
               >
                 {submitting ? (
                   <><Loader className="w-5 h-5 animate-spin" /> Processing...</>

@@ -45,7 +45,7 @@ export default function InfluencerDashboard() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+          <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading analytics...</p>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function InfluencerDashboard() {
           <p className="text-gray-600 mb-6">Start promoting products to see your analytics</p>
           <button
             onClick={() => window.location.href = '/affiliate/marketplace'}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             <TrendingUp className="w-5 h-5" />
             Browse Products
@@ -94,7 +94,7 @@ export default function InfluencerDashboard() {
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(parseInt(e.target.value))}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value={7}>Last 7 days</option>
               <option value={30}>Last 30 days</option>
@@ -145,8 +145,8 @@ export default function InfluencerDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <MousePointerClick className="w-6 h-6 text-purple-600" />
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <MousePointerClick className="w-6 h-6 text-blue-600" />
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Clicks</p>
@@ -165,12 +165,12 @@ export default function InfluencerDashboard() {
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <Percent className="w-6 h-6 text-purple-600" />
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Percent className="w-6 h-6 text-blue-600" />
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Conversion Rate</p>
-            <p className="text-3xl font-bold text-purple-600">{conversionRate}%</p>
+            <p className="text-3xl font-bold text-blue-600">{conversionRate}%</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
@@ -197,7 +197,7 @@ export default function InfluencerDashboard() {
                   <span className="font-semibold text-gray-900">{stats.total_clicks.toLocaleString()}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div className="bg-purple-600 h-3 rounded-full" style={{ width: '100%' }} />
+                  <div className="bg-blue-600 h-3 rounded-full" style={{ width: '100%' }} />
                 </div>
               </div>
 
@@ -232,9 +232,9 @@ export default function InfluencerDashboard() {
                   KES {parseFloat(stats.pending_commissions).toLocaleString()}
                 </span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                 <span className="text-sm text-gray-700">Available</span>
-                <span className="font-semibold text-purple-600">
+                <span className="font-semibold text-blue-600">
                   KES {parseFloat(stats.available_to_withdraw).toLocaleString()}
                 </span>
               </div>
@@ -246,7 +246,7 @@ export default function InfluencerDashboard() {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-              <Award className="w-6 h-6 text-purple-600" />
+              <Award className="w-6 h-6 text-blue-600" />
               Your Top Performing Products
             </h2>
           </div>
@@ -256,7 +256,7 @@ export default function InfluencerDashboard() {
               <p className="text-gray-500 mb-4">No product data yet</p>
               <button
                 onClick={() => window.location.href = '/affiliate/marketplace'}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 <TrendingUp className="w-5 h-5" />
                 Browse Products to Promote
@@ -271,7 +271,7 @@ export default function InfluencerDashboard() {
 
                 return (
                   <div key={product.id} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600 font-bold">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 font-bold">
                       #{index + 1}
                     </div>
 
@@ -325,7 +325,7 @@ export default function InfluencerDashboard() {
         </div>
 
         {/* Tips & Insights */}
-        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
           <h3 className="text-xl font-semibold mb-4">Performance Tips</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-white bg-opacity-10 rounded-lg p-4">

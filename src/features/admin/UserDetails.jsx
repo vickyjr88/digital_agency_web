@@ -91,7 +91,7 @@ export default function UserDetails() {
                         </div>
                         <div className="flex flex-col items-end gap-3">
                             <div className="flex gap-3">
-                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${user.role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
                                     {user.role || 'user'}
                                 </span>
                                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700 capitalize">

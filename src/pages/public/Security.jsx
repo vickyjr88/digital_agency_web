@@ -46,11 +46,11 @@ export default function Security() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Shield className="w-16 h-16 mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Security at Dexter</h1>
-          <p className="text-xl text-purple-100 max-w-3xl mx-auto">
+          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
             Your data security and privacy are our top priorities. Learn how we protect your information.
           </p>
         </div>
@@ -65,8 +65,8 @@ export default function Security() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {measures.map((measure, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <measure.icon className="w-6 h-6 text-purple-600" />
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <measure.icon className="w-6 h-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{measure.title}</h3>
                 <p className="text-gray-600">{measure.description}</p>
@@ -101,29 +101,29 @@ export default function Security() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Protect Your Account</h2>
           <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-lg">
-              <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</div>
+            <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
+              <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Use a strong password</h3>
                 <p className="text-gray-600">Create a unique password with letters, numbers, and symbols.</p>
               </div>
             </div>
-            <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-lg">
-              <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</div>
+            <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
+              <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Enable two-factor authentication</h3>
                 <p className="text-gray-600">Add an extra layer of security to your account.</p>
               </div>
             </div>
-            <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-lg">
-              <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</div>
+            <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
+              <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Be cautious of phishing</h3>
                 <p className="text-gray-600">We'll never ask for your password via email or phone.</p>
               </div>
             </div>
-            <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-lg">
-              <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">4</div>
+            <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
+              <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">4</div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Monitor account activity</h3>
                 <p className="text-gray-600">Review your account regularly and report suspicious activity immediately.</p>
@@ -142,7 +142,7 @@ export default function Security() {
           </p>
           <a
             href="mailto:security@dexter.co"
-            className="inline-block px-8 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+            className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Report Security Issue
           </a>

@@ -89,7 +89,7 @@ export default function InfluencerOrders() {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       case 'contacted': return 'bg-blue-100 text-blue-800';
-      case 'in_progress': return 'bg-purple-100 text-purple-800';
+      case 'in_progress': return 'bg-blue-100 text-blue-800';
       case 'fulfilled': return 'bg-green-100 text-green-800';
       case 'cancelled': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
@@ -119,7 +119,7 @@ export default function InfluencerOrders() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+          <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading your orders...</p>
         </div>
       </div>
@@ -141,8 +141,8 @@ export default function InfluencerOrders() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Package className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Package className="w-5 h-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total Orders</p>
@@ -253,7 +253,7 @@ export default function InfluencerOrders() {
             {myLinks.length > 4 && (
               <button
                 onClick={() => toast.info('View all links page coming soon!')}
-                className="mt-4 text-purple-600 hover:text-purple-700 text-sm font-medium"
+                className="mt-4 text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
                 View all {myLinks.length} links →
               </button>
@@ -271,7 +271,7 @@ export default function InfluencerOrders() {
                 placeholder="Search orders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -279,7 +279,7 @@ export default function InfluencerOrders() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Orders</option>
                 <option value="pending">Pending</option>
@@ -307,7 +307,7 @@ export default function InfluencerOrders() {
             {!searchQuery && myLinks.length === 0 && (
               <button
                 onClick={() => window.location.href = '/affiliate/marketplace'}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 <TrendingUp className="w-5 h-5" />
                 Browse Products

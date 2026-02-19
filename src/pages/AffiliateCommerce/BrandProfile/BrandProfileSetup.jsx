@@ -140,7 +140,7 @@ export default function BrandProfileSetup() {
   if (loadingBrands) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader className="w-8 h-8 text-purple-600 animate-spin" />
+        <Loader className="w-8 h-8 text-blue-600 animate-spin" />
       </div>
     );
   }
@@ -150,8 +150,8 @@ export default function BrandProfileSetup() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-5">
-            <Building2 className="w-8 h-8 text-purple-600" />
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5">
+            <Building2 className="w-8 h-8 text-blue-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">No brands found</h2>
           <p className="text-gray-500 mb-8">
@@ -159,7 +159,7 @@ export default function BrandProfileSetup() {
           </p>
           <button
             onClick={() => navigate('/my-brands')}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 font-semibold"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold"
           >
             <Building2 className="w-5 h-5" />
             Create a brand
@@ -191,7 +191,7 @@ export default function BrandProfileSetup() {
         {/* ── Brand picker ──────────────────────────────────────────────── */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-purple-600" />
+            <Building2 className="w-5 h-5 text-blue-600" />
             Select brand
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -202,14 +202,14 @@ export default function BrandProfileSetup() {
                 onClick={() => setSelectedBrandId(brand.id)}
                 className={`relative flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all
                   ${selectedBrandId === brand.id
-                    ? 'border-purple-500 bg-purple-50'
-                    : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'}`}
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'}`}
               >
                 {/* Logo or initials */}
                 {brand.logo_url ? (
                   <img src={brand.logo_url} alt={brand.name} className="w-10 h-10 rounded-lg object-cover shrink-0" />
                 ) : (
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center shrink-0 text-purple-700 font-bold text-lg">
+                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0 text-blue-700 font-bold text-lg">
                     {brand.name.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -220,7 +220,7 @@ export default function BrandProfileSetup() {
                   )}
                 </div>
                 {selectedBrandId === brand.id && (
-                  <CheckCircle className="w-5 h-5 text-purple-600 shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-blue-600 shrink-0" />
                 )}
               </button>
             ))}
@@ -251,7 +251,7 @@ export default function BrandProfileSetup() {
             {/* Contact Information */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Phone className="w-5 h-5 text-purple-600" />
+                <Phone className="w-5 h-5 text-blue-600" />
                 Contact Information (Required)
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
@@ -266,7 +266,7 @@ export default function BrandProfileSetup() {
                     onChange={handleChange}
                     placeholder="+254712345678"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">Include country code (e.g., +254)</p>
                 </div>
@@ -281,7 +281,7 @@ export default function BrandProfileSetup() {
                     value={formData.phone_number}
                     onChange={handleChange}
                     placeholder="+254712345678"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
@@ -296,7 +296,7 @@ export default function BrandProfileSetup() {
                     placeholder="123 Business Street, Nairobi, Kenya"
                     required
                     rows="2"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
@@ -310,7 +310,7 @@ export default function BrandProfileSetup() {
                     value={formData.business_hours}
                     onChange={handleChange}
                     placeholder="Mon-Sat, 9AM-6PM"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
@@ -323,7 +323,7 @@ export default function BrandProfileSetup() {
                     value={formData.preferred_contact_method}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="whatsapp">WhatsApp</option>
                     <option value="phone">Phone</option>
@@ -336,7 +336,7 @@ export default function BrandProfileSetup() {
             {/* Online Presence */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Globe className="w-5 h-5 text-purple-600" />
+                <Globe className="w-5 h-5 text-blue-600" />
                 Online Presence
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
@@ -350,7 +350,7 @@ export default function BrandProfileSetup() {
                     value={formData.business_email}
                     onChange={handleChange}
                     placeholder="contact@business.com"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -363,7 +363,7 @@ export default function BrandProfileSetup() {
                     value={formData.website_url}
                     onChange={handleChange}
                     placeholder="https://business.com"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -376,7 +376,7 @@ export default function BrandProfileSetup() {
                     value={formData.instagram_handle}
                     onChange={handleChange}
                     placeholder="@yourbusiness"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -389,7 +389,7 @@ export default function BrandProfileSetup() {
                     value={formData.facebook_page}
                     onChange={handleChange}
                     placeholder="YourBusinessPage"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -398,7 +398,7 @@ export default function BrandProfileSetup() {
             {/* Business Details */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-purple-600" />
+                <Building2 className="w-5 h-5 text-blue-600" />
                 Business Details
               </h2>
               <div className="space-y-4">
@@ -410,7 +410,7 @@ export default function BrandProfileSetup() {
                     value={formData.business_category}
                     onChange={handleChange}
                     placeholder="Fashion, Electronics, etc."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -421,7 +421,7 @@ export default function BrandProfileSetup() {
                     onChange={handleChange}
                     placeholder="Tell customers about your business..."
                     rows="4"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -437,7 +437,7 @@ export default function BrandProfileSetup() {
                   name="auto_approve_influencers"
                   checked={formData.auto_approve_influencers}
                   onChange={handleChange}
-                  className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="auto_approve" className="text-sm text-gray-700">
                   <div className="font-medium">Auto-approve influencer applications</div>
@@ -460,7 +460,7 @@ export default function BrandProfileSetup() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 {saving ? 'Saving...' : existingProfile ? 'Update Profile' : 'Create Profile'}

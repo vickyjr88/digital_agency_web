@@ -62,7 +62,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 	if (loading) {
 		return (
 			<div className="min-h-screen flex items-center justify-center bg-gray-50">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
 			</div>
 		);
 	}
@@ -74,7 +74,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 			<div className="p-6 border-b border-gray-100">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
-						<div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+						<div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
 							D
 						</div>
 						<span className="text-xl font-bold text-gray-900">Dexter</span>
@@ -97,7 +97,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/trends');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<TrendingUp size={20} />
 					Trends
@@ -108,7 +108,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/my-brands');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<LayoutGrid size={20} />
 					My Brands
@@ -119,7 +119,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/billing');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<CreditCard size={20} />
 					Subscription
@@ -130,7 +130,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 						navigate('/profile');
 						if (isMobile) closeMobileSidebar();
 					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 				>
 					<Settings size={20} />
 					Profile
@@ -145,7 +145,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/campaigns/create');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/create' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/create' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Plus size={20} />
 						Start Campaign
@@ -155,7 +155,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/campaigns/open');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/open' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/open' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Globe size={20} />
 						Browse Campaigns
@@ -165,7 +165,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/my-campaigns');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-campaigns' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-campaigns' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Target size={20} />
 						My Campaigns
@@ -175,7 +175,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/campaign-invites');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaign-invites' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaign-invites' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Mail size={20} />
 						Invites
@@ -185,7 +185,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/my-bids');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-bids' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-bids' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<FileText size={20} />
 						My Bids
@@ -202,7 +202,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/wallet');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet' || location.pathname === '/wallet' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet' || location.pathname === '/wallet' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<WalletIcon size={20} />
 						My Wallet
@@ -219,7 +219,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/affiliate/marketplace');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/marketplace' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/marketplace' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<ShoppingBag size={20} />
 						Browse Products
@@ -229,7 +229,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/affiliate/products');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/products') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/products') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Package size={20} />
 						My Products
@@ -239,7 +239,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/affiliate/orders');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/orders' || location.pathname === '/affiliate/my-orders' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/orders' || location.pathname === '/affiliate/my-orders' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<ClipboardCheck size={20} />
 						Orders
@@ -249,7 +249,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/affiliate/analytics');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/analytics') || location.pathname.startsWith('/affiliate/my-dashboard') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/analytics') || location.pathname.startsWith('/affiliate/my-dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<BarChart2 size={20} />
 						Affiliate Stats
@@ -266,7 +266,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 								navigate('/influencer/dashboard');
 								if (isMobile) closeMobileSidebar();
 							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencer' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencer' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 						>
 							<Star size={20} />
 							My Services
@@ -276,7 +276,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 								navigate('/payment-methods');
 								if (isMobile) closeMobileSidebar();
 							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'payment-methods' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'payment-methods' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 						>
 							<CreditCard size={20} />
 							Payout Settings
@@ -286,7 +286,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 								navigate('/proof-of-work/submit');
 								if (isMobile) closeMobileSidebar();
 							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/submit' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/submit' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 						>
 							<Camera size={20} />
 							Submit Proof
@@ -296,7 +296,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 								navigate('/proof-of-work/my-submissions');
 								if (isMobile) closeMobileSidebar();
 							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/my-submissions' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/my-submissions' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 						>
 							<ClipboardCheck size={20} />
 							My Submissions
@@ -310,7 +310,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							navigate('/admin');
 							if (isMobile) closeMobileSidebar();
 						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'admin' ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'}`}
+						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'admin' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
 					>
 						<Shield size={20} />
 						Admin Panel
@@ -323,11 +323,11 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 					<div className="px-4 mb-6">
 						<div className="flex justify-between items-end mb-2">
 							<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Monthly Usage</span>
-							<span className="text-xs font-bold text-purple-600">{user.usage.current} / {user.usage.limit}</span>
+							<span className="text-xs font-bold text-blue-600">{user.usage.current} / {user.usage.limit}</span>
 						</div>
 						<div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
 							<div
-								className={`h-full transition-all duration-1000 ${user.usage.current / user.usage.limit > 0.9 ? 'bg-red-500' : 'bg-purple-600'
+								className={`h-full transition-all duration-1000 ${user.usage.current / user.usage.limit > 0.9 ? 'bg-red-500' : 'bg-blue-600'
 									}`}
 								style={{ width: `${Math.min(100, (user.usage.current / user.usage.limit) * 100)}%` }}
 							/>
@@ -362,7 +362,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 			{/* Mobile Header */}
 			<div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 px-4 h-16 flex items-center justify-between">
 				<div className="flex items-center gap-3">
-					<div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+					<div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
 						D
 					</div>
 					<span className="text-xl font-bold text-gray-900">Dexter</span>
@@ -430,7 +430,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 									</div>
 									<button
 										onClick={() => navigate('/brands/new')}
-										className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium"
+										className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium"
 									>
 										<Plus size={18} />
 										New Brand
@@ -448,7 +448,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 										</p>
 										<button
 											onClick={() => navigate('/brands/new')}
-											className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium shadow-lg shadow-purple-200"
+											className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-200"
 										>
 											Create Your First Brand
 										</button>
@@ -466,7 +466,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 											>
 												<div className="p-6">
 													<div className="flex justify-between items-start mb-4">
-														<div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
+														<div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
 															{brand.name[0]}
 														</div>
 														<span

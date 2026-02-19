@@ -97,8 +97,8 @@ export default function NextActionWidget({ user, brands = [] }) {
                 btnText: "Create Brand",
                 path: "/brands/new",
                 icon: Briefcase,
-                color: "bg-purple-100 text-purple-600",
-                btnColor: "bg-purple-600 hover:bg-purple-700"
+                color: "bg-blue-100 text-blue-600",
+                btnColor: "bg-blue-600 hover:bg-blue-700"
             };
         } else {
             action = {
@@ -121,8 +121,8 @@ export default function NextActionWidget({ user, brands = [] }) {
                 btnText: "Create Brand",
                 path: "/brands/new",
                 icon: Briefcase,
-                color: "bg-purple-100 text-purple-600",
-                btnColor: "bg-purple-600 hover:bg-purple-700"
+                color: "bg-blue-100 text-blue-600",
+                btnColor: "bg-blue-600 hover:bg-blue-700"
             };
         } else {
             action = {

@@ -103,13 +103,13 @@ For EU users, our Data Protection Officer can be reached at dpo@dexter.co`
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center mb-6">
             <Shield className="w-16 h-16" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">Privacy Policy</h1>
-          <p className="text-xl text-purple-100 max-w-3xl mx-auto text-center">
+          <p className="text-xl text-blue-100 max-w-3xl mx-auto text-center">
             Last Updated: February 20, 2025
           </p>
         </div>
@@ -134,9 +134,9 @@ For EU users, our Data Protection Officer can be reached at dpo@dexter.co`
             </div>
 
             {/* Summary Box */}
-            <div className="mt-12 p-6 bg-purple-50 border border-purple-200 rounded-xl">
-              <h3 className="text-xl font-semibold text-purple-900 mb-3">In Summary</h3>
-              <ul className="space-y-2 text-purple-800">
+            <div className="mt-12 p-6 bg-blue-50 border border-blue-200 rounded-xl">
+              <h3 className="text-xl font-semibold text-blue-900 mb-3">In Summary</h3>
+              <ul className="space-y-2 text-blue-800">
                 <li>✓ We collect only necessary information to provide our services</li>
                 <li>✓ We never sell your personal data</li>
                 <li>✓ You have full control over your data</li>

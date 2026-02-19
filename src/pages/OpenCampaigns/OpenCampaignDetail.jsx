@@ -398,14 +398,14 @@ export default function OpenCampaignDetail() {
                         <div className="info-card">
                             <div className="section-header">
                                 <h3 className="flex items-center gap-2">
-                                    <Sparkles size={20} className="text-purple-500" />
+                                    <Sparkles size={20} className="text-blue-500" />
                                     AI Generated Content
                                 </h3>
                                 <span className="status-badge sm draft">{generatedContents.length} items</span>
                             </div>
                             <div className="deliverables-list mt-4 grid gap-4">
                                 {generatedContents.map((content) => (
-                                    <div key={content.id} className="deliverable-item p-4 border rounded-xl bg-purple-50 flex items-center justify-between">
+                                    <div key={content.id} className="deliverable-item p-4 border rounded-xl bg-blue-50 flex items-center justify-between">
                                         <div className="del-info">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <span className="font-semibold capitalize">{content.platform}</span>
@@ -436,7 +436,7 @@ export default function OpenCampaignDetail() {
                         <div className="info-card deliverables-section">
                             <div className="section-header">
                                 <h3>
-                                    <Sparkles size={20} className="text-purple-500" />
+                                    <Sparkles size={20} className="text-blue-500" />
                                     Proof of Work / Deliverables
                                 </h3>
                                 <span className={`status-badge sm ${campaign.status}`}>{campaign.status}</span>
@@ -685,7 +685,7 @@ export default function OpenCampaignDetail() {
                                                         className="btn-secondary full-width flex items-center justify-center gap-2 py-2 px-4 rounded-lg"
                                                         onClick={() => handleAction('generate', null, bid.id)}
                                                     >
-                                                        <Sparkles size={16} className="text-purple-500" />
+                                                        <Sparkles size={16} className="text-blue-500" />
                                                         Generate AI Content
                                                     </button>
                                                 )}

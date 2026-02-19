@@ -194,7 +194,7 @@ export default function EditGeneratedContent() {
                             {content.instagram_reel_script && (
                                 <div className="space-y-4 border p-4 rounded-lg bg-gray-50">
                                     <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }} className="font-medium flex items-center gap-2">
-                                        <Sparkles size={16} className="text-purple-500" />
+                                        <Sparkles size={16} className="text-blue-500" />
                                         Reel Script
                                     </h3>
                                     <div className="form-group">

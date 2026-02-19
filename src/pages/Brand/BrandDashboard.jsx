@@ -16,7 +16,7 @@ const STATUS_CONFIG = {
     open: { label: 'Open', color: 'bg-blue-50 text-blue-700 border-blue-200', icon: '📢' },
     pending: { label: 'Pending', color: 'bg-yellow-50 text-yellow-700 border-yellow-200', icon: '⏳' },
     accepted: { label: 'Accepted', color: 'bg-indigo-50 text-indigo-700 border-indigo-200', icon: '✓' },
-    in_progress: { label: 'In Progress', color: 'bg-purple-50 text-purple-700 border-purple-200', icon: '🔄' },
+    in_progress: { label: 'In Progress', color: 'bg-blue-50 text-blue-700 border-blue-200', icon: '🔄' },
     draft_submitted: { label: 'Review Needed', color: 'bg-orange-50 text-orange-700 border-orange-200', icon: '👀' },
     revision_requested: { label: 'Revision Sent', color: 'bg-amber-50 text-amber-700 border-amber-200', icon: '🔄' },
     draft_approved: { label: 'Approved', color: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: '✅' },
@@ -160,7 +160,7 @@ export default function BrandDashboard() {
                 <div className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-gray-500">Total Spent</span>
-                        <DollarSign className="w-5 h-5 text-purple-600" />
+                        <DollarSign className="w-5 h-5 text-blue-600" />
                     </div>
                     <p className="text-2xl font-bold text-gray-900">{formatPrice(stats.total_spent)}</p>
                 </div>

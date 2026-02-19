@@ -136,13 +136,13 @@ Address: Nairobi, Kenya`
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center mb-6">
             <FileText className="w-16 h-16" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">Terms of Service</h1>
-          <p className="text-xl text-purple-100 max-w-3xl mx-auto text-center">
+          <p className="text-xl text-blue-100 max-w-3xl mx-auto text-center">
             Last Updated: February 20, 2025
           </p>
         </div>

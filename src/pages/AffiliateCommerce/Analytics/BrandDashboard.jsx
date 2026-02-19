@@ -48,7 +48,7 @@ export default function BrandDashboard() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+          <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading analytics...</p>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function BrandDashboard() {
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(parseInt(e.target.value))}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value={7}>Last 7 days</option>
               <option value={30}>Last 30 days</option>
@@ -104,8 +104,8 @@ export default function BrandDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <Package className="w-6 h-6 text-purple-600" />
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Package className="w-6 h-6 text-blue-600" />
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Products</p>
@@ -145,7 +145,7 @@ export default function BrandDashboard() {
 
         {/* Revenue Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-white bg-opacity-20 rounded-lg">
                 <DollarSign className="w-6 h-6" />
@@ -184,17 +184,17 @@ export default function BrandDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <Percent className="w-6 h-6 text-purple-600" />
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Percent className="w-6 h-6 text-blue-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Conversion Rate</p>
-                <p className="text-3xl font-bold text-purple-600">{conversionRate}%</p>
+                <p className="text-3xl font-bold text-blue-600">{conversionRate}%</p>
               </div>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="bg-purple-600 h-2 rounded-full transition-all"
+                className="bg-blue-600 h-2 rounded-full transition-all"
                 style={{ width: `${Math.min(parseFloat(conversionRate), 100)}%` }}
               />
             </div>
@@ -225,7 +225,7 @@ export default function BrandDashboard() {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-              <Award className="w-6 h-6 text-purple-600" />
+              <Award className="w-6 h-6 text-blue-600" />
               Top Performing Products
             </h2>
           </div>
@@ -235,7 +235,7 @@ export default function BrandDashboard() {
             <div className="space-y-4">
               {topProducts.map((product, index) => (
                 <div key={product.id} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-600 font-bold text-sm">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold text-sm">
                     #{index + 1}
                   </div>
                   <div className="flex-1">
@@ -262,7 +262,7 @@ export default function BrandDashboard() {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-              <Users className="w-6 h-6 text-purple-600" />
+              <Users className="w-6 h-6 text-blue-600" />
               Top Performing Affiliates
             </h2>
           </div>
@@ -286,7 +286,7 @@ export default function BrandDashboard() {
                   {topAffiliates.map((affiliate, index) => (
                     <tr key={affiliate.id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
-                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600 font-bold text-xs">
+                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 font-bold text-xs">
                           {index + 1}
                         </div>
                       </td>
@@ -299,7 +299,7 @@ export default function BrandDashboard() {
                       <td className="py-3 px-4 text-center text-gray-900">{affiliate.clicks_count || 0}</td>
                       <td className="py-3 px-4 text-center text-gray-900">{affiliate.orders_count || 0}</td>
                       <td className="py-3 px-4 text-center">
-                        <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
                           {affiliate.clicks_count > 0
                             ? ((affiliate.orders_count / affiliate.clicks_count) * 100).toFixed(1)
                             : 0}%

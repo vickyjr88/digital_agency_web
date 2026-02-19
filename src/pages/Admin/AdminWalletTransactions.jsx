@@ -76,7 +76,7 @@ export default function AdminWalletTransactions() {
             case 'deposit': return <span className="text-green-600 flex items-center gap-1"><ArrowDownLeft size={14} /> Deposit</span>;
             case 'withdrawal': return <span className="text-red-600 flex items-center gap-1"><ArrowUpRight size={14} /> Withdrawal</span>;
             case 'payment': return <span className="text-blue-600 flex items-center gap-1"><ArrowUpRight size={14} /> Payment</span>;
-            case 'escrow_release': return <span className="text-purple-600 flex items-center gap-1"><CheckCircle size={14} /> Release</span>;
+            case 'escrow_release': return <span className="text-blue-600 flex items-center gap-1"><CheckCircle size={14} /> Release</span>;
             case 'refund': return <span className="text-orange-600 flex items-center gap-1"><RefreshCcw size={14} /> Refund</span>;
             default: return <span className="text-gray-600 capitalize">{type?.replace('_', ' ')}</span>;
         }

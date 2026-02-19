@@ -69,7 +69,7 @@ export default function BrandOrders() {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       case 'contacted': return 'bg-blue-100 text-blue-800';
-      case 'in_progress': return 'bg-purple-100 text-purple-800';
+      case 'in_progress': return 'bg-blue-100 text-blue-800';
       case 'fulfilled': return 'bg-green-100 text-green-800';
       case 'cancelled': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
@@ -99,7 +99,7 @@ export default function BrandOrders() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+          <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading orders...</p>
         </div>
       </div>
@@ -121,8 +121,8 @@ export default function BrandOrders() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Package className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Package className="w-5 h-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total</p>
@@ -145,8 +145,8 @@ export default function BrandOrders() {
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">In Progress</p>
@@ -194,7 +194,7 @@ export default function BrandOrders() {
                 placeholder="Search orders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export default function BrandOrders() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Orders</option>
                 <option value="pending">Pending</option>
@@ -258,7 +258,7 @@ export default function BrandOrders() {
                       </div>
                       <div className="text-right">
                         <p className="text-sm text-gray-500">Order Total</p>
-                        <p className="text-2xl font-bold text-purple-600">
+                        <p className="text-2xl font-bold text-blue-600">
                           KES {parseFloat(order.total_amount).toLocaleString()}
                         </p>
                       </div>
@@ -274,13 +274,13 @@ export default function BrandOrders() {
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <Phone className="w-4 h-4 text-gray-400" />
-                          <a href={`tel:${order.customer_phone}`} className="text-purple-600 hover:underline">
+                          <a href={`tel:${order.customer_phone}`} className="text-blue-600 hover:underline">
                             {order.customer_phone}
                           </a>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <Mail className="w-4 h-4 text-gray-400" />
-                          <a href={`mailto:${order.customer_email}`} className="text-purple-600 hover:underline">
+                          <a href={`mailto:${order.customer_email}`} className="text-blue-600 hover:underline">
                             {order.customer_email}
                           </a>
                         </div>
@@ -344,7 +344,7 @@ export default function BrandOrders() {
                           <button
                             onClick={() => handleStatusUpdate(order.id, 'in_progress')}
                             disabled={updatingStatus === order.id}
-                            className="px-4 py-2 border border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 disabled:opacity-50 text-sm font-medium"
+                            className="px-4 py-2 border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 disabled:opacity-50 text-sm font-medium"
                           >
                             {updatingStatus === order.id ? 'Updating...' : 'Mark In Progress'}
                           </button>

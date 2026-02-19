@@ -73,7 +73,7 @@ export default function PaymentVerify() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+          <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600 text-lg">Verifying your payment...</p>
           <p className="text-sm text-gray-400 mt-2">Please wait</p>
         </div>
@@ -103,7 +103,7 @@ export default function PaymentVerify() {
               </Link>
               <button
                 onClick={() => navigate(-1)}
-                className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium"
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
               >
                 Try Again
               </button>
@@ -131,15 +131,15 @@ export default function PaymentVerify() {
 
             {/* Order Info */}
             <div className="flex items-center gap-4 bg-gray-50 rounded-xl p-4 mb-6 text-left">
-              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center shrink-0">
-                <FileText className="w-7 h-7 text-purple-600" />
+              <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
+                <FileText className="w-7 h-7 text-blue-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-900">Order #{paymentResult.order_number}</p>
                 {paymentResult.download_file_name && (
                   <p className="text-sm text-gray-500 truncate">{paymentResult.download_file_name}</p>
                 )}
-                <p className="text-sm font-medium text-purple-600">
+                <p className="text-sm font-medium text-blue-600">
                   KES {(paymentResult.amount / 100).toLocaleString()}
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default function PaymentVerify() {
             <button
               onClick={handleDownload}
               disabled={downloadLoading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50 font-semibold text-lg transition-colors mb-4"
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 font-semibold text-lg transition-colors mb-4"
             >
               {downloadLoading ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -190,12 +190,12 @@ export default function PaymentVerify() {
             {/* Order Summary */}
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-purple-100 rounded flex items-center justify-center">
-                  <Package className="w-8 h-8 text-purple-600" />
+                <div className="w-16 h-16 bg-blue-100 rounded flex items-center justify-center">
+                  <Package className="w-8 h-8 text-blue-600" />
                 </div>
                 <div className="flex-1 text-left">
                   <p className="font-semibold text-gray-900">Order Confirmed</p>
-                  <p className="text-lg font-bold text-purple-600">
+                  <p className="text-lg font-bold text-blue-600">
                     KES {(paymentResult.amount / 100).toLocaleString()}
                   </p>
                 </div>
@@ -206,7 +206,7 @@ export default function PaymentVerify() {
           {/* Brand Contact Information */}
           <div className="bg-white rounded-lg shadow-lg p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <MessageCircle className="w-6 h-6 text-purple-600" />
+              <MessageCircle className="w-6 h-6 text-blue-600" />
               Contact the Seller
             </h2>
 
@@ -249,14 +249,14 @@ export default function PaymentVerify() {
               )}
 
               {brandContact.business_email && (
-                <div className="flex items-start gap-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                  <Mail className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                <div className="flex items-start gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                   <div className="flex-1">
                     <p className="font-medium text-gray-900 mb-1">Email</p>
                     <p className="text-gray-700 mb-3">{brandContact.business_email}</p>
                     <a
                       href={`mailto:${brandContact.business_email}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       <Mail className="w-4 h-4" />
                       Send Email
@@ -286,7 +286,7 @@ export default function PaymentVerify() {
               )}
             </div>
 
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
               <h3 className="font-semibold text-gray-900 mb-3">Next Steps:</h3>
               <ol className="list-decimal list-inside space-y-2 text-gray-700">
                 <li>Contact the seller using the information above</li>
@@ -321,7 +321,7 @@ export default function PaymentVerify() {
           </p>
           <Link
             to="/shop"
-            className="inline-block px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium"
+            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
           >
             Continue Shopping
           </Link>

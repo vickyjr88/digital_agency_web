@@ -300,7 +300,7 @@ export default function CreateProduct() {
   if (!profileChecked) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -319,7 +319,7 @@ export default function CreateProduct() {
           </p>
           <Link
             to="/affiliate/brand-profile"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 font-semibold transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors"
           >
             <Building2 className="w-5 h-5" />
             Set up brand profile
@@ -347,9 +347,9 @@ export default function CreateProduct() {
               <button
                 key={profile.id}
                 onClick={() => { setSelectedProfile(profile); setShowBrandPicker(false); }}
-                className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 text-left transition-all"
+                className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-left transition-all"
               >
-                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-700 font-bold text-lg shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg shrink-0">
                   {(profile.brand_name || '?').charAt(0).toUpperCase()}
                 </div>
                 <div>
@@ -390,14 +390,14 @@ export default function CreateProduct() {
               <p className="text-gray-600 mt-2">Add a new product for influencers to promote</p>
             </div>
             {selectedProfile && (
-              <div className="flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-xl px-4 py-2 text-sm shrink-0">
-                <Building2 className="w-4 h-4 text-purple-600" />
-                <span className="text-purple-800 font-medium">{selectedProfile.brand_name}</span>
+              <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 text-sm shrink-0">
+                <Building2 className="w-4 h-4 text-blue-600" />
+                <span className="text-blue-800 font-medium">{selectedProfile.brand_name}</span>
                 {brandProfiles.length > 1 && (
                   <button
                     type="button"
                     onClick={() => { setSelectedProfile(null); setShowBrandPicker(true); }}
-                    className="ml-1 text-purple-500 hover:text-purple-700 underline text-xs"
+                    className="ml-1 text-blue-500 hover:text-blue-700 underline text-xs"
                   >
                     Change
                   </button>
@@ -412,7 +412,7 @@ export default function CreateProduct() {
           {/* Basic Information */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Package className="w-5 h-5 text-purple-600" />
+              <Package className="w-5 h-5 text-blue-600" />
               Basic Information
             </h2>
             <div className="space-y-4">
@@ -427,7 +427,7 @@ export default function CreateProduct() {
                   onChange={handleChange}
                   placeholder="Premium Sneakers"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -441,7 +441,7 @@ export default function CreateProduct() {
                   onChange={handleChange}
                   placeholder="Describe your product..."
                   rows="4"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -456,7 +456,7 @@ export default function CreateProduct() {
                     value={formData.category}
                     onChange={handleChange}
                     placeholder="Fashion, Electronics, etc."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
@@ -470,7 +470,7 @@ export default function CreateProduct() {
                     value={formData.sku}
                     onChange={handleChange}
                     placeholder="PROD-001"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -480,7 +480,7 @@ export default function CreateProduct() {
           {/* Pricing */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+              <DollarSign className="w-5 h-5 text-blue-600" />
               Pricing
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -497,7 +497,7 @@ export default function CreateProduct() {
                   step="0.01"
                   min="0"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -513,7 +513,7 @@ export default function CreateProduct() {
                   placeholder="7000"
                   step="0.01"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p className="text-xs text-gray-500 mt-1">Original price for discount display</p>
               </div>
@@ -523,7 +523,7 @@ export default function CreateProduct() {
           {/* Commission Settings */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Percent className="w-5 h-5 text-purple-600" />
+              <Percent className="w-5 h-5 text-blue-600" />
               Commission Settings
             </h2>
             <div className="space-y-4">
@@ -539,7 +539,7 @@ export default function CreateProduct() {
                       value="percentage"
                       checked={formData.commission_type === 'percentage'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Percentage</span>
                   </label>
@@ -550,7 +550,7 @@ export default function CreateProduct() {
                       value="fixed"
                       checked={formData.commission_type === 'fixed'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Fixed Amount</span>
                   </label>
@@ -572,7 +572,7 @@ export default function CreateProduct() {
                     min="0"
                     max="100"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Percentage of product price paid to influencer
@@ -592,7 +592,7 @@ export default function CreateProduct() {
                     step="0.01"
                     min="0"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Fixed amount paid to influencer per sale
@@ -613,7 +613,7 @@ export default function CreateProduct() {
                       value="percentage"
                       checked={formData.platform_fee_type === 'percentage'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Percentage</span>
                   </label>
@@ -624,7 +624,7 @@ export default function CreateProduct() {
                       value="fixed"
                       checked={formData.platform_fee_type === 'fixed'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Fixed Amount</span>
                   </label>
@@ -644,7 +644,7 @@ export default function CreateProduct() {
                       step="0.01"
                       min="0"
                       max="100"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Percentage deducted from influencer commission (default: 10%)
@@ -663,7 +663,7 @@ export default function CreateProduct() {
                       placeholder="75"
                       step="0.01"
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Fixed amount deducted from influencer commission
@@ -677,7 +677,7 @@ export default function CreateProduct() {
           {/* Inventory */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Package className="w-5 h-5 text-purple-600" />
+              <Package className="w-5 h-5 text-blue-600" />
               Inventory
             </h2>
             <div className="space-y-4">
@@ -688,7 +688,7 @@ export default function CreateProduct() {
                   name="track_inventory"
                   checked={formData.track_inventory}
                   onChange={handleChange}
-                  className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="track_inventory" className="text-sm text-gray-700">
                   <div className="font-medium">Track inventory</div>
@@ -711,7 +711,7 @@ export default function CreateProduct() {
                       onChange={handleChange}
                       placeholder="100"
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
@@ -726,7 +726,7 @@ export default function CreateProduct() {
                       onChange={handleChange}
                       placeholder="10"
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -737,7 +737,7 @@ export default function CreateProduct() {
           {/* Images */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-1 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-purple-600" />
+              <ImageIcon className="w-5 h-5 text-blue-600" />
               Product Images
             </h2>
             <p className="text-sm text-gray-500 mb-4">
@@ -751,12 +751,12 @@ export default function CreateProduct() {
               onDrop={handleImageDrop}
               onClick={() => imageInputRef.current?.click()}
               className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors mb-4
-                ${imageDragOver ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'}
+                ${imageDragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'}
                 ${pendingImages.length >= 10 ? 'opacity-50 pointer-events-none' : ''}
               `}
             >
-              <ImagePlus className="w-8 h-8 text-purple-400 mb-2" />
-              <span className="text-sm font-medium text-purple-700">
+              <ImagePlus className="w-8 h-8 text-blue-400 mb-2" />
+              <span className="text-sm font-medium text-blue-700">
                 {imageDragOver ? 'Drop images here' : 'Click or drag & drop images'}
               </span>
               <span className="text-xs text-gray-400 mt-1">
@@ -813,7 +813,7 @@ export default function CreateProduct() {
           {/* Digital Product */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-1 flex items-center gap-2">
-              <Download className="w-5 h-5 text-purple-600" />
+              <Download className="w-5 h-5 text-blue-600" />
               Digital Product (optional)
             </h2>
             <p className="text-sm text-gray-500 mb-4">
@@ -827,7 +827,7 @@ export default function CreateProduct() {
                 name="is_digital"
                 checked={formData.is_digital}
                 onChange={handleChange}
-                className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <label htmlFor="is_digital" className="text-sm text-gray-700">
                 <div className="font-medium">This is a digital product</div>
@@ -838,9 +838,9 @@ export default function CreateProduct() {
             {formData.is_digital && (
               <div className="pl-7">
                 {digitalFile ? (
-                  <div className="flex items-center justify-between bg-purple-50 border border-purple-200 rounded-lg px-4 py-3">
+                  <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-purple-600 shrink-0" />
+                      <FileText className="w-5 h-5 text-blue-600 shrink-0" />
                       <div>
                         <p className="text-sm font-medium text-gray-800">{digitalFile.name}</p>
                         <p className="text-xs text-gray-500">{formatFileSize(digitalFile.size)} · {digitalFile.type}</p>
@@ -855,9 +855,9 @@ export default function CreateProduct() {
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center border-2 border-dashed border-purple-300 rounded-lg p-6 cursor-pointer hover:bg-purple-50 transition-colors">
-                    <Upload className="w-8 h-8 text-purple-400 mb-2" />
-                    <span className="text-sm font-medium text-purple-700">Click to select file</span>
+                  <label className="flex flex-col items-center justify-center border-2 border-dashed border-blue-300 rounded-lg p-6 cursor-pointer hover:bg-blue-50 transition-colors">
+                    <Upload className="w-8 h-8 text-blue-400 mb-2" />
+                    <span className="text-sm font-medium text-blue-700">Click to select file</span>
                     <span className="text-xs text-gray-500 mt-1">PDF, EPUB, ZIP, MP4, MP3 · Max 200 MB</span>
                     <input
                       ref={fileInputRef}
@@ -875,7 +875,7 @@ export default function CreateProduct() {
           {/* Shipping */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Package className="w-5 h-5 text-purple-600" />
+              <Package className="w-5 h-5 text-blue-600" />
               Shipping Details
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -891,7 +891,7 @@ export default function CreateProduct() {
                   placeholder="0.5"
                   step="0.01"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -905,7 +905,7 @@ export default function CreateProduct() {
                   value={formData.dimensions}
                   onChange={handleChange}
                   placeholder="30 x 20 x 10"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -919,7 +919,7 @@ export default function CreateProduct() {
                   onChange={handleChange}
                   placeholder="Shipping details, delivery time, etc."
                   rows="2"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -928,7 +928,7 @@ export default function CreateProduct() {
           {/* Settings */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Settings className="w-5 h-5 text-purple-600" />
+              <Settings className="w-5 h-5 text-blue-600" />
               Product Settings
             </h2>
             <div className="space-y-4">
@@ -939,7 +939,7 @@ export default function CreateProduct() {
                   name="auto_approve_affiliates"
                   checked={formData.auto_approve_affiliates}
                   onChange={handleChange}
-                  className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="auto_approve" className="text-sm text-gray-700">
                   <div className="font-medium">Auto-approve affiliates</div>
@@ -957,7 +957,7 @@ export default function CreateProduct() {
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="active">Active</option>
                   <option value="paused">Paused</option>
@@ -978,7 +978,7 @@ export default function CreateProduct() {
             <button
               type="submit"
               disabled={loading || uploadingFile}
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
             >
               {uploadingFile ? (
                 <><Upload className="w-4 h-4 animate-pulse" /> Uploading...</>

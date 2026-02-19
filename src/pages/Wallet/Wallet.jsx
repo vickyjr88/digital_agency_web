@@ -215,7 +215,7 @@ export default function Wallet() {
                     title="Total Spent"
                     value={formatPrice(wallet?.total_spent || 0)}
                     icon={CreditCard}
-                    color="bg-purple-50 text-purple-600"
+                    color="bg-blue-50 text-blue-600"
                     trend="Lifetime spending"
                 />
             </div>

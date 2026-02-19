@@ -27,10 +27,10 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">About Dexter</h1>
-          <p className="text-xl text-purple-100 max-w-3xl mx-auto">
+          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
             We're building the future of influencer marketing and content commerce,
             connecting brands with authentic voices and enabling seamless collaboration.
           </p>
@@ -70,8 +70,8 @@ export default function About() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <value.icon className="w-6 h-6 text-purple-600" />
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <value.icon className="w-6 h-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{value.title}</h3>
                 <p className="text-gray-600">{value.description}</p>
@@ -86,15 +86,15 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-purple-600 mb-2">10K+</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">10K+</div>
               <div className="text-gray-600">Active Influencers</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-purple-600 mb-2">500+</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
               <div className="text-gray-600">Brand Partners</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-purple-600 mb-2">$2M+</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">$2M+</div>
               <div className="text-gray-600">Paid to Creators</div>
             </div>
           </div>
@@ -102,22 +102,22 @@ export default function About() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-purple-600 text-white">
+      <section className="py-16 bg-blue-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-xl text-purple-100 mb-8">
+          <p className="text-xl text-blue-100 mb-8">
             Join thousands of brands and influencers already using Dexter
           </p>
           <div className="flex gap-4 justify-center">
             <a
               href="/signup"
-              className="px-8 py-3 bg-white text-purple-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              className="px-8 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Sign Up Now
             </a>
             <a
               href="/contact"
-              className="px-8 py-3 bg-purple-700 text-white rounded-lg font-semibold hover:bg-purple-800 transition-colors"
+              className="px-8 py-3 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors"
             >
               Contact Sales
             </a>

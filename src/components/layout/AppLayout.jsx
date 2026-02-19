@@ -116,7 +116,7 @@ export default function AppLayout() {
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
               D
             </div>
             <span className="text-xl font-bold text-gray-900">Dexter</span>
@@ -142,7 +142,7 @@ export default function AppLayout() {
               onClick={() => isMobile && closeMobileSidebar()}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-purple-50 text-purple-600'
+                  ? 'bg-blue-50 text-blue-600'
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -186,7 +186,7 @@ export default function AppLayout() {
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
               D
             </div>
             <span className="text-xl font-bold text-gray-900">Dexter</span>

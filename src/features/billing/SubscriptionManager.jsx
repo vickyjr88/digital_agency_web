@@ -30,7 +30,7 @@ export default function SubscriptionManager({ user }) {
             name: 'Professional',
             price: 'KES 7,999',
             period: 'monthly',
-            icon: <Crown className="text-purple-600" />,
+            icon: <Crown className="text-blue-600" />,
             features: ['10 brand profiles', '500 content pieces/month', 'Analytics']
         },
         {

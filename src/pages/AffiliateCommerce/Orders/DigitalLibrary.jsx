@@ -71,8 +71,8 @@ export default function DigitalLibrary() {
             <div className="max-w-3xl mx-auto px-4">
                 {/* Header */}
                 <div className="text-center mb-10">
-                    <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Download className="w-8 h-8 text-purple-600" />
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Download className="w-8 h-8 text-blue-600" />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Digital Library</h1>
                     <p className="text-gray-600">
@@ -90,13 +90,13 @@ export default function DigitalLibrary() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your purchase email..."
-                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2 font-medium"
+                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2 font-medium"
                         >
                             {loading ? (
                                 <Loader className="w-5 h-5 animate-spin" />
@@ -133,8 +133,8 @@ export default function DigitalLibrary() {
                                     return (
                                         <div key={purchase.id} className="bg-white rounded-lg shadow-sm p-6">
                                             <div className="flex items-start gap-4">
-                                                <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <FileText className="w-7 h-7 text-purple-600" />
+                                                <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                    <FileText className="w-7 h-7 text-blue-600" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -162,7 +162,7 @@ export default function DigitalLibrary() {
                                                             href={downloadUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                                                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                                                         >
                                                             <Download className="w-4 h-4" />
                                                             Download

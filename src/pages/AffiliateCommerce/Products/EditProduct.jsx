@@ -381,7 +381,7 @@ export default function EditProduct() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+          <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading product...</p>
         </div>
       </div>
@@ -424,7 +424,7 @@ export default function EditProduct() {
           {/* Basic Information */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Package className="w-5 h-5 text-purple-600" />
+              <Package className="w-5 h-5 text-blue-600" />
               Basic Information
             </h2>
             <div className="space-y-4">
@@ -438,7 +438,7 @@ export default function EditProduct() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -451,7 +451,7 @@ export default function EditProduct() {
                   value={formData.description}
                   onChange={handleChange}
                   rows="4"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -465,7 +465,7 @@ export default function EditProduct() {
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
@@ -478,7 +478,7 @@ export default function EditProduct() {
                     name="sku"
                     value={formData.sku}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -488,7 +488,7 @@ export default function EditProduct() {
           {/* Pricing */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+              <DollarSign className="w-5 h-5 text-blue-600" />
               Pricing
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -504,7 +504,7 @@ export default function EditProduct() {
                   step="0.01"
                   min="0"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -519,7 +519,7 @@ export default function EditProduct() {
                   onChange={handleChange}
                   step="0.01"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -528,7 +528,7 @@ export default function EditProduct() {
           {/* Commission Settings */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Percent className="w-5 h-5 text-purple-600" />
+              <Percent className="w-5 h-5 text-blue-600" />
               Commission Settings
             </h2>
             <div className="space-y-4">
@@ -544,7 +544,7 @@ export default function EditProduct() {
                       value="percentage"
                       checked={formData.commission_type === 'percentage'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Percentage</span>
                   </label>
@@ -555,7 +555,7 @@ export default function EditProduct() {
                       value="fixed"
                       checked={formData.commission_type === 'fixed'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Fixed Amount</span>
                   </label>
@@ -576,7 +576,7 @@ export default function EditProduct() {
                     min="0"
                     max="100"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               ) : (
@@ -592,7 +592,7 @@ export default function EditProduct() {
                     step="0.01"
                     min="0"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               )}
@@ -609,7 +609,7 @@ export default function EditProduct() {
                       value="percentage"
                       checked={formData.platform_fee_type === 'percentage'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Percentage</span>
                   </label>
@@ -620,7 +620,7 @@ export default function EditProduct() {
                       value="fixed"
                       checked={formData.platform_fee_type === 'fixed'}
                       onChange={handleChange}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Fixed Amount</span>
                   </label>
@@ -639,7 +639,7 @@ export default function EditProduct() {
                       step="0.01"
                       min="0"
                       max="100"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 ) : (
@@ -654,7 +654,7 @@ export default function EditProduct() {
                       onChange={handleChange}
                       step="0.01"
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 )}
@@ -665,7 +665,7 @@ export default function EditProduct() {
           {/* Inventory */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Package className="w-5 h-5 text-purple-600" />
+              <Package className="w-5 h-5 text-blue-600" />
               Inventory
             </h2>
             <div className="space-y-4">
@@ -676,7 +676,7 @@ export default function EditProduct() {
                   name="track_inventory"
                   checked={formData.track_inventory}
                   onChange={handleChange}
-                  className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="track_inventory" className="text-sm text-gray-700">
                   <div className="font-medium">Track inventory</div>
@@ -698,7 +698,7 @@ export default function EditProduct() {
                       value={formData.stock_quantity}
                       onChange={handleChange}
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
@@ -712,7 +712,7 @@ export default function EditProduct() {
                       value={formData.low_stock_threshold}
                       onChange={handleChange}
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -723,7 +723,7 @@ export default function EditProduct() {
           {/* Images */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-1 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-purple-600" />
+              <ImageIcon className="w-5 h-5 text-blue-600" />
               Product Images
             </h2>
             <p className="text-sm text-gray-500 mb-4">
@@ -781,12 +781,12 @@ export default function EditProduct() {
               onDrop={handleImageDrop}
               onClick={() => imageInputRef.current?.click()}
               className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors mb-4
-                ${imageDragOver ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'}
+                ${imageDragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'}
                 ${totalImages >= MAX_IMAGE_COUNT ? 'opacity-50 pointer-events-none' : ''}
               `}
             >
-              <ImagePlus className="w-8 h-8 text-purple-400 mb-2" />
-              <span className="text-sm font-medium text-purple-700">
+              <ImagePlus className="w-8 h-8 text-blue-400 mb-2" />
+              <span className="text-sm font-medium text-blue-700">
                 {imageDragOver ? 'Drop images here' : 'Click or drag & drop to add images'}
               </span>
               <span className="text-xs text-gray-400 mt-1">
@@ -810,7 +810,7 @@ export default function EditProduct() {
                 </p>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                   {pendingImages.map((entry, idx) => (
-                    <div key={entry.id} className="relative group rounded-lg overflow-hidden border border-purple-200 aspect-square bg-gray-100">
+                    <div key={entry.id} className="relative group rounded-lg overflow-hidden border border-blue-200 aspect-square bg-gray-100">
                       <img
                         src={entry.preview}
                         alt={`New image ${idx + 1}`}
@@ -845,7 +845,7 @@ export default function EditProduct() {
           {/* Digital Product */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-1 flex items-center gap-2">
-              <Download className="w-5 h-5 text-purple-600" />
+              <Download className="w-5 h-5 text-blue-600" />
               Digital Product (optional)
             </h2>
             <p className="text-sm text-gray-500 mb-4">
@@ -855,9 +855,9 @@ export default function EditProduct() {
 
             {/* Existing file */}
             {existingFile && !newDigitalFile && (
-              <div className="flex items-center justify-between bg-purple-50 border border-purple-200 rounded-lg px-4 py-3 mb-4">
+              <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-4">
                 <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-purple-600 shrink-0" />
+                  <FileText className="w-5 h-5 text-blue-600 shrink-0" />
                   <div>
                     <p className="text-sm font-medium text-gray-800">{existingFile.name}</p>
                     <p className="text-xs text-gray-500">
@@ -867,7 +867,7 @@ export default function EditProduct() {
                 </div>
                 <div className="flex items-center gap-2">
                   <label
-                    className="text-sm text-purple-700 hover:text-purple-900 font-medium cursor-pointer underline-offset-2 hover:underline"
+                    className="text-sm text-blue-700 hover:text-blue-900 font-medium cursor-pointer underline-offset-2 hover:underline"
                     title="Replace file"
                   >
                     Replace
@@ -921,9 +921,9 @@ export default function EditProduct() {
 
             {/* Upload zone — show when no existing file and no new file picked */}
             {!existingFile && !newDigitalFile && (
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-purple-300 rounded-lg p-6 cursor-pointer hover:bg-purple-50 transition-colors">
-                <Upload className="w-8 h-8 text-purple-400 mb-2" />
-                <span className="text-sm font-medium text-purple-700">Click to select file</span>
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-blue-300 rounded-lg p-6 cursor-pointer hover:bg-blue-50 transition-colors">
+                <Upload className="w-8 h-8 text-blue-400 mb-2" />
+                <span className="text-sm font-medium text-blue-700">Click to select file</span>
                 <span className="text-xs text-gray-500 mt-1">PDF, EPUB, ZIP, MP4, MP3 · Max 200 MB</span>
                 <input
                   ref={fileInputRef}
@@ -939,7 +939,7 @@ export default function EditProduct() {
           {/* Shipping */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Package className="w-5 h-5 text-purple-600" />
+              <Package className="w-5 h-5 text-blue-600" />
               Shipping Details
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -954,7 +954,7 @@ export default function EditProduct() {
                   onChange={handleChange}
                   step="0.01"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -967,7 +967,7 @@ export default function EditProduct() {
                   name="dimensions"
                   value={formData.dimensions}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -980,7 +980,7 @@ export default function EditProduct() {
                   value={formData.shipping_info}
                   onChange={handleChange}
                   rows="2"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -989,7 +989,7 @@ export default function EditProduct() {
           {/* Settings */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Settings className="w-5 h-5 text-purple-600" />
+              <Settings className="w-5 h-5 text-blue-600" />
               Product Settings
             </h2>
             <div className="space-y-4">
@@ -1000,7 +1000,7 @@ export default function EditProduct() {
                   name="auto_approve_affiliates"
                   checked={formData.auto_approve_affiliates}
                   onChange={handleChange}
-                  className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="auto_approve" className="text-sm text-gray-700">
                   <div className="font-medium">Auto-approve affiliates</div>
@@ -1018,7 +1018,7 @@ export default function EditProduct() {
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="active">Active</option>
                   <option value="paused">Paused</option>
@@ -1040,7 +1040,7 @@ export default function EditProduct() {
             <button
               type="submit"
               disabled={isBusy}
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
             >
               {uploadingFile ? (
                 <><Upload className="w-4 h-4 animate-pulse" /> Uploading file...</>

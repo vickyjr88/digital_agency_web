@@ -68,7 +68,7 @@ function ProductCard({ product }) {
             </span>
           )}
           {product.is_digital && (
-            <span className="bg-purple-600 text-white text-xs font-semibold px-2 py-0.5 rounded flex items-center gap-1">
+            <span className="bg-blue-600 text-white text-xs font-semibold px-2 py-0.5 rounded flex items-center gap-1">
               <Zap className="w-3 h-3" /> Digital
             </span>
           )}
@@ -78,12 +78,12 @@ function ProductCard({ product }) {
       {/* Info */}
       <div className="flex flex-col flex-1 p-4 gap-2">
         {product.category && (
-          <span className="text-xs text-purple-600 font-medium uppercase tracking-wide">
+          <span className="text-xs text-blue-600 font-medium uppercase tracking-wide">
             {product.category}
           </span>
         )}
 
-        <h3 className="font-semibold text-gray-900 line-clamp-2 leading-snug group-hover:text-purple-700 transition-colors">
+        <h3 className="font-semibold text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-700 transition-colors">
           {product.name}
         </h3>
 
@@ -104,7 +104,7 @@ function ProductCard({ product }) {
               </p>
             )}
           </div>
-          <span className="flex items-center gap-1 text-sm font-semibold text-purple-600 group-hover:translate-x-1 transition-transform">
+          <span className="flex items-center gap-1 text-sm font-semibold text-blue-600 group-hover:translate-x-1 transition-transform">
             {product.is_digital ? 'Buy now' : 'Order'}{' '}
             <ChevronRight className="w-4 h-4" />
           </span>
@@ -205,7 +205,7 @@ export default function PublicShop() {
       {/* ── Topbar ──────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2 text-lg font-bold text-purple-600 shrink-0">
+          <Link to="/" className="flex items-center gap-2 text-lg font-bold text-blue-600 shrink-0">
             <LayoutDashboard className="w-5 h-5" />
             <span className="hidden sm:inline">Dexter</span>
           </Link>
@@ -218,7 +218,7 @@ export default function PublicShop() {
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
               placeholder="Search products…"
-              className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             {search && (
               <button
@@ -249,7 +249,7 @@ export default function PublicShop() {
               <select
                 value={category}
                 onChange={e => { setCategory(e.target.value); setPage(1); }}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Categories</option>
                 {categories.map(cat => (
@@ -264,7 +264,7 @@ export default function PublicShop() {
               <select
                 value={productType}
                 onChange={e => { setProductType(e.target.value); setPage(1); }}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Types</option>
                 <option value="digital">Digital only</option>
@@ -278,7 +278,7 @@ export default function PublicShop() {
               <select
                 value={sortBy}
                 onChange={e => { setSortBy(e.target.value); setPage(1); }}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="newest">Newest</option>
                 <option value="price_asc">Price: Low to High</option>
@@ -305,7 +305,7 @@ export default function PublicShop() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6 text-purple-600" />
+              <ShoppingCart className="w-6 h-6 text-blue-600" />
               Shop
             </h1>
             {!loading && (
@@ -319,7 +319,7 @@ export default function PublicShop() {
         {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-24">
-            <Loader className="w-10 h-10 text-purple-600 animate-spin" />
+            <Loader className="w-10 h-10 text-blue-600 animate-spin" />
           </div>
         )}
 
@@ -336,7 +336,7 @@ export default function PublicShop() {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
               >
                 Clear Filters
               </button>
@@ -358,7 +358,7 @@ export default function PublicShop() {
           <div className="flex justify-center mt-10">
             <button
               onClick={() => setPage(p => p + 1)}
-              className="px-6 py-2 border border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 font-medium text-sm"
+              className="px-6 py-2 border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 font-medium text-sm"
             >
               Load more
             </button>
@@ -370,11 +370,11 @@ export default function PublicShop() {
       <footer className="border-t border-gray-200 mt-16 py-8 text-center text-sm text-gray-400">
         <p>
           Powered by{' '}
-          <Link to="/" className="text-purple-600 font-medium hover:underline">
+          <Link to="/" className="text-blue-600 font-medium hover:underline">
             Dexter
           </Link>
           . Want to sell your products?{' '}
-          <Link to="/signup" className="text-purple-600 font-medium hover:underline">
+          <Link to="/signup" className="text-blue-600 font-medium hover:underline">
             Sign up free
           </Link>
           .

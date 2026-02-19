@@ -90,7 +90,7 @@ export default function AdminDashboard() {
           {/* Usage Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatsCard icon={Users} title="Total Users" value={stats?.users} color="bg-blue-50 text-blue-600" />
-            <StatsCard icon={Briefcase} title="Total Brands" value={stats?.brands} color="bg-purple-50 text-purple-600" />
+            <StatsCard icon={Briefcase} title="Total Brands" value={stats?.brands} color="bg-blue-50 text-blue-600" />
             <StatsCard icon={TrendingUp} title="Total Trends" value={stats?.trends} color="bg-teal-50 text-teal-600" />
             <StatsCard icon={FileText} title="Content Generated" value={stats?.content_generated} color="bg-orange-50 text-orange-600" />
           </div>
@@ -222,7 +222,7 @@ export default function AdminDashboard() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${user.role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
                         {user.role}
                       </span>
                     </td>

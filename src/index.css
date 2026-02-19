@@ -269,8 +269,8 @@ body {
   color: white;
 }
 
-.gradient-purple .stat-icon {
-  background: linear-gradient(135deg, #a855f7, #7c3aed);
+.gradient-blue-alt .stat-icon {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
 }
 
 .gradient-blue .stat-icon {
@@ -539,8 +539,8 @@ body {
   color: white;
 }
 
-.action-icon.bg-purple {
-  background: #a855f7;
+.action-icon.bg-blue-alt {
+  background: #60a5fa;
 }
 
 .action-icon.bg-blue {
@@ -1310,8 +1310,8 @@ body {
 }
 
 .role-admin {
-  background: #f3e8ff;
-  color: #6b21a8;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 .role-user {

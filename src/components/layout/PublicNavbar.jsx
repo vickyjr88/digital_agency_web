@@ -16,7 +16,7 @@ export default function PublicNavbar() {
             <Sparkles className="text-indigo-600" size={28} />
             <Link
               to="/"
-              className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent hover:opacity-90"
+              className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent hover:opacity-90"
               onClick={closeMobileMenu}
             >
               Dexter

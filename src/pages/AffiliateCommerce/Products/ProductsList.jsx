@@ -95,7 +95,7 @@ export default function ProductsList() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Package className="w-12 h-12 text-purple-600 animate-pulse mx-auto mb-4" />
+          <Package className="w-12 h-12 text-blue-600 animate-pulse mx-auto mb-4" />
           <p className="text-gray-600">Loading products...</p>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function ProductsList() {
             </p>
             <Link
               to="/affiliate/brand-profile"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 font-semibold transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors"
             >
               <Building2 className="w-5 h-5" />
               Set up brand profile
@@ -145,7 +145,7 @@ export default function ProductsList() {
             </div>
             <button
               onClick={() => navigate('/affiliate/products/create')}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-5 h-5" />
               Create Product
@@ -153,20 +153,20 @@ export default function ProductsList() {
           </div>
 
           {/* Brand profile banner */}
-          <div className="flex items-center justify-between bg-purple-50 border border-purple-100 rounded-lg px-4 py-3 mb-4 text-sm">
-            <div className="flex items-center gap-2 text-purple-800 flex-wrap">
+          <div className="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 mb-4 text-sm">
+            <div className="flex items-center gap-2 text-blue-800 flex-wrap">
               <Building2 className="w-4 h-4 shrink-0" />
               <span className="font-medium">Selling under:</span>
               {brandProfiles.map((p, i) => (
                 <span key={p.id} className="inline-flex items-center gap-1">
-                  {i > 0 && <span className="text-purple-400">·</span>}
+                  {i > 0 && <span className="text-blue-400">·</span>}
                   <span className="font-semibold">{p.brand_name || p.business_category || 'Brand'}</span>
                 </span>
               ))}
             </div>
             <Link
               to="/affiliate/brand-profile"
-              className="text-purple-600 hover:text-purple-800 font-medium underline-offset-2 hover:underline shrink-0 ml-3"
+              className="text-blue-600 hover:text-blue-800 font-medium underline-offset-2 hover:underline shrink-0 ml-3"
             >
               Manage profiles
             </Link>
@@ -176,8 +176,8 @@ export default function ProductsList() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Package className="w-5 h-5 text-purple-600" />
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Package className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Total Products</p>
@@ -235,7 +235,7 @@ export default function ProductsList() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -243,7 +243,7 @@ export default function ProductsList() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -269,7 +269,7 @@ export default function ProductsList() {
             {!searchQuery && (
               <button
                 onClick={() => navigate('/affiliate/products/create')}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 <Plus className="w-5 h-5" />
                 Create Product
@@ -322,7 +322,7 @@ export default function ProductsList() {
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-gray-500">Commission</p>
-                      <p className="text-lg font-semibold text-purple-600">
+                      <p className="text-lg font-semibold text-blue-600">
                         {product.commission_type === 'percentage'
                           ? `${product.commission_rate}%`
                           : `KES ${parseFloat(product.fixed_commission).toLocaleString()}`
