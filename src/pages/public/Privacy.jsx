@@ -82,7 +82,7 @@ These services have their own privacy policies governing their data practices.`
       content: `We retain your information for as long as your account is active or as needed to provide services. We may also retain information to comply with legal obligations, resolve disputes, and enforce our agreements.`
     },
     {
-      title: '9. Children's Privacy',
+      title: '9. Children\'s Privacy',
       content: `Our services are not directed to individuals under 18. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us.`
     },
     {
