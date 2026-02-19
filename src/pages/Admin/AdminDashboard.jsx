@@ -246,7 +246,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
     return (
         <div className="min-h-screen bg-gray-50 font-sans flex text-left">
             {/* Desktop Sidebar */}
-            <aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-100 z-30 hidden md:flex flex-col h-screen">
+            <aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-100 z-30 hidden md:flex flex-col h-screen overflow-hidden">
                 <SidebarContent />
             </aside>
 
@@ -283,7 +283,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                 animate={{ x: 0 }}
                                 exit={{ x: '-100%' }}
                                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                                className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col md:hidden"
+                                className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col md:hidden overflow-hidden"
                             >
                                 <SidebarContent isMobile />
                             </motion.aside>

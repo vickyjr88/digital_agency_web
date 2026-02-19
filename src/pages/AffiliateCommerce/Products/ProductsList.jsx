@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
   Plus,
@@ -12,9 +12,11 @@ import {
   Package,
   TrendingUp,
   Users,
-  MousePointerClick
+  MousePointerClick,
+  Building2,
+  AlertCircle,
 } from 'lucide-react';
-import { productsApi } from '../../../services/affiliateApi';
+import { productsApi, brandProfileApi, brandsApi } from '../../../services/affiliateApi';
 
 export default function ProductsList() {
   const navigate = useNavigate();
@@ -22,10 +24,31 @@ export default function ProductsList() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [brandProfiles, setBrandProfiles] = useState([]);   // all user profiles
+  const [profileChecked, setProfileChecked] = useState(false);
 
   useEffect(() => {
-    loadProducts();
-  }, [statusFilter]);
+    checkBrandProfiles();
+  }, []);
+
+  useEffect(() => {
+    if (profileChecked && brandProfiles.length > 0) {
+      loadProducts();
+    } else if (profileChecked && brandProfiles.length === 0) {
+      setLoading(false);
+    }
+  }, [statusFilter, profileChecked]);  // eslint-disable-line
+
+  const checkBrandProfiles = async () => {
+    try {
+      const res = await brandProfileApi.listMyProfiles();
+      setBrandProfiles(res.data || []);
+    } catch {
+      setBrandProfiles([]);
+    } finally {
+      setProfileChecked(true);
+    }
+  };
 
   const loadProducts = async () => {
     try {
@@ -67,12 +90,42 @@ export default function ProductsList() {
     }
   };
 
-  if (loading) {
+  // ── Guards ────────────────────────────────────────────────────────────────
+  if (!profileChecked || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <Package className="w-12 h-12 text-purple-600 animate-pulse mx-auto mb-4" />
           <p className="text-gray-600">Loading products...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (brandProfiles.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">My Products</h1>
+            <p className="text-gray-600 mt-2">Manage your products available for affiliate promotion</p>
+          </div>
+          <div className="bg-white rounded-2xl shadow-sm border border-amber-100 p-12 text-center max-w-lg mx-auto">
+            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-5">
+              <AlertCircle className="w-8 h-8 text-amber-500" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Set up a brand profile first</h2>
+            <p className="text-gray-500 mb-8">
+              You need at least one brand profile before you can create products. Select one of your brands to get started.
+            </p>
+            <Link
+              to="/affiliate/brand-profile"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 font-semibold transition-colors"
+            >
+              <Building2 className="w-5 h-5" />
+              Set up brand profile
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -97,6 +150,26 @@ export default function ProductsList() {
               <Plus className="w-5 h-5" />
               Create Product
             </button>
+          </div>
+
+          {/* Brand profile banner */}
+          <div className="flex items-center justify-between bg-purple-50 border border-purple-100 rounded-lg px-4 py-3 mb-4 text-sm">
+            <div className="flex items-center gap-2 text-purple-800 flex-wrap">
+              <Building2 className="w-4 h-4 shrink-0" />
+              <span className="font-medium">Selling under:</span>
+              {brandProfiles.map((p, i) => (
+                <span key={p.id} className="inline-flex items-center gap-1">
+                  {i > 0 && <span className="text-purple-400">·</span>}
+                  <span className="font-semibold">{p.brand_name || p.business_category || 'Brand'}</span>
+                </span>
+              ))}
+            </div>
+            <Link
+              to="/affiliate/brand-profile"
+              className="text-purple-600 hover:text-purple-800 font-medium underline-offset-2 hover:underline shrink-0 ml-3"
+            >
+              Manage profiles
+            </Link>
           </div>
 
           {/* Stats Summary */}

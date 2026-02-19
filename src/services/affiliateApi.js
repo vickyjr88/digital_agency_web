@@ -25,24 +25,39 @@ api.interceptors.request.use((config) => {
 // BRAND PROFILES
 // ============================================================================
 
+// ============================================================================
+// BRANDS (content-platform Brand objects owned by the user)
+// ============================================================================
+
+export const brandsApi = {
+  // List all brands owned by the current user
+  list: () => api.get('/brands'),
+};
+
 export const brandProfileApi = {
-  // Create brand profile
+  // List all profiles owned by the current user (one per brand)
+  listMyProfiles: () => api.get('/brand-profiles/my-profiles'),
+
+  // Create a profile for a specific brand  { brand_id, whatsapp_number, ... }
   create: (data) => api.post('/brand-profiles/', data),
 
-  // Get my brand profile
-  getMyProfile: () => api.get('/brand-profiles/me'),
+  // Get the profile for a specific brand (authenticated owner)
+  getForBrand: (brandId) => api.get(`/brand-profiles/brand/${brandId}`),
 
-  // Update my brand profile
-  updateMyProfile: (data) => api.put('/brand-profiles/me', data),
+  // Update the profile for a specific brand
+  updateForBrand: (brandId, data) => api.put(`/brand-profiles/brand/${brandId}`, data),
+
+  // Delete the profile for a specific brand
+  deleteForBrand: (brandId) => api.delete(`/brand-profiles/brand/${brandId}`),
 
   // Get brand profile by ID (public)
   getById: (id) => api.get(`/brand-profiles/${id}`),
 
-  // Get brand contact info (public)
+  // Get brand contact info (public, shown to customers after order)
   getContactInfo: (id) => api.get(`/brand-profiles/${id}/contact`),
 
-  // Delete my brand profile
-  deleteMyProfile: () => api.delete('/brand-profiles/me'),
+  // Legacy: returns first profile (used by pages that haven't migrated yet)
+  getMyProfile: () => api.get('/brand-profiles/me'),
 };
 
 // ============================================================================
@@ -79,6 +94,45 @@ export const productsApi = {
 
   // Get affiliates count
   getAffiliatesCount: (productId) => api.get(`/products/${productId}/affiliates-count`),
+
+  // ── Digital product file management ──────────────────────────────────────
+
+  // Upload digital file (PDF, EPUB, ZIP, MP4, MP3) – multipart/form-data
+  uploadFile: (productId, file) => {
+    const form = new FormData();
+    form.append('file', file);
+    return api.post(`/products/${productId}/upload-file`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  // Get presigned download URL for a purchased digital product
+  // orderId is required for buyers; brand owners can omit it
+  getDownloadUrl: (productId, orderId = null) =>
+    api.get(`/products/${productId}/download-file`, {
+      params: orderId ? { order_id: orderId } : {},
+    }),
+
+  // Remove the digital file from a product
+  deleteFile: (productId) => api.delete(`/products/${productId}/delete-file`),
+
+  // ── Product image management ──────────────────────────────────────────────
+
+  // Upload a product image (JPEG, PNG, WebP, GIF) – multipart/form-data
+  // Returns { object_key, url, images, thumbnail, ... }
+  uploadImage: (productId, file) => {
+    const form = new FormData();
+    form.append('file', file);
+    return api.post(`/products/${productId}/upload-image`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  // Delete a product image by its MinIO object_key
+  deleteImage: (productId, objectKey) =>
+    api.delete(`/products/${productId}/delete-image`, {
+      params: { object_key: objectKey },
+    }),
 };
 
 // ============================================================================
@@ -115,6 +169,12 @@ export const affiliateApi = {
 export const ordersApi = {
   // Place order (no payment)
   placeOrder: (data) => api.post('/orders/place', data),
+
+  // Initialize payment for order
+  initializePayment: (data) => api.post('/orders/initialize-payment', data),
+
+  // Verify payment
+  verifyPayment: (reference) => api.get(`/orders/verify-payment/${reference}`),
 
   // Get my orders as customer
   getMyOrdersAsCustomer: (email) => api.get('/orders/my-orders', { params: { email } }),
@@ -157,6 +217,7 @@ export const analyticsApi = {
 };
 
 export default {
+  brands: brandsApi,
   brandProfile: brandProfileApi,
   products: productsApi,
   affiliate: affiliateApi,

@@ -66,8 +66,10 @@ import ProductMarketplace from './pages/AffiliateCommerce/Products/ProductMarket
 import BrandOrders from './pages/AffiliateCommerce/Orders/BrandOrders';
 import InfluencerOrders from './pages/AffiliateCommerce/Orders/InfluencerOrders';
 import PlaceOrder from './pages/AffiliateCommerce/Orders/PlaceOrder';
+import PaymentVerify from './pages/AffiliateCommerce/Orders/PaymentVerify';
 import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDashboard';
 import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
+import PublicShop from './pages/AffiliateCommerce/Shop/PublicShop';
 
 
 // Protected Route Component (Simplified for now)
@@ -112,6 +114,9 @@ function Layout({ children }) {
           <div className="flex items-center gap-6">
             <Link to="/" className="text-gray-600 hover:text-purple-600 font-medium">
               Home
+            </Link>
+            <Link to="/shop" className="text-gray-600 hover:text-purple-600 font-medium">
+              🛍️ Shop
             </Link>
             {isAuthenticated && (
               <Link to="/dashboard" className="text-gray-600 hover:text-purple-600 font-medium">
@@ -408,9 +413,15 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* Public Affiliate Commerce (Customer Order Page) */}
+            {/* Public Affiliate Commerce (Shop & Customer Order Page) */}
+            <Route path="/shop" element={
+              <MinimalLayout><PublicShop /></MinimalLayout>
+            } />
             <Route path="/shop/p/:slug" element={
               <MinimalLayout><PlaceOrder /></MinimalLayout>
+            } />
+            <Route path="/shop/payment/verify" element={
+              <MinimalLayout><PaymentVerify /></MinimalLayout>
             } />
 
             {/* Influencer Onboarding */}
