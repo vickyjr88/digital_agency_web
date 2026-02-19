@@ -36,6 +36,14 @@ export default function AppLayout() {
   // Define public routes that should never show sidebar (even when authenticated)
   const publicRoutes = [
     '/',
+    '/about',
+    '/contact',
+    '/privacy',
+    '/terms',
+    '/security',
+    '/api',
+    '/integrations',
+    '/careers',
     '/shop',
     '/shop/p',
     '/shop/payment/verify',

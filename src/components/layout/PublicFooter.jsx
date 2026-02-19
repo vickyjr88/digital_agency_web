@@ -10,7 +10,7 @@ const productLinks = [
 
 const companyLinks = [
   { label: 'About', to: '/about' },
-  { label: 'Blog', to: '/blog' },
+  { label: 'Blog', to: 'https://vitaldigitalmedia.net/blog', external: true },
   { label: 'Careers', to: '/careers' },
   { label: 'Contact', to: '/contact' }
 ];
@@ -28,9 +28,20 @@ export default function PublicFooter() {
       <ul className="space-y-2 text-sm">
         {links.map((link) => (
           <li key={link.label}>
-            <Link to={link.to} className="hover:text-white transition-colors">
-              {link.label}
-            </Link>
+            {link.external ? (
+              <a
+                href={link.to}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link to={link.to} className="hover:text-white transition-colors">
+                {link.label}
+              </Link>
+            )}
           </li>
         ))}
       </ul>

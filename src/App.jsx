@@ -72,6 +72,16 @@ import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDa
 import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
 import PublicShop from './pages/AffiliateCommerce/Shop/PublicShop';
 
+// Public Pages
+import About from './pages/public/About';
+import Contact from './pages/public/Contact';
+import Privacy from './pages/public/Privacy';
+import Terms from './pages/public/Terms';
+import Security from './pages/public/Security';
+import API from './pages/public/API';
+import Integrations from './pages/public/Integrations';
+import Careers from './pages/public/Careers';
+
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -123,6 +133,16 @@ function App() {
             {/* All other routes wrapped in AppLayout */}
             <Route element={<AppLayout />}>
               <Route path="/" element={<LandingPage />} />
+
+              {/* Public Pages */}
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/api" element={<API />} />
+              <Route path="/integrations" element={<Integrations />} />
+              <Route path="/careers" element={<Careers />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <PageContainer><Dashboard defaultTab="trends" /></PageContainer>
