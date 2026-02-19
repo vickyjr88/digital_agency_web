@@ -216,6 +216,33 @@ export const analyticsApi = {
   getBrandTopAffiliates: (limit = 10) => api.get('/affiliate-analytics/brand/top-affiliates', { params: { limit } }),
 };
 
+// ============================================================================
+// DIGITAL PRODUCTS
+// ============================================================================
+
+export const digitalProductsApi = {
+  // Add file to digital product
+  addFile: (productId, data) => api.post(`/digital-products/${productId}/files`, data),
+
+  // Get files for a product
+  getFiles: (productId) => api.get(`/digital-products/${productId}/files`),
+
+  // Delete a file
+  removeFile: (fileId) => api.delete(`/digital-products/files/${fileId}`),
+
+  // Get preview file (public)
+  getPreview: (productId) => api.get(`/digital-products/${productId}/preview`),
+
+  // Download file via access token (public)
+  getDownloadUrl: (accessToken) => `${API_BASE_URL}/digital-products/download/${accessToken}`,
+
+  // List downloadable files for a purchase
+  listDownloadableFiles: (accessToken) => api.get(`/digital-products/download/${accessToken}/files`),
+
+  // Look up purchases by email (public)
+  lookupPurchases: (email) => api.get('/digital-products/my-purchases', { params: { email } }),
+};
+
 export default {
   brands: brandsApi,
   brandProfile: brandProfileApi,
@@ -223,4 +250,5 @@ export default {
   affiliate: affiliateApi,
   orders: ordersApi,
   analytics: analyticsApi,
+  digitalProducts: digitalProductsApi,
 };

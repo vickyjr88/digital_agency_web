@@ -19,7 +19,7 @@ import {
   Zap,
   CreditCard,
 } from 'lucide-react';
-import { productsApi, ordersApi, affiliateApi, brandProfileApi } from '../../../services/affiliateApi';
+import { productsApi, ordersApi, affiliateApi, brandProfileApi, digitalProductsApi } from '../../../services/affiliateApi';
 import { useAuth } from '../../../context/AuthContext';
 
 export default function PlaceOrder() {
@@ -34,6 +34,8 @@ export default function PlaceOrder() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderResult, setOrderResult] = useState(null);   // full order response
   const [brandContact, setBrandContact] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [orderResponse, setOrderResponse] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -172,191 +174,6 @@ export default function PlaceOrder() {
     );
   }
 
-  // ── Digital order success ────────────────────────────────────────────────
-  if (orderPlaced && product.is_digital) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-xl mx-auto px-4">
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-12 h-12 text-green-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Purchase Successful!</h1>
-            <p className="text-gray-500 mb-6">
-              Your digital product is ready. Click the button below to download it.
-              The link is valid for 24 hours.
-            </p>
-
-            {/* Product summary */}
-            <div className="flex items-center gap-4 bg-gray-50 rounded-xl p-4 mb-6 text-left">
-              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center shrink-0">
-                <FileText className="w-7 h-7 text-purple-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900 truncate">{product.name}</p>
-                {orderResult?.download_file_name && (
-                  <p className="text-sm text-gray-500 truncate">{orderResult.download_file_name}</p>
-                )}
-                <p className="text-sm font-medium text-purple-600">
-                  KES {calculateTotal().toLocaleString()}
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleDownload}
-              disabled={downloadLoading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50 font-semibold text-lg transition-colors mb-4"
-            >
-              {downloadLoading ? (
-                <Loader className="w-5 h-5 animate-spin" />
-              ) : (
-                <Download className="w-5 h-5" />
-              )}
-              {downloadLoading ? 'Preparing download...' : 'Download Your File'}
-            </button>
-
-            <p className="text-xs text-gray-400">
-              Order #{orderResult?.order_number} · Link expires in 24 hours
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // ── Physical order success ───────────────────────────────────────────────
-  if (orderPlaced && brandContact) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-2xl mx-auto px-4">
-          {/* Success Message */}
-          <div className="bg-white rounded-lg shadow-lg p-8 text-center mb-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-10 h-10 text-green-600" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h1>
-            <p className="text-gray-600 mb-6">
-              Thank you for your order. Please contact the seller to complete your purchase.
-            </p>
-
-            {/* Order Summary */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <div className="flex items-center gap-4">
-                {product.thumbnail ? (
-                  <img src={product.thumbnail} alt={product.name} className="w-20 h-20 object-cover rounded" />
-                ) : (
-                  <div className="w-20 h-20 bg-gray-200 rounded flex items-center justify-center">
-                    <Package className="w-8 h-8 text-gray-400" />
-                  </div>
-                )}
-                <div className="flex-1 text-left">
-                  <h3 className="font-semibold text-gray-900">{product.name}</h3>
-                  <p className="text-sm text-gray-600">Quantity: {quantity}</p>
-                  <p className="text-lg font-bold text-purple-600">KES {calculateTotal().toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Brand Contact Information */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <MessageCircle className="w-6 h-6 text-purple-600" />
-              Contact the Seller
-            </h2>
-
-            <div className="space-y-4 mb-8">
-              {brandContact.whatsapp_number && (
-                <div className="flex items-start gap-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <MessageCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 mb-1">WhatsApp</p>
-                    <p className="text-gray-700 mb-3">{brandContact.whatsapp_number}</p>
-                    <a
-                      href={`https://wa.me/${brandContact.whatsapp_number.replace(/[^0-9]/g, '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      Chat on WhatsApp
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {brandContact.phone_number && (
-                <div className="flex items-start gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <Phone className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 mb-1">Phone Number</p>
-                    <p className="text-gray-700 mb-3">{brandContact.phone_number}</p>
-                    <a
-                      href={`tel:${brandContact.phone_number}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <Phone className="w-4 h-4" />
-                      Call Now
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {brandContact.business_email && (
-                <div className="flex items-start gap-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                  <Mail className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 mb-1">Email</p>
-                    <p className="text-gray-700 mb-3">{brandContact.business_email}</p>
-                    <a
-                      href={`mailto:${brandContact.business_email}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      Send Email
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {brandContact.business_location && (
-                <div className="flex items-start gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <MapPin className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 mb-1">Location</p>
-                    <p className="text-gray-700">{brandContact.business_location}</p>
-                  </div>
-                </div>
-              )}
-
-              {brandContact.business_hours && (
-                <div className="flex items-start gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <Clock className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 mb-1">Business Hours</p>
-                    <p className="text-gray-700">{brandContact.business_hours}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-              <h3 className="font-semibold text-gray-900 mb-3">Next Steps:</h3>
-              <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                <li>Contact the seller using the information above</li>
-                <li>Confirm product availability and pricing</li>
-                <li>Arrange payment and delivery directly with the seller</li>
-                <li>Complete your purchase</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // ── Order form ───────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -420,6 +237,13 @@ export default function PlaceOrder() {
               </div>
             )}
 
+            {!product.is_digital && product.shipping_info && (
+              <div className="border-t pt-4">
+                <h3 className="font-semibold text-gray-900 mb-2">Shipping Information</h3>
+                <p className="text-gray-600 text-sm">{product.shipping_info}</p>
+              </div>
+            )}
+
             {product.is_digital && (
               <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
                 <div className="flex items-center gap-2 text-purple-700 font-medium mb-1">
@@ -427,7 +251,7 @@ export default function PlaceOrder() {
                   Instant digital delivery
                 </div>
                 <p className="text-sm text-purple-600">
-                  You will receive a secure download link immediately after purchase. Link valid for 24 hours.
+                  Payment required via Paystack. You will receive access after successful payment.
                 </p>
               </div>
             )}
@@ -551,19 +375,15 @@ export default function PlaceOrder() {
               </div>
 
               {/* Info Notice */}
-              {product.is_digital ? (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800">
-                  <p className="font-medium mb-1 flex items-center gap-1">
-                    <Zap className="w-4 h-4" /> Instant delivery
-                  </p>
-                  <p>After clicking the button below, you will immediately see your download link. No waiting required.</p>
-                </div>
-              ) : (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-                  <p className="font-medium mb-1">What happens next?</p>
-                  <p>After placing your order, you'll receive the seller's contact information. Contact them directly to complete your purchase.</p>
-                </div>
-              )}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                <p className="font-medium mb-1">{product.is_digital ? '💳 Secure Payment Required' : 'What happens next?'}</p>
+                <p>
+                  {product.is_digital
+                    ? 'You will be redirected to Paystack to complete your payment. After successful payment, you\'ll get instant download access.'
+                    : 'You will be redirected to Paystack to complete your payment. After payment, you\'ll receive the seller\'s contact information.'
+                  }
+                </p>
+              </div>
 
               {/* Submit Button */}
               <button

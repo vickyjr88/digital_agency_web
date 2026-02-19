@@ -11,7 +11,8 @@ import {
   Percent,
   DollarSign,
   Eye,
-  Loader
+  Loader,
+  Download
 } from 'lucide-react';
 import { productsApi, affiliateApi } from '../../../services/affiliateApi';
 
@@ -74,7 +75,7 @@ export default function ProductMarketplace() {
   const filteredProducts = products.filter(product => {
     // Search filter
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
     // Category filter
     const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
@@ -245,6 +246,12 @@ export default function ProductMarketplace() {
                     {product.compare_at_price && parseFloat(product.compare_at_price) > parseFloat(product.price) && (
                       <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">
                         SALE
+                      </div>
+                    )}
+                    {product.is_digital && (
+                      <div className="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+                        <Download className="w-3 h-3" />
+                        Digital
                       </div>
                     )}
                   </div>

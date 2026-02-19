@@ -67,6 +67,7 @@ import BrandOrders from './pages/AffiliateCommerce/Orders/BrandOrders';
 import InfluencerOrders from './pages/AffiliateCommerce/Orders/InfluencerOrders';
 import PlaceOrder from './pages/AffiliateCommerce/Orders/PlaceOrder';
 import PaymentVerify from './pages/AffiliateCommerce/Orders/PaymentVerify';
+import DigitalLibrary from './pages/AffiliateCommerce/Orders/DigitalLibrary';
 import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDashboard';
 import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
 import PublicShop from './pages/AffiliateCommerce/Shop/PublicShop';
@@ -422,6 +423,11 @@ function App() {
             } />
             <Route path="/shop/payment/verify" element={
               <MinimalLayout><PaymentVerify /></MinimalLayout>
+            } />
+
+            {/* Digital Library (Customer Downloads) */}
+            <Route path="/shop/digital-library" element={
+              <MinimalLayout><DigitalLibrary /></MinimalLayout>
             } />
 
             {/* Influencer Onboarding */}
