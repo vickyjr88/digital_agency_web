@@ -962,7 +962,7 @@ export default function OpenCampaignDetail() {
 
             {/* Dispute Form Modal */}
             {showDisputeForm && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
                         <div className="p-6 border-b flex justify-between items-center">
                             <h3 className="text-lg font-bold flex items-center gap-2">

@@ -118,7 +118,7 @@ export default function InfluencerLayout({ children }) {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
                             onClick={closeMobileSidebar}
                         />
                         <motion.aside

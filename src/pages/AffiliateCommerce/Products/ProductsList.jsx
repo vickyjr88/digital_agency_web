@@ -21,6 +21,11 @@ import {
   Clock,
   UserCheck,
   XCircle,
+  Mail,
+  Phone,
+  Instagram,
+  Youtube,
+  ExternalLink,
 } from 'lucide-react';
 import { productsApi, brandProfileApi, brandsApi, affiliateApi } from '../../../services/affiliateApi';
 
@@ -439,7 +444,7 @@ export default function ProductsList() {
 
         {/* Affiliates Management Modal */}
         {showAffiliatesModal && selectedProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
               {/* Modal Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -508,52 +513,118 @@ export default function ProductsList() {
                 ) : pendingApprovals.length > 0 ? (
                   <div className="mb-6">
                     <h3 className="font-semibold text-gray-900 text-lg mb-4">Pending Approval Requests</h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {pendingApprovals.map((approval) => (
-                        <div key={approval.id} className="border border-orange-200 bg-orange-50 rounded-lg p-4">
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold">
-                                  {approval.influencer?.name?.[0]?.toUpperCase() || 'I'}
-                                </div>
+                        <div key={approval.id} className="border border-orange-200 bg-orange-50 rounded-xl p-5">
+                          <div className="flex items-start gap-4 mb-4">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl shrink-0">
+                              {approval.influencer?.name?.[0]?.toUpperCase() || approval.influencer?.display_name?.[0]?.toUpperCase() || 'I'}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-3 mb-3">
                                 <div>
-                                  <p className="font-semibold text-gray-900">
-                                    {approval.influencer?.name || 'Influencer'}
-                                  </p>
-                                  <p className="text-xs text-gray-600">{approval.influencer?.email || ''}</p>
+                                  <h4 className="font-semibold text-gray-900 text-lg">
+                                    {approval.influencer?.name || approval.influencer?.display_name || 'Influencer'}
+                                  </h4>
+                                  {approval.influencer?.display_name && approval.influencer?.name !== approval.influencer?.display_name && (
+                                    <p className="text-sm text-gray-600">@{approval.influencer.display_name}</p>
+                                  )}
                                 </div>
+                                <Link
+                                  to={`/influencer/${approval.influencer?.id}`}
+                                  className="flex items-center gap-1 px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors shrink-0"
+                                  title="View Full Profile"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  View Profile
+                                </Link>
                               </div>
-                              {approval.message && (
-                                <p className="text-sm text-gray-700 mb-2">
-                                  <span className="font-medium">Message:</span> {approval.message}
-                                </p>
+
+                              {/* Contact Info */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+                                {approval.influencer?.email && (
+                                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                                    <Mail className="w-4 h-4 text-gray-500" />
+                                    <span className="truncate">{approval.influencer.email}</span>
+                                  </div>
+                                )}
+                                {approval.influencer?.phone_number && (
+                                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                                    <Phone className="w-4 h-4 text-gray-500" />
+                                    <span>{approval.influencer.phone_number}</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Social Stats */}
+                              <div className="flex flex-wrap gap-3 mb-3">
+                                {approval.influencer?.instagram_handle && (
+                                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-gray-200">
+                                    <Instagram className="w-4 h-4 text-pink-600" />
+                                    <span className="text-xs font-medium text-gray-700">
+                                      {approval.influencer.instagram_followers?.toLocaleString() || 0} followers
+                                    </span>
+                                  </div>
+                                )}
+                                {approval.influencer?.tiktok_handle && (
+                                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-gray-200">
+                                    <div className="w-4 h-4 bg-black rounded-sm"></div>
+                                    <span className="text-xs font-medium text-gray-700">
+                                      {approval.influencer.tiktok_followers?.toLocaleString() || 0} followers
+                                    </span>
+                                  </div>
+                                )}
+                                {approval.influencer?.youtube_channel && (
+                                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-gray-200">
+                                    <Youtube className="w-4 h-4 text-red-600" />
+                                    <span className="text-xs font-medium text-gray-700">
+                                      {approval.influencer.youtube_subscribers?.toLocaleString() || 0} subscribers
+                                    </span>
+                                  </div>
+                                )}
+                                {approval.influencer?.rating && (
+                                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-gray-200">
+                                    <span className="text-yellow-500">★</span>
+                                    <span className="text-xs font-medium text-gray-700">
+                                      {approval.influencer.rating.toFixed(1)} rating
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Application Message */}
+                              {approval.application_message && (
+                                <div className="bg-white rounded-lg p-3 mb-3 border border-gray-200">
+                                  <p className="text-xs font-medium text-gray-500 mb-1">Application Message:</p>
+                                  <p className="text-sm text-gray-700">{approval.application_message}</p>
+                                </div>
                               )}
+
                               <p className="text-xs text-gray-500">
-                                Applied {new Date(approval.created_at).toLocaleDateString()}
+                                Applied {new Date(approval.applied_at || approval.created_at).toLocaleDateString()}
                               </p>
                             </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => handleReviewApplication(approval.id, 'approved')}
-                                className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-                                title="Approve"
-                              >
-                                <UserCheck className="w-4 h-4" />
-                                Approve
-                              </button>
-                              <button
-                                onClick={() => {
-                                  const reason = prompt('Rejection reason (optional):');
-                                  handleReviewApplication(approval.id, 'rejected', reason);
-                                }}
-                                className="flex items-center gap-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
-                                title="Reject"
-                              >
-                                <XCircle className="w-4 h-4" />
-                                Reject
-                              </button>
-                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleReviewApplication(approval.id, 'approved')}
+                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                            >
+                              <UserCheck className="w-4 h-4" />
+                              Approve Affiliate
+                            </button>
+                            <button
+                              onClick={() => {
+                                const reason = prompt('Rejection reason (optional):');
+                                handleReviewApplication(approval.id, 'rejected', reason);
+                              }}
+                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                            >
+                              <XCircle className="w-4 h-4" />
+                              Reject Application
+                            </button>
                           </div>
                         </div>
                       ))}
