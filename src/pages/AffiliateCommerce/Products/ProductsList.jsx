@@ -15,6 +15,9 @@ import {
   MousePointerClick,
   Building2,
   AlertCircle,
+  UserPlus,
+  X,
+  Check,
 } from 'lucide-react';
 import { productsApi, brandProfileApi, brandsApi } from '../../../services/affiliateApi';
 
@@ -26,6 +29,8 @@ export default function ProductsList() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [brandProfiles, setBrandProfiles] = useState([]);   // all user profiles
   const [profileChecked, setProfileChecked] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showAffiliatesModal, setShowAffiliatesModal] = useState(false);
 
   useEffect(() => {
     checkBrandProfiles();
@@ -336,47 +341,178 @@ export default function ProductsList() {
                     <div className="text-center p-2 bg-gray-50 rounded">
                       <MousePointerClick className="w-4 h-4 text-gray-400 mx-auto mb-1" />
                       <p className="text-xs text-gray-500">Clicks</p>
-                      <p className="font-semibold text-gray-900">{product.clicks_count || 0}</p>
+                      <p className="font-semibold text-gray-900">{product.total_clicks || 0}</p>
                     </div>
                     <div className="text-center p-2 bg-gray-50 rounded">
                       <Package className="w-4 h-4 text-gray-400 mx-auto mb-1" />
                       <p className="text-xs text-gray-500">Orders</p>
-                      <p className="font-semibold text-gray-900">{product.orders_count || 0}</p>
+                      <p className="font-semibold text-gray-900">{product.total_orders || 0}</p>
                     </div>
                     <div className="text-center p-2 bg-gray-50 rounded">
                       <Users className="w-4 h-4 text-gray-400 mx-auto mb-1" />
                       <p className="text-xs text-gray-500">Affiliates</p>
-                      <p className="font-semibold text-gray-900">{product.affiliates_count || 0}</p>
+                      <p className="font-semibold text-gray-900">{product.active_affiliates_count || 0}</p>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mb-2">
                     <button
                       onClick={() => navigate(`/affiliate/products/edit/${product.id}`)}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
                     >
                       <Edit className="w-4 h-4" />
                       Edit
                     </button>
                     <button
                       onClick={() => navigate(`/shop/p/${product.slug}`)}
-                      className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                       title="View Product Page"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleArchive(product.id)}
-                      className="flex items-center justify-center gap-2 px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors"
+                      className="flex items-center justify-center gap-2 px-3 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors"
                       title="Archive Product"
                     >
                       <Archive className="w-4 h-4" />
                     </button>
                   </div>
+                  <button
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setShowAffiliatesModal(true);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    Manage Affiliates ({product.active_affiliates_count || 0})
+                  </button>
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Affiliates Management Modal */}
+        {showAffiliatesModal && selectedProduct && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Manage Affiliates</h2>
+                  <p className="text-sm text-gray-600 mt-1">{selectedProduct.name}</p>
+                </div>
+                <button
+                  onClick={() => setShowAffiliatesModal(false)}
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+                {/* Info Banner */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <Users className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-blue-900 mb-1">Affiliate Program Status</h3>
+                      <p className="text-sm text-blue-800">
+                        This product is available in the affiliate marketplace. Influencers can generate affiliate links
+                        and promote it to earn {selectedProduct.commission_type === 'percentage'
+                          ? `${selectedProduct.commission_rate}%`
+                          : `KES ${selectedProduct.fixed_commission}`} commission per sale.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="bg-gray-50 rounded-lg p-4 text-center">
+                    <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-gray-900">{selectedProduct.active_affiliates_count || 0}</p>
+                    <p className="text-sm text-gray-600">Active Affiliates</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4 text-center">
+                    <MousePointerClick className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-gray-900">{selectedProduct.total_clicks || 0}</p>
+                    <p className="text-sm text-gray-600">Total Clicks</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4 text-center">
+                    <Package className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-gray-900">{selectedProduct.total_orders || 0}</p>
+                    <p className="text-sm text-gray-600">Total Orders</p>
+                  </div>
+                </div>
+
+                {/* Affiliate Access Info */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 text-lg">How Affiliates Join</h3>
+
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                      <div className="w-6 h-6 rounded-full bg-green-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Check className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-green-900">Automatic Enrollment</p>
+                        <p className="text-sm text-green-800">
+                          All influencers can automatically browse and promote your products from the affiliate marketplace.
+                          No approval needed!
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                      <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                        2
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-900">Generate Affiliate Links</p>
+                        <p className="text-sm text-blue-800">
+                          Influencers visit the marketplace, select your product, and generate their unique tracking link.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                      <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                        3
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-900">Track Performance</p>
+                        <p className="text-sm text-blue-800">
+                          Monitor clicks, orders, and commissions in your analytics dashboard.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-6 pt-6 border-t border-gray-200 flex gap-3">
+                  <button
+                    onClick={() => navigate('/affiliate/analytics')}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    <BarChart3 className="w-5 h-5" />
+                    View Analytics
+                  </button>
+                  <button
+                    onClick={() => navigate('/affiliate/marketplace')}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                  >
+                    <Eye className="w-5 h-5" />
+                    View in Marketplace
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
