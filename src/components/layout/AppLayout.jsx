@@ -171,14 +171,25 @@ export default function AppLayout() {
 
       <div className="p-4 border-t border-gray-100">
         <div className="flex items-center gap-3 px-4 py-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs">
-            {user?.full_name?.[0] || user?.username?.[0] || 'U'}
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+            {user?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {user?.full_name || user?.username || 'User'}
+            <p className="text-sm font-semibold text-gray-900 truncate">
+              {user?.name || user?.email?.split('@')[0] || 'User'}
             </p>
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            {user?.user_type && (
+              <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wide ${
+                user.user_type.toLowerCase() === 'admin'
+                  ? 'bg-purple-100 text-purple-700'
+                  : user.user_type.toLowerCase() === 'influencer'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-blue-100 text-blue-700'
+              }`}>
+                {user.user_type}
+              </span>
+            )}
           </div>
         </div>
         <button
