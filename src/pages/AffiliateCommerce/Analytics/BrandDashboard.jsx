@@ -70,13 +70,19 @@ export default function BrandDashboard() {
   // Handle both dashboardData.stats and dashboardData directly
   const stats = dashboardData.stats || dashboardData || {
     total_products: 0,
+    total_affiliates: 0,
     active_affiliates: 0,
     total_clicks: 0,
     total_orders: 0,
     total_sales: 0,
-    commissions_paid: 0,
-    platform_fees: 0
+    total_commissions_paid: 0,
+    total_platform_fees: 0
   };
+
+  // Backend: active_affiliates = affiliates with orders in period
+  //          total_affiliates  = all approved affiliates (links exist)
+  // Show total_affiliates as primary metric, active as sub-label
+  const displayAffiliates = stats.total_affiliates ?? stats.active_affiliates ?? 0;
 
   const conversionRate = (stats.total_clicks || 0) > 0
     ? (((stats.total_orders || 0) / stats.total_clicks) * 100).toFixed(2)
@@ -128,8 +134,11 @@ export default function BrandDashboard() {
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
             </div>
-            <p className="text-sm text-gray-600 mb-1">Active Affiliates</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.active_affiliates || 0}</p>
+            <p className="text-sm text-gray-600 mb-1">Affiliates</p>
+            <p className="text-3xl font-bold text-gray-900">{displayAffiliates}</p>
+            {(stats.active_affiliates ?? 0) > 0 && displayAffiliates !== stats.active_affiliates && (
+              <p className="text-xs text-gray-400 mt-1">{stats.active_affiliates} with sales</p>
+            )}
           </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
@@ -174,7 +183,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm opacity-90 mb-1">Commissions Paid</p>
-            <p className="text-4xl font-bold">KES {parseFloat(stats.commissions_paid || 0).toLocaleString()}</p>
+            <p className="text-4xl font-bold">KES {parseFloat(stats.total_commissions_paid ?? stats.commissions_paid ?? 0).toLocaleString()}</p>
             <p className="text-sm opacity-75 mt-2">To affiliates</p>
           </div>
 
@@ -185,7 +194,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm opacity-90 mb-1">Platform Fees</p>
-            <p className="text-4xl font-bold">KES {parseFloat(stats.platform_fees || 0).toLocaleString()}</p>
+            <p className="text-4xl font-bold">KES {parseFloat(stats.total_platform_fees ?? stats.platform_fees ?? 0).toLocaleString()}</p>
             <p className="text-sm opacity-75 mt-2">Deducted from commissions</p>
           </div>
         </div>

@@ -12,7 +12,9 @@ import {
   DollarSign,
   Eye,
   Loader,
-  Download
+  Download,
+  Copy,
+  Link2,
 } from 'lucide-react';
 import { productsApi, affiliateApi } from '../../../services/affiliateApi';
 
@@ -20,12 +22,14 @@ export default function ProductMarketplace() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [myApplications, setMyApplications] = useState([]);
+  const [myLinks, setMyLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [commissionFilter, setCommissionFilter] = useState('all');
   const [categories, setCategories] = useState([]);
   const [applying, setApplying] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -34,15 +38,17 @@ export default function ProductMarketplace() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [productsRes, applicationsRes, categoriesRes] = await Promise.all([
+      const [productsRes, applicationsRes, categoriesRes, linksRes] = await Promise.all([
         productsApi.list({ status: 'active' }),
         affiliateApi.getMyApplications(),
-        productsApi.getCategories()
+        productsApi.getCategories(),
+        affiliateApi.getMyLinks()
       ]);
 
       setProducts(productsRes.data);
       setMyApplications(applicationsRes.data);
       setCategories(categoriesRes.data);
+      setMyLinks(linksRes.data || []);
     } catch (error) {
       toast.error('Failed to load products');
       console.error(error);
@@ -70,6 +76,30 @@ export default function ProductMarketplace() {
   const getApplicationStatus = (productId) => {
     const application = myApplications.find(app => app.product_id === productId);
     return application?.status || null;
+  };
+
+  const getAffiliateLink = (productId) => {
+    const link = myLinks.find(l => l.product_id === productId);
+    if (!link) return null;
+    // Prefer link_url from backend, fallback to constructing from affiliate_code
+    return link.link_url || `${window.location.origin}/shop/p/${link.product?.slug}?ref=${link.affiliate_code || link.code}`;
+  };
+
+  const copyAffiliateLink = async (productId, e) => {
+    e.stopPropagation();
+    const url = getAffiliateLink(productId);
+    if (!url) {
+      toast.error('Link not found. Try refreshing.');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedId(productId);
+      toast.success('Affiliate link copied!');
+      setTimeout(() => setCopiedId(null), 2500);
+    } catch {
+      toast.error('Could not copy link');
+    }
   };
 
   const filteredProducts = products.filter(product => {
@@ -307,13 +337,29 @@ export default function ProductMarketplace() {
 
                     {/* Action Button */}
                     {applicationStatus === 'approved' ? (
-                      <button
-                        onClick={() => navigate('/affiliate/my-links')}
-                        className="w-full px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium flex items-center justify-center gap-2"
-                      >
-                        <CheckCircle className="w-5 h-5" />
-                        Approved - View Link
-                      </button>
+                      <div className="space-y-2">
+                        {/* Copy affiliate link */}
+                        <button
+                          onClick={(e) => copyAffiliateLink(product.id, e)}
+                          className={`w-full px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition-all ${copiedId === product.id
+                              ? 'bg-green-600 text-white'
+                              : 'bg-green-100 text-green-700 hover:bg-green-200'
+                            }`}
+                        >
+                          {copiedId === product.id ? (
+                            <><CheckCircle className="w-4 h-4" /> Copied!</>
+                          ) : (
+                            <><Copy className="w-4 h-4" /> Copy Affiliate Link</>
+                          )}
+                        </button>
+                        {/* Navigate to all links */}
+                        <button
+                          onClick={() => navigate('/affiliate/my-links')}
+                          className="w-full px-4 py-2 border border-green-300 text-green-700 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-green-50 text-sm"
+                        >
+                          <Link2 className="w-4 h-4" /> My Links
+                        </button>
+                      </div>
                     ) : applicationStatus === 'pending' ? (
                       <button
                         disabled

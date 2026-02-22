@@ -28,6 +28,7 @@ import {
   Camera,
   ClipboardCheck,
   Settings,
+  Link2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import PublicNavbar from './PublicNavbar';
@@ -97,6 +98,8 @@ export default function AppLayout() {
       items.push(
         { type: 'divider', label: 'Influencer Tools' },
         { path: '/influencer/dashboard', icon: Star, label: 'My Services' },
+        { path: '/affiliate/my-links', icon: Link2, label: 'My Affiliate Links' },
+        { path: '/affiliate/my-orders', icon: ShoppingBag, label: 'My Earnings' },
         { path: '/payment-methods', icon: CreditCard, label: 'Payout Settings' },
         { path: '/proof-of-work/submit', icon: Camera, label: 'Submit Proof' },
         { path: '/proof-of-work/my-submissions', icon: ClipboardCheck, label: 'My Submissions' }
@@ -156,11 +159,10 @@ export default function AppLayout() {
               key={item.path}
               to={item.path}
               onClick={() => isMobile && closeMobileSidebar()}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                isActive
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
                   ? 'bg-blue-50 text-blue-600'
                   : 'text-gray-600 hover:bg-gray-50'
-              }`}
+                }`}
             >
               <item.icon size={20} />
               {item.label}
@@ -180,13 +182,12 @@ export default function AppLayout() {
             </p>
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             {user?.user_type && (
-              <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wide ${
-                user.user_type.toLowerCase() === 'admin'
+              <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wide ${user.user_type.toLowerCase() === 'admin'
                   ? 'bg-purple-100 text-purple-700'
                   : user.user_type.toLowerCase() === 'influencer'
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-blue-100 text-blue-700'
-              }`}>
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-blue-100 text-blue-700'
+                }`}>
                 {user.user_type}
               </span>
             )}

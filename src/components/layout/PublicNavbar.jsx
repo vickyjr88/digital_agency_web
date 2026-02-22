@@ -36,6 +36,9 @@ export default function PublicNavbar() {
             <Link to="/#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">
               How It Works
             </Link>
+            <Link to="/shop" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              Shop
+            </Link>
             {isAuthenticated ? (
               <Link
                 to="/dashboard"
@@ -95,6 +98,13 @@ export default function PublicNavbar() {
                 onClick={closeMobileMenu}
               >
                 How It Works
+              </Link>
+              <Link
+                to="/shop"
+                className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                onClick={closeMobileMenu}
+              >
+                Shop
               </Link>
               {isAuthenticated ? (
                 <Link
