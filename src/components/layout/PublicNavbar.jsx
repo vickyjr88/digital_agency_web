@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles, Menu, X } from 'lucide-react';
+import { Sparkles, Menu, X, ArrowRight } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export default function PublicNavbar() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -34,18 +36,29 @@ export default function PublicNavbar() {
             <Link to="/#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">
               How It Works
             </Link>
-            <button
-              onClick={() => navigate('/login')}
-              className="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => navigate('/signup')}
-              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-            >
-              Get Started
-            </button>
+            {isAuthenticated ? (
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+              >
+                Go to Dashboard <ArrowRight size={16} />
+              </Link>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                >
+                  Get Started
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,24 +96,36 @@ export default function PublicNavbar() {
               >
                 How It Works
               </Link>
-              <button
-                onClick={() => {
-                  navigate('/login');
-                  closeMobileMenu();
-                }}
-                className="text-left text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => {
-                  navigate('/signup');
-                  closeMobileMenu();
-                }}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium mx-4"
-              >
-                Get Started
-              </button>
+              {isAuthenticated ? (
+                <Link
+                  to="/dashboard"
+                  className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium mx-4"
+                  onClick={closeMobileMenu}
+                >
+                  Go to Dashboard <ArrowRight size={16} />
+                </Link>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate('/login');
+                      closeMobileMenu();
+                    }}
+                    className="text-left text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/signup');
+                      closeMobileMenu();
+                    }}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium mx-4"
+                  >
+                    Get Started
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}

@@ -29,14 +29,14 @@ export default function MarketplaceActionWidget({ user, brands = [] }) {
         try {
             const newStatus = { hasCampaigns: false, hasBids: false };
 
-            if (user.user_type === 'brand') {
+            if (user.user_type?.toLowerCase() === 'brand') {
                 try {
                     const campaigns = await campaignApi.getAll();
                     newStatus.hasCampaigns = campaigns && campaigns.length > 0;
                 } catch (e) {
                     console.error("Error fetching campaigns:", e);
                 }
-            } else if (user.user_type === 'influencer') {
+            } else if (user.user_type?.toLowerCase() === 'influencer') {
                 try {
                     const bids = await bidApi.getMyBids();
                     newStatus.hasBids = bids && bids.length > 0;
@@ -60,7 +60,7 @@ export default function MarketplaceActionWidget({ user, brands = [] }) {
 
     let action = null;
 
-    if (user.user_type === 'brand') {
+    if (user.user_type?.toLowerCase() === 'brand') {
         if (!status.hasCampaigns) {
             action = {
                 title: "Launch Your First Campaign",
@@ -83,7 +83,7 @@ export default function MarketplaceActionWidget({ user, brands = [] }) {
                 btnColor: "bg-indigo-600 hover:bg-indigo-700"
             };
         }
-    } else if (user.user_type === 'influencer') {
+    } else if (user.user_type?.toLowerCase() === 'influencer') {
         if (!status.hasBids) {
             action = {
                 title: "Find Campaigns to Bid On",

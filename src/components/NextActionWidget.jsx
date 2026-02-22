@@ -33,7 +33,7 @@ export default function NextActionWidget({ user, brands = [] }) {
             };
 
             // For influencers, check profile and packages
-            if (user.user_type === 'influencer') {
+            if (user.user_type?.toLowerCase() === 'influencer') {
                 try {
                     const profile = await influencerApi.getMyProfile();
                     newStatus.hasProfile = !!profile;
@@ -69,7 +69,7 @@ export default function NextActionWidget({ user, brands = [] }) {
     // Determine the next best action
     let action = null;
 
-    if (user.user_type === 'influencer') {
+    if (user.user_type?.toLowerCase() === 'influencer') {
         if (!status.hasProfile) {
             action = {
                 title: "Complete Your Influencer Profile",
@@ -190,7 +190,7 @@ export default function NextActionWidget({ user, brands = [] }) {
             </div>
 
             {/* Progress Indicators (Only for Influencer to show journey) */}
-            {user.user_type === 'influencer' && (
+            {user.user_type?.toLowerCase() === 'influencer' && (
                 <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex items-center overflow-x-auto gap-8 md:justify-center no-scrollbar">
                     <div className={`flex items-center gap-2 whitespace-nowrap text-sm font-medium ${status.hasProfile ? 'text-green-600' : 'text-gray-400'}`}>
                         {status.hasProfile ? <CheckCircle size={16} /> : <div className="w-4 h-4 rounded-full border-2 border-gray-300"></div>}

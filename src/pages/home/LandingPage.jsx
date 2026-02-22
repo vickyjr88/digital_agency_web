@@ -17,7 +17,6 @@ import {
 	Clock,
 	Shield,
 	CreditCard,
-	LayoutDashboard,
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -86,54 +85,7 @@ export default function LandingPage() {
 
 	return (
 		<div className="bg-gradient-to-br from-indigo-50 via-white to-blue-50">
-
-			{/* ── Navbar ──────────────────────────────────────────────────────── */}
-			<header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-					{/* Logo */}
-					<Link to="/" className="flex items-center gap-2 text-xl font-bold text-indigo-600">
-						<LayoutDashboard className="w-6 h-6" />
-						Dexter
-					</Link>
-
-					{/* Nav links */}
-					<nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-						<a href="#features" className="hover:text-indigo-600 transition-colors">Features</a>
-						<a href="#how-it-works" className="hover:text-indigo-600 transition-colors">How It Works</a>
-						<a href="#pricing" className="hover:text-indigo-600 transition-colors">Pricing</a>
-						<Link to="/shop" className="hover:text-indigo-600 transition-colors">Shop</Link>
-					</nav>
-
-					{/* Auth buttons */}
-					<div className="flex items-center gap-3">
-						{isAuthenticated ? (
-							<Link
-								to="/dashboard"
-								className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-semibold"
-							>
-								Go to Dashboard <ArrowRight size={15} />
-							</Link>
-						) : (
-							<>
-								<Link
-									to="/login"
-									className="text-sm font-semibold text-gray-700 hover:text-indigo-600 transition-colors px-3 py-2 rounded-lg hover:bg-gray-100"
-								>
-									Log in
-								</Link>
-								<Link
-									to="/signup"
-									className="text-sm font-semibold bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
-								>
-									Sign up free
-								</Link>
-							</>
-						)}
-					</div>
-				</div>
-			</header>
-
-			<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
+			<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-32">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}

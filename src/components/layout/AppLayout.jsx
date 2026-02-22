@@ -20,6 +20,14 @@ import {
   Megaphone,
   FileText,
   Wallet as WalletIcon,
+  Plus,
+  Target,
+  Mail,
+  BarChart2,
+  Star,
+  Camera,
+  ClipboardCheck,
+  Settings,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import PublicNavbar from './PublicNavbar';
@@ -57,53 +65,51 @@ export default function AppLayout() {
 
   // Define menu items based on user type
   const getMenuItems = () => {
-    const baseItems = [
-      { path: '/dashboard', icon: LayoutGrid, label: 'Dashboard' },
-      { path: '/marketplace', icon: Globe, label: 'Marketplace' },
-      { path: '/shop', icon: ShoppingBag, label: 'Shop' },
-    ];
+    const items = [
+      // Main sections
+      { path: '/trends', icon: TrendingUp, label: 'Trends' },
+      { path: '/my-brands', icon: LayoutGrid, label: 'My Brands' },
+      { path: '/billing', icon: CreditCard, label: 'Subscription' },
+      { path: '/profile', icon: Settings, label: 'Profile' },
 
-    // Influencer items
-    const influencerItems = [
-      { path: '/influencer/dashboard', icon: TrendingUp, label: 'My Stats' },
-      { path: '/influencer/onboarding', icon: User, label: 'Profile Setup' },
-      { path: '/affiliate/marketplace', icon: Store, label: 'Products to Promote' },
-      { path: '/affiliate/my-orders', icon: Package, label: 'My Orders' },
-    ];
+      // Campaigns section
+      { type: 'divider', label: 'Campaigns' },
+      { path: '/campaigns/create', icon: Plus, label: 'Start Campaign' },
+      { path: '/campaigns/open', icon: Globe, label: 'Browse Campaigns' },
+      { path: '/my-campaigns', icon: Target, label: 'My Campaigns' },
+      { path: '/campaign-invites', icon: Mail, label: 'Invites' },
+      { path: '/my-bids', icon: FileText, label: 'My Bids' },
 
-    // Brand items
-    const brandItems = [
+      // Financials section
+      { type: 'divider', label: 'Financials' },
+      { path: '/wallet', icon: WalletIcon, label: 'My Wallet' },
+
+      // Affiliate Commerce section
+      { type: 'divider', label: 'Affiliate Commerce' },
+      { path: '/affiliate/marketplace', icon: ShoppingBag, label: 'Browse Products' },
       { path: '/affiliate/products', icon: Package, label: 'My Products' },
-      { path: '/affiliate/orders', icon: FileText, label: 'Orders' },
-      { path: '/affiliate/analytics', icon: TrendingUp, label: 'Analytics' },
-      { path: '/campaigns/open', icon: Megaphone, label: 'Campaigns' },
+      { path: '/affiliate/orders', icon: ClipboardCheck, label: 'Orders' },
+      { path: '/affiliate/analytics', icon: BarChart2, label: 'Affiliate Stats' },
     ];
 
-    // Admin items
-    const adminItems = [
-      { path: '/admin', icon: Shield, label: 'Admin Dashboard' },
-      { path: '/admin/users', icon: Users, label: 'Users' },
-    ];
-
-    const commonItems = [
-      { path: '/wallet', icon: CreditCard, label: 'Wallet' },
-    ];
-
-    let items = [...baseItems];
-
-    if (user?.user_type === 'influencer') {
-      items.push(...influencerItems);
+    // Add Influencer Tools section for influencers
+    if (user?.user_type?.toLowerCase() === 'influencer') {
+      items.push(
+        { type: 'divider', label: 'Influencer Tools' },
+        { path: '/influencer/dashboard', icon: Star, label: 'My Services' },
+        { path: '/payment-methods', icon: CreditCard, label: 'Payout Settings' },
+        { path: '/proof-of-work/submit', icon: Camera, label: 'Submit Proof' },
+        { path: '/proof-of-work/my-submissions', icon: ClipboardCheck, label: 'My Submissions' }
+      );
     }
 
-    if (user?.user_type === 'brand' || user?.role === 'brand') {
-      items.push(...brandItems);
+    // Add Admin section for admins
+    if (user?.user_type?.toLowerCase() === 'admin' || user?.role?.toLowerCase() === 'admin') {
+      items.push(
+        { type: 'divider', label: 'Admin' },
+        { path: '/admin', icon: Shield, label: 'Admin Panel' }
+      );
     }
-
-    if (user?.user_type === 'admin' || user?.role === 'admin') {
-      items.push(...adminItems);
-    }
-
-    items.push(...commonItems);
 
     return items;
   };
@@ -133,7 +139,17 @@ export default function AppLayout() {
       </div>
 
       <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
-        {menuItems.map((item) => {
+        {menuItems.map((item, index) => {
+          if (item.type === 'divider') {
+            return (
+              <div key={`divider-${index}`} className="pt-4 pb-2 px-4">
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  {item.label}
+                </span>
+              </div>
+            );
+          }
+
           const isActive = location.pathname === item.path;
           return (
             <Link
@@ -230,7 +246,7 @@ export default function AppLayout() {
         </AnimatePresence>
 
         {/* Main Content */}
-        <main className="md:ml-64 pt-16 md:pt-0">
+        <main className="md:ml-64 pt-16 md:pt-8 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
           <Outlet />
         </main>
 
@@ -250,7 +266,7 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <PublicNavbar />
-      <main className="flex-1">
+      <main className="flex-1 pt-0">
         <Outlet />
       </main>
       <PublicFooter />

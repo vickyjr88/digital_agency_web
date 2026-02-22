@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, LayoutGrid, LogOut, Briefcase, Shield, TrendingUp, Menu, X, Settings, CreditCard, BarChart2, Star, Target, Mail, FileText, Globe, Wallet as WalletIcon, ShoppingBag, Package, ClipboardCheck, Camera } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Plus, Briefcase } from 'lucide-react';
 import AdminUsers from '../../features/admin/AdminUsers';
 import TrendsDashboard from '../../features/trends/TrendsDashboard';
 import ProfileSettings from '../../features/profile/ProfileSettings';
@@ -17,9 +17,7 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 	const [brands, setBrands] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState(defaultTab);
-	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 	const navigate = useNavigate();
-	const location = useLocation();
 
 	useEffect(() => {
 		setActiveTab(defaultTab);
@@ -61,381 +59,41 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 
 	if (loading) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-gray-50">
+			<div className="flex items-center justify-center py-12">
 				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
 			</div>
 		);
 	}
 
-	const closeMobileSidebar = () => setMobileSidebarOpen(false);
-
-	const SidebarContent = ({ isMobile = false }) => (
-		<>
-			<div className="p-6 border-b border-gray-100">
-				<div className="flex items-center justify-between">
-					<div className="flex items-center gap-3">
-						<div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-							D
-						</div>
-						<span className="text-xl font-bold text-gray-900">Dexter</span>
-					</div>
-					{isMobile && (
-						<button
-							onClick={closeMobileSidebar}
-							className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-							aria-label="Close menu"
-						>
-							<X size={24} />
-						</button>
-					)}
-				</div>
-			</div>
-
-			<nav className="p-4 space-y-1 flex-1">
-				<button
-					onClick={() => {
-						navigate('/trends');
-						if (isMobile) closeMobileSidebar();
-					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'trends' || activeTab === 'dashboard' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-				>
-					<TrendingUp size={20} />
-					Trends
-				</button>
-
-				<button
-					onClick={() => {
-						navigate('/my-brands');
-						if (isMobile) closeMobileSidebar();
-					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-				>
-					<LayoutGrid size={20} />
-					My Brands
-				</button>
-
-				<button
-					onClick={() => {
-						navigate('/billing');
-						if (isMobile) closeMobileSidebar();
-					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'billing' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-				>
-					<CreditCard size={20} />
-					Subscription
-				</button>
-
-				<button
-					onClick={() => {
-						navigate('/profile');
-						if (isMobile) closeMobileSidebar();
-					}}
-					className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-				>
-					<Settings size={20} />
-					Profile
-				</button>
-
-				<>
-					<div className="pt-4 pb-2 px-4">
-						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Campaigns</span>
-					</div>
-					<button
-						onClick={() => {
-							navigate('/campaigns/create');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/create' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<Plus size={20} />
-						Start Campaign
-					</button>
-					<button
-						onClick={() => {
-							navigate('/campaigns/open');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaigns/open' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<Globe size={20} />
-						Browse Campaigns
-					</button>
-					<button
-						onClick={() => {
-							navigate('/my-campaigns');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-campaigns' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<Target size={20} />
-						My Campaigns
-					</button>
-					<button
-						onClick={() => {
-							navigate('/campaign-invites');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/campaign-invites' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<Mail size={20} />
-						Invites
-					</button>
-					<button
-						onClick={() => {
-							navigate('/my-bids');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/my-bids' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<FileText size={20} />
-						My Bids
-					</button>
-				</>
-
-				{/* Wallet Section */}
-				<>
-					<div className="pt-4 pb-2 px-4">
-						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Financials</span>
-					</div>
-					<button
-						onClick={() => {
-							navigate('/wallet');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'wallet' || location.pathname === '/wallet' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<WalletIcon size={20} />
-						My Wallet
-					</button>
-				</>
-
-				{/* Affiliate Commerce Section */}
-				<>
-					<div className="pt-4 pb-2 px-4">
-						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Affiliate Commerce</span>
-					</div>
-					<button
-						onClick={() => {
-							navigate('/affiliate/marketplace');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/marketplace' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<ShoppingBag size={20} />
-						Browse Products
-					</button>
-					<button
-						onClick={() => {
-							navigate('/affiliate/products');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/products') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<Package size={20} />
-						My Products
-					</button>
-					<button
-						onClick={() => {
-							navigate('/affiliate/orders');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/affiliate/orders' || location.pathname === '/affiliate/my-orders' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<ClipboardCheck size={20} />
-						Orders
-					</button>
-					<button
-						onClick={() => {
-							navigate('/affiliate/analytics');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname.startsWith('/affiliate/analytics') || location.pathname.startsWith('/affiliate/my-dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<BarChart2 size={20} />
-						Affiliate Stats
-					</button>
-				</>
-
-				{user?.user_type === 'influencer' && (
-					<>
-						<div className="pt-4 pb-2 px-4">
-							<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Influencer Tools</span>
-						</div>
-						<button
-							onClick={() => {
-								navigate('/influencer/dashboard');
-								if (isMobile) closeMobileSidebar();
-							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'influencer' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-						>
-							<Star size={20} />
-							My Services
-						</button>
-						<button
-							onClick={() => {
-								navigate('/payment-methods');
-								if (isMobile) closeMobileSidebar();
-							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'payment-methods' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-						>
-							<CreditCard size={20} />
-							Payout Settings
-						</button>
-						<button
-							onClick={() => {
-								navigate('/proof-of-work/submit');
-								if (isMobile) closeMobileSidebar();
-							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/submit' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-						>
-							<Camera size={20} />
-							Submit Proof
-						</button>
-						<button
-							onClick={() => {
-								navigate('/proof-of-work/my-submissions');
-								if (isMobile) closeMobileSidebar();
-							}}
-							className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${location.pathname === '/proof-of-work/my-submissions' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-						>
-							<ClipboardCheck size={20} />
-							My Submissions
-						</button>
-					</>
-				)}
-
-				{user?.role === 'admin' && (
-					<button
-						onClick={() => {
-							navigate('/admin');
-							if (isMobile) closeMobileSidebar();
-						}}
-						className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'admin' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
-					>
-						<Shield size={20} />
-						Admin Panel
-					</button>
-				)}
-			</nav>
-
-			<div className="p-4 border-t border-gray-100">
-				{user?.usage && (
-					<div className="px-4 mb-6">
-						<div className="flex justify-between items-end mb-2">
-							<span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Monthly Usage</span>
-							<span className="text-xs font-bold text-blue-600">{user.usage.current} / {user.usage.limit}</span>
-						</div>
-						<div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-							<div
-								className={`h-full transition-all duration-1000 ${user.usage.current / user.usage.limit > 0.9 ? 'bg-red-500' : 'bg-blue-600'
-									}`}
-								style={{ width: `${Math.min(100, (user.usage.current / user.usage.limit) * 100)}%` }}
-							/>
-						</div>
-						{user.usage.current / user.usage.limit > 0.8 && (
-							<p className="text-[10px] text-orange-600 mt-2 font-medium">Almost at your limit! Upgrade soon.</p>
-						)}
-					</div>
-				)}
-				<div className="flex items-center gap-3 px-4 py-3 mb-2">
-					<div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs">
-						{user?.name?.[0]}
-					</div>
-					<div className="flex-1 min-w-0">
-						<p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-						<p className="text-xs text-gray-500 truncate">{user?.email}</p>
-					</div>
-				</div>
-				<button
-					onClick={handleLogout}
-					className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
-				>
-					<LogOut size={16} />
-					Sign Out
-				</button>
-			</div>
-		</>
-	);
-
 	return (
-		<div className="min-h-screen bg-gray-50 font-sans">
-			{/* Mobile Header */}
-			<div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 px-4 h-16 flex items-center justify-between">
-				<div className="flex items-center gap-3">
-					<div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-						D
-					</div>
-					<span className="text-xl font-bold text-gray-900">Dexter</span>
-				</div>
-				<button
-					onClick={() => setMobileSidebarOpen(true)}
-					className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-					aria-label="Open menu"
-				>
-					<Menu size={24} />
-				</button>
-			</div>
+		<div className="max-w-7xl mx-auto">
+			{children ? (
+				children
+			) : (
+				<>
+					{activeTab === 'trends' && (
+						<div>
+							{user && <NextActionWidget user={user} brands={brands} />}
+							{user && <MarketplaceActionWidget user={user} brands={brands} />}
+							<TrendsDashboard brands={brands} user={user} />
+						</div>
+					)}
 
-			{/* Desktop Sidebar */}
-			<aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-10 hidden md:flex flex-col">
-				<SidebarContent />
-			</aside>
-
-			{/* Mobile Sidebar Overlay */}
-			<AnimatePresence>
-				{mobileSidebarOpen && (
-					<>
-						{/* Backdrop */}
-						<motion.div
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							exit={{ opacity: 0 }}
-							transition={{ duration: 0.2 }}
-							className="fixed inset-0 bg-black/50 z-40 md:hidden"
-							onClick={closeMobileSidebar}
-						/>
-						{/* Sidebar */}
-						<motion.aside
-							initial={{ x: '-100%' }}
-							animate={{ x: 0 }}
-							exit={{ x: '-100%' }}
-							transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-							className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col md:hidden"
-						>
-							<SidebarContent isMobile />
-						</motion.aside>
-					</>
-				)}
-			</AnimatePresence>
-
-			<main className="md:ml-64 pt-16 md:pt-0 p-4 sm:p-6 md:p-8">
-				{children ? (
-					children
-				) : (
-					<>
-						{activeTab === 'trends' && (
-							<div className="max-w-6xl mx-auto">
-								{user && <NextActionWidget user={user} brands={brands} />}
-								{user && <MarketplaceActionWidget user={user} brands={brands} />}
-								<TrendsDashboard brands={brands} user={user} />
-							</div>
-						)}
-
-						{activeTab === 'brands' && (
-							<div className="max-w-6xl mx-auto">
-								<header className="flex justify-between items-center mb-8">
-									<div>
-										<h1 className="text-2xl font-bold text-gray-900">My Brands</h1>
-										<p className="text-gray-500 mt-1">Manage your brands and content generation</p>
-									</div>
-									<button
-										onClick={() => navigate('/brands/new')}
-										className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium"
-									>
-										<Plus size={18} />
-										New Brand
-									</button>
-								</header>
+					{activeTab === 'brands' && (
+						<div>
+							<header className="flex justify-between items-center mb-8">
+								<div>
+									<h1 className="text-2xl font-bold text-gray-900">My Brands</h1>
+									<p className="text-gray-500 mt-1">Manage your brands and content generation</p>
+								</div>
+								<button
+									onClick={() => navigate('/brands/new')}
+									className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium"
+								>
+									<Plus size={18} />
+									New Brand
+								</button>
+							</header>
 
 								{brands.length === 0 ? (
 									<div className="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
@@ -501,10 +159,10 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 										))}
 									</div>
 								)}
-							</div>
-						)}
+						</div>
+					)}
 
-						{activeTab === 'admin' && user?.role === 'admin' && (
+					{activeTab === 'admin' && user?.role?.toLowerCase() === 'admin' && (
 							<div className="space-y-8">
 								<AdminUsers />
 							</div>
@@ -528,14 +186,13 @@ export default function Dashboard({ defaultTab = 'trends', onLogout, children })
 							</div>
 						)}
 
-						{activeTab === 'influencer' && (
-							<div className="max-w-6xl mx-auto">
-								<InfluencerDashboard />
-							</div>
-						)}
-					</>
-				)}
-			</main>
+					{activeTab === 'influencer' && (
+						<div>
+							<InfluencerDashboard />
+						</div>
+					)}
+				</>
+			)}
 		</div>
 	);
 }
