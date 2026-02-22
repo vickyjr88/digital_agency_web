@@ -18,8 +18,11 @@ import {
   UserPlus,
   X,
   Check,
+  Clock,
+  UserCheck,
+  XCircle,
 } from 'lucide-react';
-import { productsApi, brandProfileApi, brandsApi } from '../../../services/affiliateApi';
+import { productsApi, brandProfileApi, brandsApi, affiliateApi } from '../../../services/affiliateApi';
 
 export default function ProductsList() {
   const navigate = useNavigate();
@@ -31,6 +34,8 @@ export default function ProductsList() {
   const [profileChecked, setProfileChecked] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showAffiliatesModal, setShowAffiliatesModal] = useState(false);
+  const [pendingApprovals, setPendingApprovals] = useState([]);
+  const [loadingApprovals, setLoadingApprovals] = useState(false);
 
   useEffect(() => {
     checkBrandProfiles();
@@ -80,6 +85,43 @@ export default function ProductsList() {
       toast.error('Failed to archive product');
     }
   };
+
+  const loadPendingApprovals = async (productId) => {
+    try {
+      setLoadingApprovals(true);
+      const response = await affiliateApi.getPendingApprovals();
+      // Filter approvals for the selected product
+      const productApprovals = response.data.filter(approval => approval.product_id === productId);
+      setPendingApprovals(productApprovals);
+    } catch (error) {
+      console.error('Failed to load pending approvals:', error);
+      toast.error('Failed to load pending approvals');
+    } finally {
+      setLoadingApprovals(false);
+    }
+  };
+
+  const handleReviewApplication = async (approvalId, status, rejectionReason = null) => {
+    try {
+      await affiliateApi.reviewApplication(approvalId, { status, rejection_reason: rejectionReason });
+      toast.success(status === 'approved' ? 'Affiliate approved successfully!' : 'Application rejected');
+      // Reload approvals and products
+      if (selectedProduct) {
+        loadPendingApprovals(selectedProduct.id);
+      }
+      loadProducts();
+    } catch (error) {
+      console.error('Failed to review application:', error);
+      toast.error('Failed to process application');
+    }
+  };
+
+  // Load approvals when modal opens
+  useEffect(() => {
+    if (showAffiliatesModal && selectedProduct) {
+      loadPendingApprovals(selectedProduct.id);
+    }
+  }, [showAffiliatesModal, selectedProduct]); // eslint-disable-line
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -432,11 +474,16 @@ export default function ProductsList() {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-4 gap-4 mb-6">
                   <div className="bg-gray-50 rounded-lg p-4 text-center">
                     <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
                     <p className="text-2xl font-bold text-gray-900">{selectedProduct.active_affiliates_count || 0}</p>
                     <p className="text-sm text-gray-600">Active Affiliates</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4 text-center">
+                    <Clock className="w-8 h-8 text-orange-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-gray-900">{selectedProduct.pending_approvals_count || 0}</p>
+                    <p className="text-sm text-gray-600">Pending Review</p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4 text-center">
                     <MousePointerClick className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
@@ -449,6 +496,70 @@ export default function ProductsList() {
                     <p className="text-sm text-gray-600">Total Orders</p>
                   </div>
                 </div>
+
+                {/* Pending Approvals Section */}
+                {loadingApprovals ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="text-center">
+                      <Clock className="w-8 h-8 text-blue-600 animate-pulse mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Loading pending requests...</p>
+                    </div>
+                  </div>
+                ) : pendingApprovals.length > 0 ? (
+                  <div className="mb-6">
+                    <h3 className="font-semibold text-gray-900 text-lg mb-4">Pending Approval Requests</h3>
+                    <div className="space-y-3">
+                      {pendingApprovals.map((approval) => (
+                        <div key={approval.id} className="border border-orange-200 bg-orange-50 rounded-lg p-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold">
+                                  {approval.influencer?.name?.[0]?.toUpperCase() || 'I'}
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-gray-900">
+                                    {approval.influencer?.name || 'Influencer'}
+                                  </p>
+                                  <p className="text-xs text-gray-600">{approval.influencer?.email || ''}</p>
+                                </div>
+                              </div>
+                              {approval.message && (
+                                <p className="text-sm text-gray-700 mb-2">
+                                  <span className="font-medium">Message:</span> {approval.message}
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-500">
+                                Applied {new Date(approval.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleReviewApplication(approval.id, 'approved')}
+                                className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                                title="Approve"
+                              >
+                                <UserCheck className="w-4 h-4" />
+                                Approve
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const reason = prompt('Rejection reason (optional):');
+                                  handleReviewApplication(approval.id, 'rejected', reason);
+                                }}
+                                className="flex items-center gap-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                                title="Reject"
+                              >
+                                <XCircle className="w-4 h-4" />
+                                Reject
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
 
                 {/* Affiliate Access Info */}
                 <div className="space-y-4">
