@@ -45,9 +45,13 @@ export default function MyLinks() {
         }
     };
 
-    const generateAffiliateUrl = (productSlug, affiliateCode) => {
-        const baseUrl = window.location.origin;
-        return `${baseUrl}/shop/p/${productSlug}?ref=${affiliateCode}`;
+    // The backend stores the correct link_url already. Use it directly.
+    // Fallback: construct from slug + affiliate_code if link_url is missing.
+    const getFullUrl = (link) => {
+        if (link.link_url) return link.link_url;
+        const slug = link.product?.slug || '';
+        const code = link.affiliate_code || '';
+        return `${window.location.origin}/shop/p/${slug}?ref=${code}`;
     };
 
     const copyToClipboard = async (text, id) => {
@@ -76,24 +80,24 @@ export default function MyLinks() {
     const filteredLinks = links
         .filter((l) => {
             const name = l.product?.name?.toLowerCase() || '';
-            const code = l.code?.toLowerCase() || '';
+            const code = l.affiliate_code?.toLowerCase() || '';
             const q = searchQuery.toLowerCase();
             return name.includes(q) || code.includes(q);
         })
         .sort((a, b) => {
-            if (sortBy === 'clicks') return (b.clicks_count || 0) - (a.clicks_count || 0);
-            if (sortBy === 'orders') return (b.orders_count || 0) - (a.orders_count || 0);
+            if (sortBy === 'clicks') return (b.clicks || 0) - (a.clicks || 0);
+            if (sortBy === 'orders') return (b.orders || 0) - (a.orders || 0);
             if (sortBy === 'conversion') {
-                const ra = a.clicks_count ? (a.orders_count / a.clicks_count) : 0;
-                const rb = b.clicks_count ? (b.orders_count / b.clicks_count) : 0;
+                const ra = a.clicks ? (a.orders / a.clicks) : 0;
+                const rb = b.clicks ? (b.orders / b.clicks) : 0;
                 return rb - ra;
             }
-            // newest (default) — by id descending
-            return b.id - a.id;
+            // newest (default) — by generated_at descending
+            return new Date(b.generated_at || 0) - new Date(a.generated_at || 0);
         });
 
-    const totalClicks = links.reduce((s, l) => s + (l.clicks_count || 0), 0);
-    const totalOrders = links.reduce((s, l) => s + (l.orders_count || 0), 0);
+    const totalClicks = links.reduce((s, l) => s + (l.clicks || 0), 0);
+    const totalOrders = links.reduce((s, l) => s + (l.orders || 0), 0);
     const overallConversion = totalClicks > 0 ? ((totalOrders / totalClicks) * 100).toFixed(1) : '0.0';
 
     if (loading) {
@@ -213,9 +217,9 @@ export default function MyLinks() {
             ) : (
                 <div className="links-list">
                     {filteredLinks.map((link) => {
-                        const fullUrl = generateAffiliateUrl(link.product?.slug, link.code);
-                        const convRate = link.clicks_count
-                            ? ((link.orders_count / link.clicks_count) * 100).toFixed(1)
+                        const fullUrl = getFullUrl(link);
+                        const convRate = link.clicks
+                            ? ((link.orders / link.clicks) * 100).toFixed(1)
                             : '0.0';
                         const isExpanded = expandedLink === link.id;
 
@@ -240,12 +244,14 @@ export default function MyLinks() {
                                             <div className="product-tags">
                                                 <span className="code-badge">
                                                     <Tag size={12} />
-                                                    {link.code}
+                                                    {link.affiliate_code}
                                                 </span>
                                                 <span className="commission-badge">
                                                     {link.product?.commission_type === 'percentage'
                                                         ? `${link.product?.commission_rate}% commission`
-                                                        : `KES ${parseFloat(link.product?.fixed_commission || 0).toLocaleString()} / sale`}
+                                                        : link.product?.commission_type === 'fixed'
+                                                            ? `KES ${parseFloat(link.product?.fixed_commission || 0).toLocaleString()} / sale`
+                                                            : 'Commission'}
                                                 </span>
                                             </div>
                                         </div>
@@ -255,12 +261,12 @@ export default function MyLinks() {
                                     <div className="link-mini-stats">
                                         <div className="mini-stat">
                                             <MousePointerClick size={14} />
-                                            <span>{(link.clicks_count || 0).toLocaleString()}</span>
+                                            <span>{(link.clicks || 0).toLocaleString()}</span>
                                             <small>clicks</small>
                                         </div>
                                         <div className="mini-stat">
                                             <ShoppingCart size={14} />
-                                            <span>{(link.orders_count || 0).toLocaleString()}</span>
+                                            <span>{(link.orders || 0).toLocaleString()}</span>
                                             <small>orders</small>
                                         </div>
                                         <div className="mini-stat highlight">
