@@ -67,12 +67,22 @@ export default function BrandDashboard() {
     );
   }
 
-  const stats = dashboardData.stats;
-  const conversionRate = stats.total_clicks > 0
-    ? ((stats.total_orders / stats.total_clicks) * 100).toFixed(2)
+  // Handle both dashboardData.stats and dashboardData directly
+  const stats = dashboardData.stats || dashboardData || {
+    total_products: 0,
+    active_affiliates: 0,
+    total_clicks: 0,
+    total_orders: 0,
+    total_sales: 0,
+    commissions_paid: 0,
+    platform_fees: 0
+  };
+
+  const conversionRate = (stats.total_clicks || 0) > 0
+    ? (((stats.total_orders || 0) / stats.total_clicks) * 100).toFixed(2)
     : 0;
-  const avgOrderValue = stats.total_orders > 0
-    ? (stats.total_sales / stats.total_orders).toFixed(2)
+  const avgOrderValue = (stats.total_orders || 0) > 0
+    ? ((stats.total_sales || 0) / stats.total_orders).toFixed(2)
     : 0;
 
   return (
@@ -109,7 +119,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Products</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.total_products}</p>
+            <p className="text-3xl font-bold text-gray-900">{stats.total_products || 0}</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
@@ -119,7 +129,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Active Affiliates</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.active_affiliates}</p>
+            <p className="text-3xl font-bold text-gray-900">{stats.active_affiliates || 0}</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
@@ -129,7 +139,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Clicks</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.total_clicks.toLocaleString()}</p>
+            <p className="text-3xl font-bold text-gray-900">{(stats.total_clicks || 0).toLocaleString()}</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
@@ -139,7 +149,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Orders</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.total_orders.toLocaleString()}</p>
+            <p className="text-3xl font-bold text-gray-900">{(stats.total_orders || 0).toLocaleString()}</p>
           </div>
         </div>
 
@@ -153,8 +163,8 @@ export default function BrandDashboard() {
               <TrendingUp className="w-6 h-6 opacity-75" />
             </div>
             <p className="text-sm opacity-90 mb-1">Total Sales</p>
-            <p className="text-4xl font-bold">KES {parseFloat(stats.total_sales).toLocaleString()}</p>
-            <p className="text-sm opacity-75 mt-2">From {stats.total_orders} orders</p>
+            <p className="text-4xl font-bold">KES {parseFloat(stats.total_sales || 0).toLocaleString()}</p>
+            <p className="text-sm opacity-75 mt-2">From {stats.total_orders || 0} orders</p>
           </div>
 
           <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
@@ -164,7 +174,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm opacity-90 mb-1">Commissions Paid</p>
-            <p className="text-4xl font-bold">KES {parseFloat(stats.commissions_paid).toLocaleString()}</p>
+            <p className="text-4xl font-bold">KES {parseFloat(stats.commissions_paid || 0).toLocaleString()}</p>
             <p className="text-sm opacity-75 mt-2">To affiliates</p>
           </div>
 
@@ -175,7 +185,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm opacity-90 mb-1">Platform Fees</p>
-            <p className="text-4xl font-bold">KES {parseFloat(stats.platform_fees).toLocaleString()}</p>
+            <p className="text-4xl font-bold">KES {parseFloat(stats.platform_fees || 0).toLocaleString()}</p>
             <p className="text-sm opacity-75 mt-2">Deducted from commissions</p>
           </div>
         </div>
@@ -199,7 +209,7 @@ export default function BrandDashboard() {
               />
             </div>
             <p className="text-sm text-gray-500 mt-2">
-              {stats.total_orders} orders from {stats.total_clicks} clicks
+              {stats.total_orders || 0} orders from {stats.total_clicks || 0} clicks
             </p>
           </div>
 
@@ -216,7 +226,7 @@ export default function BrandDashboard() {
               </div>
             </div>
             <p className="text-sm text-gray-500">
-              Total sales: KES {parseFloat(stats.total_sales).toLocaleString()}
+              Total sales: KES {parseFloat(stats.total_sales || 0).toLocaleString()}
             </p>
           </div>
         </div>
