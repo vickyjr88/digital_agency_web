@@ -11,6 +11,8 @@ const VEHICLE_TYPES = [
     { value: 'bicycle', label: '🚲 Bicycle' },
     { value: 'tuk_tuk', label: '🛺 Tuk-Tuk' },
     { value: 'car', label: '🚗 Car' },
+    { value: 'commute_walk', label: '🚶 Commute/Walk' },
+    { value: 'courier', label: '📦 Courier' },
 ];
 
 export default function RiderRegister() {
