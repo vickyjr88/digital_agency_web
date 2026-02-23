@@ -427,7 +427,7 @@ function App() {
               <Route path="/tumanasi/track/:trackingNumber" element={<TrackDelivery />} />
 
               {/* Rider pages */}
-              <Route path="/tumanasi/rider/register" element={<RiderRegister />} />
+              <Route path="/tumanasi/rider/register" element={<ProtectedRoute><RiderRegister /></ProtectedRoute>} />
               <Route path="/tumanasi/rider/dashboard" element={
                 <ProtectedRoute><RiderDashboard /></ProtectedRoute>
               } />
