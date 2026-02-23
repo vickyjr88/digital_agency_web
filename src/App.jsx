@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Signup from './pages/auth/Signup';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { FeatureFlagProvider } from './context/FeatureFlagContext';
+import { PostHogProvider } from './context/PostHogContext';
 import { Toaster } from 'sonner';
 import AppLayout from './components/layout/AppLayout';
 
@@ -135,6 +136,7 @@ function App() {
       <FeatureFlagProvider>
         <Toaster richColors position="top-right" />
         <Router>
+          <PostHogProvider>
           <Routes>
             {/* Auth routes - no layout */}
             <Route path="/login" element={<Login />} />
@@ -636,6 +638,7 @@ function App() {
               } />
             </Route>
           </Routes>
+          </PostHogProvider>
         </Router>
       </FeatureFlagProvider>
     </AuthProvider>

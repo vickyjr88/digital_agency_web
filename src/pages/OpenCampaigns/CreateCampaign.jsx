@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { toast } from 'sonner';
+import { trackEvent } from '../../lib/posthog';
 import {
     ArrowLeft, Briefcase, DollarSign, Calendar,
     Instagram, Youtube, Twitter, Video, Image, FileText,
@@ -186,6 +187,18 @@ export default function CreateCampaign() {
             };
 
             const response = await api.createOpenCampaign(payload);
+
+            // Track campaign creation in PostHog
+            trackEvent('campaign_created', {
+                campaign_id: response.campaign_id,
+                campaign_title: formData.title,
+                budget: parseInt(formData.budget),
+                platforms: formData.platforms,
+                content_types: formData.content_types,
+                has_deadline: !!formData.deadline,
+                has_content_generation: !!(formData.voice || formData.content_style || formData.key_messages.length > 0),
+            });
+
             toast.success('Campaign created! Influencers can now bid.');
             navigate(`/campaigns/open/${response.campaign_id}`);
         } catch (error) {

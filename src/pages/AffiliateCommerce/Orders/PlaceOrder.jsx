@@ -22,6 +22,7 @@ import {
 import { productsApi, ordersApi, affiliateApi, brandProfileApi, digitalProductsApi } from '../../../services/affiliateApi';
 import { useAuth } from '../../../context/AuthContext';
 import SEO from '../../../components/SEO';
+import { trackEvent } from '../../../lib/posthog';
 
 export default function PlaceOrder() {
   const { slug } = useParams();
@@ -118,6 +119,16 @@ export default function PlaceOrder() {
       const response = await ordersApi.initializePayment(orderData);
 
       if (response.data.status === 'success' && response.data.authorization_url) {
+        // Track order initiation in PostHog
+        trackEvent('order_initiated', {
+          product_id: product.id,
+          product_name: product.name,
+          product_type: product.is_digital ? 'digital' : 'physical',
+          quantity: quantity,
+          total_amount: calculateTotal(),
+          has_affiliate_code: !!affiliateCode,
+        });
+
         // Redirect to Paystack payment page
         window.location.href = response.data.authorization_url;
       } else {

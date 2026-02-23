@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { identifyUser, resetUser, setUserProperties } from '../lib/posthog';
 
 const AuthContext = createContext(null);
 
@@ -20,6 +21,16 @@ export const AuthProvider = ({ children }) => {
     try {
       const userData = await api.getProfile();
       setUser(userData);
+
+      // Update PostHog user properties
+      if (userData) {
+        setUserProperties({
+          email: userData.email,
+          name: userData.name,
+          role: userData.role,
+          account_type: userData.account_type,
+        });
+      }
     } catch (error) {
       console.error('Failed to load user:', error);
       logout();
@@ -38,6 +49,14 @@ export const AuthProvider = ({ children }) => {
 
       if (userData) {
         setUser(userData);
+
+        // Identify user in PostHog
+        identifyUser(userData.id?.toString() || userData.email, {
+          email: userData.email,
+          name: userData.name,
+          role: userData.role,
+          account_type: userData.account_type,
+        });
       } else {
         await loadUser();
       }
@@ -58,6 +77,14 @@ export const AuthProvider = ({ children }) => {
 
       if (newUser) {
         setUser(newUser);
+
+        // Identify new user in PostHog
+        identifyUser(newUser.id?.toString() || newUser.email, {
+          email: newUser.email,
+          name: newUser.name,
+          role: newUser.role,
+          account_type: newUser.account_type,
+        });
       } else {
         await loadUser();
       }
@@ -72,6 +99,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
+
+    // Reset PostHog user on logout
+    resetUser();
   };
 
   const value = {
