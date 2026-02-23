@@ -62,4 +62,6 @@ export const tumansiApi = {
         api.put(`/tumanasi/admin/deliveries/${delivId}/assign`, { rider_id: riderId }),
     createZone: (body) => api.post('/tumanasi/admin/zones', body),
     updateZone: (id, body) => api.put(`/tumanasi/admin/zones/${id}`, body),
+    deleteZone: (id) => api.delete(`/tumanasi/admin/zones/${id}`),
+    availableRiders: () => api.get('/tumanasi/admin/riders/available'),
 };
