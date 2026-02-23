@@ -83,6 +83,14 @@ import API from './pages/public/API';
 import Integrations from './pages/public/Integrations';
 import Careers from './pages/public/Careers';
 
+// Tumanasi Delivery Service
+import TumansiLanding from './pages/Tumanasi/TumansiLanding';
+import BookingWizard from './pages/Tumanasi/BookingWizard';
+import TrackDelivery from './pages/Tumanasi/TrackDelivery';
+import RiderRegister from './pages/Tumanasi/RiderRegister';
+import RiderDashboard from './pages/Tumanasi/RiderDashboard';
+import TumansiAdmin from './pages/Tumanasi/TumansiAdmin';
+
 
 // Protected Route Component (Simplified for now)
 function ProtectedRoute({ children }) {
@@ -404,6 +412,27 @@ function App() {
               {/* Digital Library (Customer Downloads) */}
               <Route path="/shop/digital-library" element={
                 <DigitalLibrary />
+              } />
+
+              {/* ================================================================ */}
+              {/* TUMANASI DELIVERY SERVICE ROUTES                                  */}
+              {/* ================================================================ */}
+
+              {/* Public Tumanasi pages (no auth required) */}
+              <Route path="/tumanasi" element={<TumansiLanding />} />
+              <Route path="/tumanasi/book" element={<BookingWizard />} />
+              <Route path="/tumanasi/track" element={<TrackDelivery />} />
+              <Route path="/tumanasi/track/:trackingNumber" element={<TrackDelivery />} />
+
+              {/* Rider pages */}
+              <Route path="/tumanasi/rider/register" element={<RiderRegister />} />
+              <Route path="/tumanasi/rider/dashboard" element={
+                <ProtectedRoute><RiderDashboard /></ProtectedRoute>
+              } />
+
+              {/* Admin Tumanasi */}
+              <Route path="/admin/tumanasi" element={
+                <AdminRoute><TumansiAdmin /></AdminRoute>
               } />
 
               {/* Public Influencer Profile by ID (short URL) */}

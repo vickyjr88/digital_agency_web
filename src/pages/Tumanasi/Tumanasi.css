@@ -1,0 +1,1654 @@
+/* ─────────────────────────────────────────────────────────────
+   Tumanasi Global Styles
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+.spin {
+    animation: tum-spin .8s linear infinite;
+}
+
+@keyframes tum-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+:root {
+    --tum-blue: #1E3A8A;
+    --tum-blue-mid: #2563EB;
+    --tum-blue-lt: #EFF6FF;
+    --tum-amber: #F59E0B;
+    --tum-amber-dk: #D97706;
+    --tum-green: #10B981;
+    --tum-red: #EF4444;
+    --tum-gray-50: #F8FAFC;
+    --tum-gray-100: #F1F5F9;
+    --tum-gray-200: #E2E8F0;
+    --tum-gray-400: #94A3B8;
+    --tum-gray-600: #475569;
+    --tum-gray-900: #0F172A;
+    --tum-radius: 14px;
+    --tum-shadow: 0 4px 24px rgba(30, 58, 138, .10);
+    --tum-shadow-lg: 0 12px 48px rgba(30, 58, 138, .18);
+}
+
+/* ── LANDING ───────────────────────────────────────────────── */
+.tum-landing {
+    font-family: 'Poppins', sans-serif;
+    background: #fff;
+}
+
+/* Hero */
+.tum-hero {
+    position: relative;
+    min-height: 88vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+    padding: 100px 6vw 80px;
+    overflow: hidden;
+}
+
+.tum-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1E3A8A 0%, #1d4ed8 50%, #0ea5e9 100%);
+    z-index: 0;
+}
+
+.tum-hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.tum-hero-content {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+}
+
+.tum-brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, .15);
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(8px);
+}
+
+.tum-hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+}
+
+.tum-name {
+    display: block;
+    letter-spacing: 0.06em;
+}
+
+.tum-tagline {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 400;
+    opacity: .85;
+}
+
+.tum-hero-desc {
+    font-size: 1.05rem;
+    opacity: .8;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.tum-hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.tum-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--tum-amber);
+    color: #1E3A8A;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all .2s;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, .4);
+}
+
+.tum-btn-primary:hover {
+    background: var(--tum-amber-dk);
+    transform: translateY(-2px);
+}
+
+.tum-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid rgba(255, 255, 255, .6);
+    color: #fff;
+    padding: 13px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all .2s;
+    backdrop-filter: blur(4px);
+}
+
+.tum-btn-outline:hover {
+    background: rgba(255, 255, 255, .15);
+}
+
+.tum-hero-phones {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.tum-phone-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 50px;
+    padding: 6px 14px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background .2s;
+}
+
+.tum-phone-chip:hover {
+    background: rgba(255, 255, 255, .22);
+}
+
+/* Hero floating card */
+.tum-hero-card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, .15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 20px;
+    padding: 2rem;
+    color: #fff;
+    max-width: 340px;
+    margin-left: auto;
+}
+
+.tum-card-track {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.tum-status-dot {
+    width: 10px;
+    height: 10px;
+    background: #10B981;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1)
+    }
+
+    50% {
+        opacity: .6;
+        transform: scale(1.4)
+    }
+}
+
+.tum-card-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.tum-card-step {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, .08);
+}
+
+.tum-card-step.done {
+    background: rgba(16, 185, 129, .3);
+}
+
+.tum-card-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--tum-amber);
+}
+
+/* ── SECTIONS ──────────────────────────────────────────────── */
+.tum-section {
+    padding: 80px 6vw;
+}
+
+.tum-section-alt {
+    background: var(--tum-gray-50);
+}
+
+.tum-section-dark {
+    background: var(--tum-blue);
+    color: #fff;
+}
+
+.tum-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.tum-section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--tum-gray-900);
+    text-align: center;
+    margin-bottom: .5rem;
+}
+
+.tum-section-sub {
+    text-align: center;
+    color: var(--tum-gray-600);
+    margin-bottom: 3rem;
+    font-size: 1.05rem;
+}
+
+/* Steps */
+.tum-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.tum-step-card {
+    background: #fff;
+    border-radius: var(--tum-radius);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: var(--tum-shadow);
+    border: 1px solid var(--tum-gray-200);
+    position: relative;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.tum-step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--tum-shadow-lg);
+}
+
+.tum-step-num {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--tum-blue);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.tum-step-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--tum-blue-lt);
+    color: var(--tum-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.tum-step-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--tum-gray-900);
+    margin-bottom: 0.5rem;
+}
+
+.tum-step-card p {
+    font-size: 0.88rem;
+    color: var(--tum-gray-600);
+    line-height: 1.6;
+}
+
+/* Features */
+.tum-features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.tum-feature-card {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: var(--tum-radius);
+    padding: 1.5rem;
+    box-shadow: var(--tum-shadow);
+}
+
+.tum-feature-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--tum-blue-lt);
+    color: var(--tum-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tum-feature-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--tum-gray-900);
+    margin-bottom: 4px;
+}
+
+.tum-feature-card p {
+    font-size: 0.88rem;
+    color: var(--tum-gray-600);
+    line-height: 1.6;
+}
+
+/* Pricing CTA */
+.tum-pricing-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, var(--tum-blue), var(--tum-blue-mid));
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    color: #fff;
+}
+
+.tum-pricing-text h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: .5rem;
+}
+
+.tum-pricing-text p {
+    opacity: .8;
+    font-size: 0.92rem;
+}
+
+/* Rider CTA */
+.tum-rider-cta {
+    text-align: center;
+}
+
+.tum-rider-cta h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: .75rem;
+}
+
+.tum-rider-cta p {
+    opacity: .8;
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+}
+
+.tum-btn-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    color: var(--tum-blue);
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all .2s;
+}
+
+.tum-btn-light:hover {
+    background: var(--tum-amber);
+    color: #fff;
+}
+
+/* ── BOOKING WIZARD ──────────────────────────────────────────── */
+.tum-wizard-page {
+    min-height: 100vh;
+    background: var(--tum-gray-50);
+    font-family: 'Poppins', sans-serif;
+    padding: 40px 20px 80px;
+}
+
+.tum-wizard-inner {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.tum-wizard-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.tum-wizard-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--tum-blue);
+}
+
+.tum-wizard-header p {
+    color: var(--tum-gray-600);
+    margin-top: .25rem;
+}
+
+/* Progress */
+.tum-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 2.5rem;
+}
+
+.tum-prog-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--tum-gray-400);
+}
+
+.tum-prog-step.active .tum-prog-circle {
+    background: var(--tum-blue);
+    color: #fff;
+    border-color: var(--tum-blue);
+}
+
+.tum-prog-step.active {
+    color: var(--tum-blue);
+}
+
+.tum-prog-step.done .tum-prog-circle {
+    background: var(--tum-green);
+    border-color: var(--tum-green);
+    color: #fff;
+}
+
+.tum-prog-step.done {
+    color: var(--tum-green);
+}
+
+.tum-prog-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--tum-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all .3s;
+}
+
+.tum-prog-line {
+    width: 60px;
+    height: 2px;
+    background: var(--tum-gray-200);
+    margin-bottom: 20px;
+}
+
+.tum-prog-line.done {
+    background: var(--tum-green);
+}
+
+/* Card */
+.tum-wizard-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: var(--tum-shadow);
+    padding: 2.5rem;
+    border: 1px solid var(--tum-gray-200);
+}
+
+.tum-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--tum-gray-900);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Form fields */
+.tum-field {
+    margin-bottom: 1.25rem;
+}
+
+.tum-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--tum-gray-600);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.tum-input,
+.tum-select,
+.tum-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--tum-gray-200);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    background: #fff;
+}
+
+.tum-input:focus,
+.tum-select:focus,
+.tum-textarea:focus {
+    border-color: var(--tum-blue-mid);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .1);
+}
+
+.tum-textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.tum-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Zone search */
+.tum-zone-search {
+    position: relative;
+}
+
+.tum-zone-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid var(--tum-blue-mid);
+    border-radius: 10px;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: var(--tum-shadow-lg);
+}
+
+.tum-zone-option {
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--tum-gray-100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    transition: background .15s;
+}
+
+.tum-zone-option:hover {
+    background: var(--tum-blue-lt);
+}
+
+.tum-zone-price {
+    font-weight: 700;
+    color: var(--tum-blue);
+    font-size: 0.85rem;
+}
+
+.tum-zone-label {
+    color: var(--tum-gray-400);
+    font-size: 0.78rem;
+}
+
+/* Toggle */
+.tum-toggle-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.tum-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px 16px;
+    border: 1.5px solid var(--tum-gray-200);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--tum-gray-600);
+    transition: all .2s;
+    user-select: none;
+}
+
+.tum-toggle.active {
+    border-color: var(--tum-blue);
+    background: var(--tum-blue-lt);
+    color: var(--tum-blue);
+}
+
+/* Errand type */
+.tum-errand-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .75rem;
+}
+
+.tum-errand-opt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 1rem;
+    border: 1.5px solid var(--tum-gray-200);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--tum-gray-600);
+    transition: all .2s;
+}
+
+.tum-errand-opt:hover {
+    border-color: var(--tum-blue-mid);
+}
+
+.tum-errand-opt.selected {
+    border-color: var(--tum-blue);
+    background: var(--tum-blue-lt);
+    color: var(--tum-blue);
+}
+
+.tum-errand-opt .tum-errand-icon {
+    font-size: 1.6rem;
+}
+
+/* Payment */
+.tum-payment-opts {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.tum-payment-opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--tum-gray-200);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.tum-payment-opt.selected {
+    border-color: var(--tum-blue);
+    background: var(--tum-blue-lt);
+}
+
+.tum-payment-opt input {
+    display: none;
+}
+
+.tum-payment-label {
+    font-weight: 600;
+    color: var(--tum-gray-900);
+}
+
+.tum-payment-desc {
+    font-size: 0.82rem;
+    color: var(--tum-gray-600);
+}
+
+/* Price preview */
+.tum-price-preview {
+    background: linear-gradient(135deg, var(--tum-blue), var(--tum-blue-mid));
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.tum-price-label {
+    font-size: 0.85rem;
+    opacity: .8;
+}
+
+.tum-price-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+/* Summary */
+.tum-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--tum-gray-100);
+    font-size: 0.9rem;
+}
+
+.tum-summary-row:last-child {
+    border-bottom: none;
+}
+
+.tum-summary-key {
+    color: var(--tum-gray-600);
+    font-weight: 500;
+}
+
+.tum-summary-val {
+    font-weight: 600;
+    color: var(--tum-gray-900);
+    text-align: right;
+    max-width: 55%;
+}
+
+/* Wizard nav */
+.tum-wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.tum-btn-back {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: 1.5px solid var(--tum-gray-200);
+    background: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    transition: all .2s;
+    color: var(--tum-gray-600);
+}
+
+.tum-btn-back:hover {
+    border-color: var(--tum-blue);
+    color: var(--tum-blue);
+}
+
+.tum-btn-next {
+    padding: 12px 28px;
+    border-radius: 10px;
+    background: var(--tum-blue);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .2s;
+}
+
+.tum-btn-next:hover {
+    background: var(--tum-blue-mid);
+    transform: translateY(-1px);
+}
+
+.tum-btn-next:disabled {
+    opacity: .5;
+    cursor: default;
+    transform: none;
+}
+
+.tum-btn-submit {
+    padding: 14px 32px;
+    border-radius: 10px;
+    background: var(--tum-green);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .2s;
+}
+
+.tum-btn-submit:hover {
+    background: #059669;
+}
+
+.tum-btn-submit:disabled {
+    opacity: .6;
+    cursor: default;
+}
+
+/* Success */
+.tum-success-box {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: var(--tum-shadow);
+}
+
+.tum-success-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.tum-success-box h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--tum-gray-900);
+    margin-bottom: .5rem;
+}
+
+.tum-success-box p {
+    color: var(--tum-gray-600);
+    margin-bottom: 1.5rem;
+}
+
+.tum-tracking-badge {
+    display: inline-block;
+    background: var(--tum-blue-lt);
+    color: var(--tum-blue);
+    font-size: 1.2rem;
+    font-weight: 800;
+    padding: 10px 28px;
+    border-radius: 10px;
+    letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+}
+
+/* ── TRACKING ──────────────────────────────────────────────── */
+.tum-track-page {
+    min-height: 100vh;
+    background: var(--tum-gray-50);
+    font-family: 'Poppins', sans-serif;
+    padding: 60px 20px;
+}
+
+.tum-track-inner {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.tum-track-search {
+    display: flex;
+    gap: .75rem;
+    margin-bottom: 2rem;
+}
+
+.tum-track-search .tum-input {
+    flex: 1;
+    font-size: 1rem;
+}
+
+.tum-btn-track {
+    padding: 12px 24px;
+    background: var(--tum-blue);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+}
+
+.tum-btn-track:hover {
+    background: var(--tum-blue-mid);
+}
+
+/* Timeline */
+.tum-timeline {
+    position: relative;
+    padding-left: 36px;
+}
+
+.tum-timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--tum-gray-200);
+}
+
+.tum-tl-step {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+
+.tum-tl-dot {
+    position: absolute;
+    left: -36px;
+    top: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--tum-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    z-index: 1;
+}
+
+.tum-tl-step.done .tum-tl-dot {
+    background: var(--tum-green);
+    color: #fff;
+}
+
+.tum-tl-step.active .tum-tl-dot {
+    background: var(--tum-blue);
+    color: #fff;
+    animation: pulse 1.5s infinite;
+}
+
+.tum-tl-label {
+    font-weight: 600;
+    color: var(--tum-gray-900);
+    font-size: 0.9rem;
+}
+
+.tum-tl-sub {
+    font-size: 0.8rem;
+    color: var(--tum-gray-400);
+    margin-top: 2px;
+}
+
+.tum-tl-step:not(.done):not(.active) .tum-tl-label {
+    color: var(--tum-gray-400);
+}
+
+/* delivery info card */
+.tum-delivery-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--tum-shadow);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--tum-gray-200);
+}
+
+.tum-delivery-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--tum-blue);
+    margin-bottom: 1rem;
+}
+
+.tum-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+.tum-info-item {
+    font-size: 0.85rem;
+}
+
+.tum-info-label {
+    color: var(--tum-gray-400);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.tum-info-val {
+    color: var(--tum-gray-900);
+    font-weight: 600;
+}
+
+/* status badge */
+.tum-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.tum-status-badge.pending_assignment {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.tum-status-badge.assigned {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.tum-status-badge.en_route_pickup {
+    background: #EDE9FE;
+    color: #5B21B6;
+}
+
+.tum-status-badge.collected {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.tum-status-badge.en_route_delivery {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.tum-status-badge.delivered {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.tum-status-badge.payment_requested {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.tum-status-badge.completed {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.tum-status-badge.cancelled {
+    background: #F1F5F9;
+    color: #64748B;
+}
+
+/* ── RIDER DASHBOARD ──────────────────────────────────────── */
+.tum-rider-page {
+    min-height: 100vh;
+    background: var(--tum-gray-50);
+    font-family: 'Poppins', sans-serif;
+    padding: 24px 16px 80px;
+    max-width: 540px;
+    margin: 0 auto;
+}
+
+.tum-rider-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.tum-rider-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--tum-gray-900);
+}
+
+.tum-avail-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    transition: all .25s;
+}
+
+.tum-avail-toggle.online {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.tum-avail-toggle.offline {
+    background: var(--tum-gray-100);
+    color: var(--tum-gray-600);
+}
+
+.tum-avail-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.tum-avail-toggle.online .tum-avail-dot {
+    background: var(--tum-green);
+}
+
+.tum-avail-toggle.offline .tum-avail-dot {
+    background: var(--tum-gray-400);
+}
+
+/* Rider stats */
+.tum-rider-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .75rem;
+    margin-bottom: 1.5rem;
+}
+
+.tum-rstat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: var(--tum-shadow);
+}
+
+.tum-rstat-val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--tum-blue);
+}
+
+.tum-rstat-label {
+    font-size: 0.72rem;
+    color: var(--tum-gray-400);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Active delivery card */
+.tum-active-delivery {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--tum-shadow-lg);
+    border: 1px solid var(--tum-gray-200);
+    margin-bottom: 1.5rem;
+}
+
+.tum-ad-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.tum-ad-tracking {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--tum-blue);
+    letter-spacing: 0.06em;
+}
+
+.tum-ad-info {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+}
+
+.tum-ad-loc {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+.tum-ad-loc-icon {
+    margin-top: 2px;
+}
+
+.tum-ad-loc-label {
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--tum-gray-400);
+}
+
+.tum-ad-loc-addr {
+    font-weight: 600;
+    color: var(--tum-gray-900);
+}
+
+.tum-ad-price {
+    background: var(--tum-blue-lt);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.tum-ad-price-val {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--tum-blue);
+}
+
+/* Status progress buttons */
+.tum-status-pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.tum-pipeline-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all .2s;
+}
+
+.tum-pipeline-btn.primary {
+    background: var(--tum-blue);
+    color: #fff;
+}
+
+.tum-pipeline-btn.primary:hover {
+    background: var(--tum-blue-mid);
+}
+
+.tum-pipeline-btn.success {
+    background: var(--tum-green);
+    color: #fff;
+}
+
+.tum-pipeline-btn.amber {
+    background: var(--tum-amber);
+    color: #1E3A8A;
+}
+
+.tum-pipeline-btn:disabled {
+    opacity: .5;
+    cursor: default;
+}
+
+/* Photo capture */
+.tum-photo-area {
+    border: 2px dashed var(--tum-gray-200);
+    border-radius: 14px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    color: var(--tum-gray-400);
+    margin-bottom: 1rem;
+}
+
+.tum-photo-area:hover {
+    border-color: var(--tum-blue-mid);
+    color: var(--tum-blue);
+}
+
+.tum-photo-area.has-photo {
+    border-color: var(--tum-green);
+}
+
+.tum-photo-preview {
+    width: 100%;
+    border-radius: 10px;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+/* Jobs list */
+.tum-jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tum-job-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: var(--tum-shadow);
+    border: 1px solid var(--tum-gray-200);
+}
+
+.tum-job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .75rem;
+}
+
+.tum-job-type {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--tum-blue);
+}
+
+.tum-job-price-tag {
+    background: var(--tum-amber);
+    color: #000;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+}
+
+.tum-job-loc {
+    font-size: 0.85rem;
+    color: var(--tum-gray-600);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tum-btn-accept {
+    width: 100%;
+    margin-top: .75rem;
+    padding: 11px;
+    background: var(--tum-blue);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.tum-btn-accept:hover {
+    background: var(--tum-blue-mid);
+}
+
+/* Rating stars */
+.tum-stars {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+}
+
+.tum-star {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: transform .1s;
+    filter: grayscale(1);
+}
+
+.tum-star.active {
+    filter: none;
+    transform: scale(1.15);
+}
+
+/* ── ADMIN ─────────────────────────────────────────────────── */
+.tum-admin-page {
+    font-family: 'Poppins', sans-serif;
+    padding: 32px 24px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tum-admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.tum-admin-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--tum-gray-900);
+}
+
+.tum-admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tum-astat {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: var(--tum-shadow);
+    border: 1px solid var(--tum-gray-200);
+}
+
+.tum-astat-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--tum-blue);
+}
+
+.tum-astat-label {
+    font-size: 0.78rem;
+    color: var(--tum-gray-400);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.tum-admin-table-wrap {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--tum-shadow);
+    overflow: hidden;
+    border: 1px solid var(--tum-gray-200);
+}
+
+.tum-admin-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--tum-gray-100);
+    flex-wrap: wrap;
+}
+
+.tum-admin-toolbar input,
+.tum-admin-toolbar select {
+    padding: 9px 14px;
+    border: 1.5px solid var(--tum-gray-200);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+}
+
+.tum-admin-toolbar input:focus,
+.tum-admin-toolbar select:focus {
+    border-color: var(--tum-blue-mid);
+}
+
+.tum-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.tum-admin-table th {
+    background: var(--tum-gray-50);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--tum-gray-600);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--tum-gray-200);
+}
+
+.tum-admin-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--tum-gray-100);
+    vertical-align: middle;
+}
+
+.tum-admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.tum-admin-table tr:hover td {
+    background: var(--tum-gray-50);
+}
+
+.tum-admin-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--tum-gray-200);
+    margin-bottom: 1.5rem;
+}
+
+.tum-admin-tab {
+    padding: 10px 24px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    color: var(--tum-gray-400);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all .2s;
+}
+
+.tum-admin-tab.active {
+    color: var(--tum-blue);
+    border-bottom-color: var(--tum-blue);
+}
+
+.tum-verify-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all .2s;
+}
+
+.tum-verify-btn.approve {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.tum-verify-btn.reject {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .tum-hero {
+        grid-template-columns: 1fr;
+        padding: 80px 6vw 60px;
+    }
+
+    .tum-hero-card {
+        display: none;
+    }
+
+    .tum-steps-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .tum-admin-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .tum-steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tum-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tum-row {
+        grid-template-columns: 1fr;
+    }
+
+    .tum-errand-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tum-admin-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .tum-pricing-cta {
+        flex-direction: column;
+        padding: 2rem;
+    }
+
+    .tum-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

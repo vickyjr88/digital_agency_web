@@ -29,6 +29,7 @@ import {
   ClipboardCheck,
   Settings,
   Link2,
+  Truck,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import PublicNavbar from './PublicNavbar';
@@ -57,12 +58,19 @@ export default function AppLayout() {
     '/shop/p',
     '/shop/payment/verify',
     '/shop/digital-library',
+    '/tumanasi',
+    '/tumanasi/book',
+    '/tumanasi/track',
+    '/tumanasi/rider/register',
   ];
 
   // Check if current route is a public route
   const isPublicRoute = publicRoutes.some(route =>
     location.pathname === route || location.pathname.startsWith(route + '/')
   );
+
+  // Check if current route is an admin route (admin has its own layout)
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   // Define menu items based on user type
   const getMenuItems = () => {
@@ -91,6 +99,11 @@ export default function AppLayout() {
       { path: '/affiliate/products', icon: Package, label: 'My Products' },
       { path: '/affiliate/orders', icon: ClipboardCheck, label: 'Orders' },
       { path: '/affiliate/analytics', icon: BarChart2, label: 'Affiliate Stats' },
+
+      // Tumanasi Delivery
+      { type: 'divider', label: 'Tumanasi Delivery' },
+      { path: '/tumanasi', icon: Truck, label: 'Book a Delivery' },
+      { path: '/tumanasi/track', icon: Truck, label: 'Track Parcel' },
     ];
 
     // Add Influencer Tools section for influencers
@@ -110,7 +123,8 @@ export default function AppLayout() {
     if (user?.user_type?.toLowerCase() === 'admin' || user?.role?.toLowerCase() === 'admin') {
       items.push(
         { type: 'divider', label: 'Admin' },
-        { path: '/admin', icon: Shield, label: 'Admin Panel' }
+        { path: '/admin', icon: Shield, label: 'Admin Panel' },
+        { path: '/admin/tumanasi', icon: Truck, label: 'Tumanasi Admin' }
       );
     }
 
@@ -160,8 +174,8 @@ export default function AppLayout() {
               to={item.path}
               onClick={() => isMobile && closeMobileSidebar()}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-blue-50 text-blue-600'
+                : 'text-gray-600 hover:bg-gray-50'
                 }`}
             >
               <item.icon size={20} />
@@ -183,10 +197,10 @@ export default function AppLayout() {
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             {user?.user_type && (
               <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wide ${user.user_type.toLowerCase() === 'admin'
-                  ? 'bg-purple-100 text-purple-700'
-                  : user.user_type.toLowerCase() === 'influencer'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-blue-100 text-blue-700'
+                ? 'bg-purple-100 text-purple-700'
+                : user.user_type.toLowerCase() === 'influencer'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-blue-100 text-blue-700'
                 }`}>
                 {user.user_type}
               </span>
@@ -206,6 +220,15 @@ export default function AppLayout() {
       </div>
     </>
   );
+
+  // Admin layout - no navbar, no footer, just content
+  if (isAdminRoute) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Outlet />
+      </div>
+    );
+  }
 
   // Authenticated layout with sidebar (but not on public routes)
   if (isAuthenticated && !isPublicRoute) {
