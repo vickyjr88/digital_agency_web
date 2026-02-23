@@ -38,6 +38,7 @@ export const tumansiApi = {
     updateRider: (body) => api.put('/tumanasi/rider/me', body),
     setAvailability: (available) => api.put('/tumanasi/rider/availability', { is_available: available }),
     riderDeliveries: (status) => api.get('/tumanasi/rider/deliveries', { params: status ? { status } : {} }),
+    riderLogClientDelivery: (body) => api.post('/tumanasi/rider/log-delivery', body),
     availableJobs: () => api.get('/tumanasi/rider/deliveries/available'),
     acceptDelivery: (id) => api.put(`/tumanasi/rider/deliveries/${id}/accept`),
     updateStatus: (id, status, note) => api.put(`/tumanasi/rider/deliveries/${id}/status`, { status, note }),

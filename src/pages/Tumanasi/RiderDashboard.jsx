@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { tumansiApi } from '../../services/tumansiApi';
 import {
     MapPin, Camera, CheckCircle, AlertCircle, Loader,
-    Package, Phone, ChevronRight, Clock, Star, TrendingUp
+    Package, Phone, ChevronRight, Clock, Star, TrendingUp, X, Plus, Save
 } from 'lucide-react';
 import './Tumanasi.css';
 
@@ -70,6 +70,7 @@ export default function RiderDashboard() {
     const navigate = useNavigate();
 
     const [rider, setRider] = useState(null);
+    const [notRegistered, setNotRegistered] = useState(false);
     const [activeJob, setActiveJob] = useState(null);
     const [jobs, setJobs] = useState([]);
     const [tab, setTab] = useState('active');   // active | available | history
@@ -78,6 +79,12 @@ export default function RiderDashboard() {
     const [acting, setActing] = useState(false);
     const [photoFile, setPhotoFile] = useState(null);
 
+    // Context for logging delivery for client
+    const [showLogModal, setShowLogModal] = useState(false);
+    const [zones, setZones] = useState([]);
+    const [df, setDf] = useState({ errand_type: 'parcel', customer_name: '', customer_phone: '', pickup_address: '', dropoff_address: '', dropoff_area_id: '', payment_method: 'cash_on_delivery' });
+    const [loggingReq, setLoggingReq] = useState(false);
+
     const load = async () => {
         try {
             const [riderRes, activeRes] = await Promise.all([
@@ -85,6 +92,7 @@ export default function RiderDashboard() {
                 tumansiApi.riderDeliveries(),
             ]);
             setRider(riderRes.data);
+            setNotRegistered(false);
 
             const all = activeRes.data;
             const active = all.find(d =>
@@ -92,11 +100,24 @@ export default function RiderDashboard() {
             );
             setActiveJob(active || null);
             setHistory(all.filter(d => ['completed', 'cancelled'].includes(d.status)));
-        } catch {
-            navigate('/tumanasi/rider');
+        } catch (err) {
+            if (err.response?.status === 404) {
+                setNotRegistered(true);
+            } else {
+                toast.error('Failed to load rider data');
+            }
         } finally {
             setLoading(false);
         }
+    };
+
+    const loadZ = async () => {
+        if (zones.length > 0) return;
+        try {
+            const z = await tumansiApi.listZones();
+            setZones(z.data);
+            if (z.data.length > 0) setDf(d => ({ ...d, dropoff_area_id: z.data[0].id }));
+        } catch (e) { toast.error('Failed to load zones'); }
     };
 
     const loadJobs = async () => {
@@ -108,6 +129,7 @@ export default function RiderDashboard() {
 
     useEffect(() => { load(); }, []);
     useEffect(() => { if (tab === 'available') loadJobs(); }, [tab]);
+    useEffect(() => { if (showLogModal) loadZ(); }, [showLogModal]);
 
     const toggleAvailability = async () => {
         try {
@@ -178,6 +200,19 @@ export default function RiderDashboard() {
         </div>
     );
 
+    if (notRegistered) return (
+        <div className="tum-rider-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+            <div style={{ background: '#fff', borderRadius: 16, padding: '3rem 2rem', textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', maxWidth: 450 }}>
+                <Bike size={54} style={{ color: 'var(--tum-blue)', marginBottom: '1.5rem', margin: '0 auto' }} />
+                <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, color: 'var(--tum-gray-900)', marginBottom: '.5rem' }}>Not a Rider Yet</h2>
+                <p style={{ color: 'var(--tum-gray-600)', marginBottom: '2rem', lineHeight: 1.6 }}>You currently don't have an active rider profile on our system. Register to start making money taking deliveries!</p>
+                <button className="tum-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => navigate('/tumanasi/rider/register')}>
+                    Register as a Rider <ChevronRight size={18} />
+                </button>
+            </div>
+        </div>
+    );
+
     if (!rider?.is_verified) return (
         <div className="tum-rider-page">
             <div style={{ background: '#FEF3C7', borderRadius: 16, padding: '2rem', textAlign: 'center', border: '1px solid #FDE68A' }}>
@@ -195,17 +230,24 @@ export default function RiderDashboard() {
         <div className="tum-rider-page">
             {/* Top bar */}
             <div className="tum-rider-topbar">
-                <div>
-                    <div className="tum-rider-name">Hey, {rider.full_name.split(' ')[0]} 👋</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--tum-gray-400)' }}>⭐ {parseFloat(rider.average_rating || 0).toFixed(1)} · {rider.completed_deliveries} deliveries</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flex: 1, marginRight: '1rem' }}>
+                    <div>
+                        <div className="tum-rider-name">Hey, {rider.full_name.split(' ')[0]} 👋</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--tum-gray-400)' }}>⭐ {parseFloat(rider.average_rating || 0).toFixed(1)} · {rider.completed_deliveries} deliveries</div>
+                    </div>
                 </div>
-                <button
-                    className={`tum-avail-toggle ${rider.is_available ? 'online' : 'offline'}`}
-                    onClick={toggleAvailability}
-                >
-                    <span className="tum-avail-dot" />
-                    {rider.is_available ? 'Online' : 'Offline'}
-                </button>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <button className="tum-btn-outline" style={{ display: 'flex', gap: 6, alignItems: 'center', padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setShowLogModal(true)}>
+                        <Plus size={14} /> Log Client Delivery
+                    </button>
+                    <button
+                        className={`tum-avail-toggle ${rider.is_available ? 'online' : 'offline'}`}
+                        onClick={toggleAvailability}
+                    >
+                        <span className="tum-avail-dot" />
+                        {rider.is_available ? 'Online' : 'Offline'}
+                    </button>
+                </div>
             </div>
 
             {/* Stats */}
@@ -354,6 +396,84 @@ export default function RiderDashboard() {
                             </div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* ── LOG CLIENT DELIVERY MODAL ── */}
+            {showLogModal && (
+                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflowY: 'auto', padding: '1rem' }}>
+                    <div style={{ background: '#fff', borderRadius: 16, width: '100%', maxWidth: 500, padding: '1.5rem', position: 'relative', marginTop: 'max(4vh, 20px)', marginBottom: 'max(4vh, 20px)' }}>
+                        <button onClick={() => setShowLogModal(false)} style={{ position: 'absolute', right: 16, top: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--tum-gray-400)' }}>
+                            <X size={24} />
+                        </button>
+                        <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.3rem', color: 'var(--tum-gray-900)', marginBottom: '1rem' }}>Log Client Delivery</h2>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--tum-gray-500)', marginBottom: '1.5rem' }}>Enter the client's errand details. This delivery will be logged and instantly assigned to you.</p>
+
+                        <div style={{ display: 'grid', gap: '1rem' }}>
+                            <div>
+                                <label className="tum-label">Errand Type</label>
+                                <select className="tum-input" value={df.errand_type} onChange={e => setDf({ ...df, errand_type: e.target.value })}>
+                                    {['parcel', 'document', 'food', 'shopping', 'errand'].map(x => <option key={x} value={x}>{x.replace('_', ' ')}</option>)}
+                                </select>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                <div><label className="tum-label">Client Name</label><input className="tum-input" placeholder="e.g. Jane Doe" value={df.customer_name} onChange={e => setDf({ ...df, customer_name: e.target.value })} /></div>
+                                <div><label className="tum-label">Client Phone</label><input className="tum-input" placeholder="+254..." value={df.customer_phone} onChange={e => setDf({ ...df, customer_phone: e.target.value })} /></div>
+                            </div>
+                            <div>
+                                <label className="tum-label">Pickup Location (From client)</label>
+                                <input className="tum-input" value={df.pickup_address} onChange={e => setDf({ ...df, pickup_address: e.target.value })} />
+                            </div>
+                            <div>
+                                <label className="tum-label">Drop-off Area (Determines Price)</label>
+                                <select className="tum-input" value={df.dropoff_area_id} onChange={e => setDf({ ...df, dropoff_area_id: e.target.value })}>
+                                    <option value="">Select a zone...</option>
+                                    {zones.map(z => <option key={z.id} value={z.id}>{z.area_name} ({z.zone_name}) - KES {parseFloat(z.price_kes)}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="tum-label">Specific Drop-off Address</label>
+                                <input className="tum-input" value={df.dropoff_address} onChange={e => setDf({ ...df, dropoff_address: e.target.value })} />
+                            </div>
+                            <div>
+                                <label className="tum-label">Payment Collection</label>
+                                <select className="tum-input" value={df.payment_method} onChange={e => setDf({ ...df, payment_method: e.target.value })}>
+                                    <option value="cash_on_delivery">Cash on Delivery (You collect)</option>
+                                    <option value="mobile_money">MPESA (Client paid online)</option>
+                                </select>
+                            </div>
+                            <button
+                                className="tum-btn-primary"
+                                style={{ justifyContent: 'center', marginTop: '1rem' }}
+                                disabled={loggingReq || !df.customer_name || !df.customer_phone || !df.pickup_address || !df.dropoff_address || !df.dropoff_area_id}
+                                onClick={async () => {
+                                    setLoggingReq(true);
+                                    try {
+                                        await tumansiApi.riderLogClientDelivery({
+                                            customer_name: df.customer_name,
+                                            customer_phone: df.customer_phone,
+                                            errand_type: df.errand_type,
+                                            pickup_address: df.pickup_address,
+                                            dropoff_address: df.dropoff_address,
+                                            dropoff_area_id: df.dropoff_area_id,
+                                            payment_method: df.payment_method,
+                                            errand_description: 'Logged by Rider'
+                                        });
+                                        toast.success('Delivery logged and assigned to you!');
+                                        setShowLogModal(false);
+                                        setTab('active');
+                                        await load();
+                                    } catch (err) {
+                                        toast.error(err?.response?.data?.detail || 'Failed to log delivery');
+                                    } finally {
+                                        setLoggingReq(false);
+                                    }
+                                }}
+                            >
+                                {loggingReq ? <Loader size={16} className="spin" /> : <Save size={16} />} Save & Start Delivery
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

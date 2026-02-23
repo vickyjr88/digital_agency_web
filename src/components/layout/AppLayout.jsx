@@ -30,6 +30,7 @@ import {
   Settings,
   Link2,
   Truck,
+  Bike,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import PublicNavbar from './PublicNavbar';
@@ -104,7 +105,8 @@ export default function AppLayout() {
       // Tumanasi Delivery
       { type: 'divider', label: 'Tumanasi Delivery' },
       { path: '/tumanasi', icon: Truck, label: 'Book a Delivery' },
-      { path: '/tumanasi/track', icon: Truck, label: 'Track Parcel' },
+      { path: '/tumanasi/track', icon: Target, label: 'Track Parcel' },
+      { path: '/tumanasi/rider/dashboard', icon: Bike, label: 'Rider Dashboard' },
     ];
 
     // Add Influencer Tools section for influencers
