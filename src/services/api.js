@@ -1,5 +1,7 @@
 
 import axios from 'axios';
+import { captureApiError, captureException } from '../lib/posthog';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4001/api';
 
 class ApiService {
@@ -10,6 +12,7 @@ class ApiService {
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
     const token = localStorage.getItem('token');
+    const method = options.method || 'GET';
 
     const headers = {
       'Content-Type': 'application/json',
@@ -19,7 +22,7 @@ class ApiService {
 
     const axiosConfig = {
       url,
-      method: options.method || 'GET',
+      method,
       headers,
       data: options.body ? JSON.parse(options.body) : undefined,
       params: options.params,
@@ -29,14 +32,28 @@ class ApiService {
       const response = await axios(axiosConfig);
       return response.data;
     } catch (error) {
+      // Capture API error to PostHog
+      captureApiError(error, endpoint, method);
+
       if (error.response) {
         // Server responded with a status other than 2xx
-        throw new Error(error.response.data?.message || error.response.statusText || 'Request failed');
+        const errorMessage = error.response.data?.message || error.response.data?.detail || error.response.statusText || 'Request failed';
+        const apiError = new Error(errorMessage);
+        apiError.status = error.response.status;
+        apiError.data = error.response.data;
+        throw apiError;
       } else if (error.request) {
         // Request was made but no response received
-        throw new Error('No response from server');
+        const networkError = new Error('No response from server');
+        networkError.isNetworkError = true;
+        throw networkError;
       } else {
         // Something else happened
+        captureException(error, {
+          context: 'api_request_setup',
+          endpoint,
+          method,
+        });
         throw new Error(error.message || 'Request failed');
       }
     }

@@ -146,6 +146,64 @@ export const getFeatureFlagPayload = (flagKey) => {
   }
 };
 
+// Capture exceptions and errors
+export const captureException = (error, context = {}) => {
+  if (!isInitialized) {
+    console.error('PostHog not initialized, logging error locally:', error);
+    return;
+  }
+
+  try {
+    // Extract error information
+    const errorInfo = {
+      message: error?.message || 'Unknown error',
+      name: error?.name || 'Error',
+      stack: error?.stack || '',
+      ...context,
+    };
+
+    // Track as an error event
+    posthog.capture('$exception', {
+      $exception_message: errorInfo.message,
+      $exception_type: errorInfo.name,
+      $exception_stack_trace_raw: errorInfo.stack,
+      ...context,
+    });
+
+    if (import.meta.env.DEV) {
+      console.error('Exception captured:', errorInfo);
+    }
+  } catch (captureError) {
+    console.error('Failed to capture exception:', captureError);
+  }
+};
+
+// Capture API errors
+export const captureApiError = (error, endpoint, method = 'GET') => {
+  if (!isInitialized) {
+    return;
+  }
+
+  try {
+    const errorData = {
+      endpoint,
+      method,
+      status: error?.response?.status || 0,
+      statusText: error?.response?.statusText || '',
+      message: error?.message || 'API Error',
+      data: error?.response?.data || null,
+    };
+
+    trackEvent('api_error', errorData);
+
+    if (import.meta.env.DEV) {
+      console.error('API Error captured:', errorData);
+    }
+  } catch (captureError) {
+    console.error('Failed to capture API error:', captureError);
+  }
+};
+
 // Export PostHog instance for advanced usage
 export { posthog };
 
@@ -158,5 +216,7 @@ export default {
   trackPageView,
   isFeatureEnabled,
   getFeatureFlagPayload,
+  captureException,
+  captureApiError,
   posthog,
 };
