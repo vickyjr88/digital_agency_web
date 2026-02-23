@@ -90,6 +90,7 @@ import TrackDelivery from './pages/Tumanasi/TrackDelivery';
 import RiderRegister from './pages/Tumanasi/RiderRegister';
 import RiderDashboard from './pages/Tumanasi/RiderDashboard';
 import TumansiAdmin from './pages/Tumanasi/TumansiAdmin';
+import TumansiPricing from './pages/Tumanasi/TumansiPricing';
 
 
 // Protected Route Component (Simplified for now)
@@ -420,6 +421,7 @@ function App() {
 
               {/* Public Tumanasi pages (no auth required) */}
               <Route path="/tumanasi" element={<TumansiLanding />} />
+              <Route path="/tumanasi/pricing" element={<TumansiPricing />} />
               <Route path="/tumanasi/book" element={<BookingWizard />} />
               <Route path="/tumanasi/track" element={<TrackDelivery />} />
               <Route path="/tumanasi/track/:trackingNumber" element={<TrackDelivery />} />

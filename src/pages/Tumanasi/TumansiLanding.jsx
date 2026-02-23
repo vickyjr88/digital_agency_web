@@ -47,6 +47,9 @@ export default function TumansiLanding() {
                             Book a Delivery
                             <ArrowRight size={18} />
                         </Link>
+                        <Link to="/tumanasi/pricing" className="tum-btn-outline">
+                            View Prices
+                        </Link>
                         <Link to="/tumanasi/track" className="tum-btn-outline">
                             Track a Parcel
                         </Link>
@@ -123,9 +126,14 @@ export default function TumansiLanding() {
                         <h2>Prices from KES 100</h2>
                         <p>Within CBD from KES 100 · Ngong Road from KES 300 · Thika Road from KES 250 · and 200+ more areas</p>
                     </div>
-                    <Link to="/tumanasi/book" className="tum-btn-primary">
-                        Book Now <ChevronRight size={18} />
-                    </Link>
+                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <Link to="/tumanasi/book" className="tum-btn-primary">
+                            Book Now <ChevronRight size={18} />
+                        </Link>
+                        <Link to="/tumanasi/pricing" className="tum-btn-outline" style={{ background: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.4)', color: '#fff' }}>
+                            Full Price List
+                        </Link>
+                    </div>
                 </div>
             </section>
 

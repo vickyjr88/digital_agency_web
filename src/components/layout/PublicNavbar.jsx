@@ -45,6 +45,12 @@ export default function PublicNavbar() {
             >
               🚚 Delivery
             </Link>
+            <Link
+              to="/tumanasi/pricing"
+              className="text-gray-600 hover:text-orange-600 transition-colors font-medium"
+            >
+              Pricing
+            </Link>
             {isAuthenticated ? (
               <Link
                 to="/dashboard"
@@ -118,6 +124,13 @@ export default function PublicNavbar() {
                 onClick={closeMobileMenu}
               >
                 🚚 Delivery
+              </Link>
+              <Link
+                to="/tumanasi/pricing"
+                className="text-gray-600 hover:text-orange-600 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                onClick={closeMobileMenu}
+              >
+                Delivery Pricing
               </Link>
               {isAuthenticated ? (
                 <Link

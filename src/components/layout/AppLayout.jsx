@@ -61,6 +61,7 @@ export default function AppLayout() {
     '/tumanasi',
     '/tumanasi/book',
     '/tumanasi/track',
+    '/tumanasi/pricing',
     '/tumanasi/rider/register',
   ];
 
