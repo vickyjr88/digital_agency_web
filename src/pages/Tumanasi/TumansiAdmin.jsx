@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 import {
     BarChart3, Truck, Users, MapPin, RefreshCw, Search,
     CheckCircle, XCircle, Plus, Edit2, Trash2, ToggleLeft,
-    ToggleRight, DollarSign, X, ChevronDown, Save, UserCheck,
-    AlertTriangle,
+    ToggleRight, DollarSign, X, Save, UserCheck,
+    AlertTriangle, FileEdit,
 } from 'lucide-react';
 import './Tumanasi.css';
 
@@ -21,6 +21,11 @@ const S_COLOR = {
     completed: ['#065F46', '#D1FAE5'],
     cancelled: ['#374151', '#F3F4F6'],
 };
+
+const ERRAND_TYPES = ['parcel', 'document', 'food', 'shopping', 'errand'];
+const STATUSES = ['pending_assignment', 'assigned', 'en_route_pickup', 'collected', 'en_route_delivery', 'delivered', 'payment_requested', 'completed', 'cancelled'];
+const PAY_METHODS = ['cash_on_delivery', 'mobile_money', 'card'];
+const PAY_STATUSES = ['pending', 'paid', 'failed'];
 
 /* ─── Sidebar items ─────────────────────────────────────────────────────────── */
 const SIDEBAR = [
@@ -103,9 +108,11 @@ export default function TumansiAdmin() {
     const [zoneSearch, setZoneSearch] = useState('');
 
     /* modals */
-    const [zoneModal, setZoneModal] = useState(null);   // null | {zone} | 'new'
-    const [assignModal, setAssignModal] = useState(null); // null | delivery
-    const [deleteConfirm, setDeleteConfirm] = useState(null); // null | zone
+    const [zoneModal, setZoneModal] = useState(null);
+    const [assignModal, setAssignModal] = useState(null);
+    const [deleteConfirm, setDeleteConfirm] = useState(null);
+    const [editDelivery, setEditDelivery] = useState(null);  // delivery being edited
+    const [df, setDf] = useState({});    // delivery form state
 
     /* zone form state */
     const [zf, setZf] = useState({ zone_name: '', area_name: '', price_kes: '' });
@@ -130,6 +137,55 @@ export default function TumansiAdmin() {
     }, []);
 
     useEffect(() => { loadAll(); }, [loadAll]);
+
+    /* ── Open edit delivery modal ── */
+    const openEditDelivery = (d) => {
+        setDf({
+            customer_name: d.customer_name || '',
+            customer_phone: d.customer_phone || '',
+            customer_email: d.customer_email || '',
+            errand_type: d.errand_type || 'parcel',
+            errand_description: d.errand_description || '',
+            special_instructions: d.special_instructions || '',
+            is_fragile: d.is_fragile ?? false,
+            requires_handling: d.requires_handling ?? false,
+            pickup_address: d.pickup_address || '',
+            pickup_contact_name: d.pickup_contact_name || '',
+            pickup_contact_phone: d.pickup_contact_phone || '',
+            dropoff_address: d.dropoff_address || '',
+            dropoff_contact_name: d.dropoff_contact_name || '',
+            dropoff_contact_phone: d.dropoff_contact_phone || '',
+            final_price_kes: String(d.quoted_price_kes || ''),
+            status: d.status || 'pending_assignment',
+            payment_status: d.payment_status || 'pending',
+            payment_method: d.payment_method || 'cash_on_delivery',
+            cancellation_reason: d.cancellation_reason || '',
+        });
+        setEditDelivery(d);
+    };
+
+    /* ── Save delivery edits ── */
+    const saveDelivery = async () => {
+        setSaving(true);
+        try {
+            const payload = {
+                ...df,
+                final_price_kes: df.final_price_kes ? parseFloat(df.final_price_kes) : undefined,
+            };
+            // strip empty strings to avoid overwriting with blanks
+            Object.keys(payload).forEach(k => { if (payload[k] === '') delete payload[k]; });
+            const res = await tumansiApi.updateDelivery(editDelivery.id, payload);
+            // Patch in delivery list
+            setDeliveries(ds => ds.map(d => d.id === editDelivery.id ? {
+                ...d,
+                ...payload,
+                quoted_price_kes: payload.final_price_kes || d.quoted_price_kes,
+            } : d));
+            toast.success('Delivery updated!');
+            setEditDelivery(null);
+        } catch (e) { toast.error(e.response?.data?.detail || 'Save failed'); }
+        finally { setSaving(false); }
+    };
 
     /* ── Open zone modal ── */
     const openZone = (zone = null) => {
@@ -551,6 +607,80 @@ export default function TumansiAdmin() {
                     <button disabled={saving || !selectedRider} onClick={doAssign} style={{ width: '100%', padding: '12px', background: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: saving || !selectedRider ? .6 : 1 }}>
                         <UserCheck size={15} /> {saving ? 'Assigning…' : 'Assign Rider'}
                     </button>
+                </Modal>
+            )}
+
+            {/* Edit delivery modal (admin override) */}
+            {editDelivery && (
+                <Modal title={`✏️ Edit Delivery — ${editDelivery.tracking_number}`} onClose={() => setEditDelivery(null)}>
+                    <div style={{ maxHeight: '65vh', overflowY: 'auto', paddingRight: 8 }}>
+                        {/* Section: Status & Pricing */}
+                        <div style={{ background: '#f8fafc', padding: 12, borderRadius: 10, marginBottom: 16 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                                <Field label="Status">
+                                    <select style={inp} value={df.status} onChange={e => setDf(p => ({ ...p, status: e.target.value }))}>
+                                        {STATUSES.map(s => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
+                                    </select>
+                                </Field>
+                                <Field label="Final Price (KES)">
+                                    <input style={inp} type="number" value={df.final_price_kes} onChange={e => setDf(p => ({ ...p, final_price_kes: e.target.value }))} placeholder="Override quoted price" />
+                                </Field>
+                            </div>
+                        </div>
+
+                        {/* Section: Payment */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <Field label="Pay Method">
+                                <select style={inp} value={df.payment_method} onChange={e => setDf(p => ({ ...p, payment_method: e.target.value }))}>
+                                    {PAY_METHODS.map(s => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
+                                </select>
+                            </Field>
+                            <Field label="Pay Status">
+                                <select style={inp} value={df.payment_status} onChange={e => setDf(p => ({ ...p, payment_status: e.target.value }))}>
+                                    {PAY_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                            </Field>
+                        </div>
+
+                        {/* Section: Addresses */}
+                        <Field label="Pickup Address">
+                            <input style={inp} value={df.pickup_address} onChange={e => setDf(p => ({ ...p, pickup_address: e.target.value }))} />
+                        </Field>
+                        <Field label="Dropoff Address">
+                            <input style={inp} value={df.dropoff_address} onChange={e => setDf(p => ({ ...p, dropoff_address: e.target.value }))} />
+                        </Field>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <Field label="Pickup Contact Phone">
+                                <input style={inp} value={df.pickup_contact_phone} onChange={e => setDf(p => ({ ...p, pickup_contact_phone: e.target.value }))} placeholder="+254..." />
+                            </Field>
+                            <Field label="Dropoff Contact Phone">
+                                <input style={inp} value={df.dropoff_contact_phone} onChange={e => setDf(p => ({ ...p, dropoff_contact_phone: e.target.value }))} placeholder="+254..." />
+                            </Field>
+                        </div>
+
+                        {/* Section: Customer */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <Field label="Customer Name">
+                                <input style={inp} value={df.customer_name} onChange={e => setDf(p => ({ ...p, customer_name: e.target.value }))} />
+                            </Field>
+                            <Field label="Customer Phone">
+                                <input style={inp} value={df.customer_phone} onChange={e => setDf(p => ({ ...p, customer_phone: e.target.value }))} />
+                            </Field>
+                        </div>
+
+                        {df.status === 'cancelled' && (
+                            <Field label="Cancellation Reason">
+                                <textarea style={{ ...inp, minHeight: 60, resize: 'vertical' }} value={df.cancellation_reason} onChange={e => setDf(p => ({ ...p, cancellation_reason: e.target.value }))} />
+                            </Field>
+                        )}
+                    </div>
+
+                    <div style={{ marginTop: 16 }}>
+                        <button disabled={saving} onClick={saveDelivery} style={{ width: '100%', padding: '12px', background: '#0f62a8', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                            <Save size={15} /> {saving ? 'Saving…' : 'Save Changes'}
+                        </button>
+                    </div>
                 </Modal>
             )}
         </div>

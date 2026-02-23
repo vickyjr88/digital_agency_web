@@ -58,6 +58,7 @@ export const tumansiApi = {
     adminDeliveries: (params) => api.get('/tumanasi/admin/deliveries', { params }),
     adminRiders: (params) => api.get('/tumanasi/admin/riders', { params }),
     verifyRider: (id, body) => api.put(`/tumanasi/admin/riders/${id}/verify`, body),
+    updateDelivery: (id, body) => api.put(`/tumanasi/admin/deliveries/${id}`, body),
     assignRider: (delivId, riderId) =>
         api.put(`/tumanasi/admin/deliveries/${delivId}/assign`, { rider_id: riderId }),
     createZone: (body) => api.post('/tumanasi/admin/zones', body),
