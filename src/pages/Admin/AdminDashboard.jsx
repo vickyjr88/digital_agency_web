@@ -12,6 +12,8 @@ import AdminWithdrawals from './AdminWithdrawals';
 import AdminSubscriptionTransactions from './AdminSubscriptionTransactions';
 import AdminWalletTransactions from './AdminWalletTransactions';
 import AdminDisputes from './AdminDisputes';
+import AdminUsersList from '../../features/admin/AdminUsersList';
+import AdminBrandsList from '../../features/admin/AdminBrandsList';
 import { disputeApi } from '../../services/marketplaceApi';
 
 export default function AdminDashboard({ defaultTab = 'overview', children }) {
@@ -71,12 +73,10 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
     const fetchAdminData = async () => {
         setLoading(true);
         try {
-            if (activeTab === 'users') {
-                const res = await api.getAdminUsers();
-                setData(d => ({ ...d, users: res }));
-            } else if (activeTab === 'brands') {
-                const res = await api.getAdminBrands();
-                setData(d => ({ ...d, brands: res }));
+            // Users and brands tabs now handle their own data fetching with infinite scroll
+            if (activeTab === 'users' || activeTab === 'brands') {
+                setLoading(false);
+                return;
             } else if (activeTab === 'content') {
                 const res = await api.getAdminContent();
                 setData(d => ({ ...d, content: res }));
@@ -309,10 +309,10 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                         <span className="text-xl">↻</span>
                                     </button>
                                 </div>
-                                <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${['analytics', 'overview'].includes(activeTab) ? '' : 'overflow-hidden'}`}>
+                                <div className={`${['analytics', 'overview', 'users', 'brands'].includes(activeTab) ? '' : 'bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden'}`}>
                                     {activeTab === 'overview' && <OverviewDashboard stats={data.stats} latest={data.latest} navigate={navigate} formatPrice={formatPrice} />}
-                                    {activeTab === 'users' && <UserManagement users={data.users} onFund={(user) => { setFundingUser(user); setShowFundModal(true); }} />}
-                                    {activeTab === 'brands' && <BrandManagement brands={data.brands} />}
+                                    {activeTab === 'users' && <AdminUsersList />}
+                                    {activeTab === 'brands' && <AdminBrandsList />}
                                     {activeTab === 'content' && <ContentManagement content={data.content} />}
                                     {activeTab === 'failures' && <FailureManagement failures={data.failures} />}
                                     {activeTab === 'influencers' && <InfluencerManagement influencers={data.influencers} onVerify={handleVerifyInfluencer} />}

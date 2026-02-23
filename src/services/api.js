@@ -195,12 +195,14 @@ class ApiService {
     });
   }
 
-  async getAdminBrands() {
-    return this.request('/admin/brands');
+  async getAdminBrands(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/admin/brands${queryString ? `?${queryString}` : ''}`);
   }
 
-  async getAdminContent() {
-    return this.request('/admin/content');
+  async getAdminContent(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/admin/content${queryString ? `?${queryString}` : ''}`);
   }
 
   async getGeneratorFailures() {
