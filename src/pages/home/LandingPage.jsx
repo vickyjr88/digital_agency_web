@@ -363,6 +363,114 @@ export default function LandingPage() {
 				</div>
 			</section>
 
+			{/* ─── TUMANASI DELIVERY AD SECTION ─── */}
+			<section id="tumanasi" className="py-24 bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+					{/* Header */}
+					<div className="text-center mb-16">
+						<div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+							🚚 Introducing Tumanasi Delivery
+						</div>
+						<h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+							Nairobi's Fastest Same-Day
+							<span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent"> Delivery Service</span>
+						</h2>
+						<p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+							Book a trusted rider in minutes. Deliver parcels, documents, food, and anything else across Nairobi — tracked live, every step of the way.
+						</p>
+					</div>
+
+					{/* Two-column layout */}
+					<div className="flex flex-col lg:flex-row items-center gap-16">
+
+						{/* Left: Feature grid */}
+						<div className="flex-1 w-full">
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+								{[
+									{ icon: '⚡', title: 'Book in 2 Minutes', desc: 'No app downloads. Just fill a simple form and your errand is on its way.' },
+									{ icon: '📡', title: 'Live Tracking', desc: 'Follow your rider\'s progress in real-time with our public tracking page.' },
+									{ icon: '📸', title: 'Photo Proof', desc: 'Riders submit pickup and delivery photos so you always know it\'s done right.' },
+									{ icon: '💵', title: 'Cash or MPesa', desc: 'Pay the rider in cash or via MPesa STK push — whichever works for you.' },
+									{ icon: '🏍️', title: 'Verified Riders', desc: 'Every rider is background-checked, verified, and rated by previous customers.' },
+									{ icon: '📍', title: 'All Over Nairobi', desc: 'Covering 200+ areas from Karen to TRM, Westlands to Githurai and beyond.' },
+								].map((f, i) => (
+									<motion.div
+										key={f.title}
+										initial={{ opacity: 0, y: 16 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										transition={{ duration: 0.4, delay: i * 0.07 }}
+										viewport={{ once: true }}
+										className="bg-white rounded-2xl p-5 border border-orange-100 shadow-sm hover:shadow-md transition-shadow"
+									>
+										<div className="text-3xl mb-3">{f.icon}</div>
+										<h3 className="font-bold text-gray-900 mb-1">{f.title}</h3>
+										<p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
+									</motion.div>
+								))}
+							</div>
+						</div>
+
+						{/* Right: Pricing card + CTA */}
+						<div className="flex-1 w-full max-w-md mx-auto lg:mx-0">
+							<motion.div
+								initial={{ opacity: 0, scale: 0.96 }}
+								whileInView={{ opacity: 1, scale: 1 }}
+								transition={{ duration: 0.5 }}
+								viewport={{ once: true }}
+								className="bg-white rounded-3xl shadow-2xl border border-orange-100 overflow-hidden"
+							>
+								{/* Card header */}
+								<div className="bg-gradient-to-r from-orange-500 to-amber-500 p-6 text-white">
+									<div className="text-sm font-semibold opacity-80 mb-1">Starting from as low as</div>
+									<div className="text-5xl font-bold mb-1">KES 150</div>
+									<div className="text-sm opacity-80">per delivery · price based on dropoff area</div>
+								</div>
+
+								{/* Sample price rows */}
+								<div className="p-5 space-y-3">
+									{[
+										{ area: 'CBD / City Centre', price: 'KES 150' },
+										{ area: 'Westlands / Parklands', price: 'KES 200' },
+										{ area: 'Karen / Lang\'ata', price: 'KES 300' },
+										{ area: 'Kiambu / Ruiru', price: 'KES 350' },
+										{ area: 'Juja / Thika Road', price: 'KES 400' },
+									].map(r => (
+										<div key={r.area} className="flex justify-between items-center text-sm border-b border-gray-50 pb-2 last:border-0">
+											<span className="text-gray-600">📍 {r.area}</span>
+											<span className="font-bold text-orange-600">{r.price}</span>
+										</div>
+									))}
+									<p className="text-xs text-gray-400 pt-1">+ 200 more areas. Search your location when booking.</p>
+								</div>
+
+								{/* CTAs */}
+								<div className="px-5 pb-6 flex flex-col gap-3">
+									<Link
+										to="/tumanasi/book"
+										className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all shadow-lg shadow-orange-200 hover:shadow-xl"
+									>
+										📦 Book a Delivery Now <ArrowRight size={18} />
+									</Link>
+									<Link
+										to="/tumanasi"
+										className="flex items-center justify-center gap-2 bg-orange-50 hover:bg-orange-100 text-orange-700 px-6 py-3 rounded-xl font-semibold transition-all border border-orange-200"
+									>
+										Learn More About Tumanasi
+									</Link>
+								</div>
+							</motion.div>
+
+							{/* Trust badges */}
+							<div className="flex justify-center gap-6 mt-6 text-sm text-gray-500 flex-wrap">
+								<div className="flex items-center gap-1.5"><CheckCircle size={14} className="text-green-500" /> No registration needed</div>
+								<div className="flex items-center gap-1.5"><CheckCircle size={14} className="text-green-500" /> Pay on delivery</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<section id="how-it-works" className="py-24 bg-gradient-to-br from-indigo-50 to-blue-50">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-16">

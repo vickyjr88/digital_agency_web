@@ -120,9 +120,9 @@ export default function BookingWizard() {
     const priceKes = form.dropoff_area?.price_kes;
 
     const canNext = () => {
-        if (step === 0) return form.customer_name && form.customer_phone;
-        if (step === 1) return form.errand_description.length >= 5;
-        if (step === 2) return form.pickup_address && form.dropoff_address && form.dropoff_area;
+        if (step === 0) return form.customer_name.trim() && form.customer_phone.trim();
+        if (step === 1) return form.errand_description.trim().length >= 3;
+        if (step === 2) return form.pickup_address.trim() && form.dropoff_address.trim() && form.dropoff_area;
         return true;
     };
 
@@ -355,6 +355,12 @@ export default function BookingWizard() {
                                     </div>
                                 </div>
                             </div>
+
+                            {!form.dropoff_area && (
+                                <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: 10, padding: '10px 14px', marginTop: '1rem', fontSize: '0.85rem', color: '#92400E' }}>
+                                    ⚠️ Please search and select a <strong>Dropoff Area</strong> above to see the price and enable Next.
+                                </div>
+                            )}
 
                             {priceKes && (
                                 <div className="tum-price-preview">

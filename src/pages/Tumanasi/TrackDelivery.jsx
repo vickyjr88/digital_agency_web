@@ -152,8 +152,9 @@ export default function TrackDelivery() {
                                             </div>
                                         )}
                                     </div>
-                                    <a href={`tel:${delivery.rider.phone}`} style={{ marginLeft: 'auto' }}
-                                        className="tum-btn-primary" style={{ padding: '8px 16px', fontSize: '0.85rem', textDecoration: 'none' }}>
+                                    <a href={`tel:${delivery.rider.phone}`}
+                                        className="tum-btn-primary"
+                                        style={{ marginLeft: 'auto', padding: '8px 16px', fontSize: '0.85rem', textDecoration: 'none' }}>
                                         <Phone size={14} /> Call
                                     </a>
                                 </div>
