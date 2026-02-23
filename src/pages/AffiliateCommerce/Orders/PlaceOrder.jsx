@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { productsApi, ordersApi, affiliateApi, brandProfileApi, digitalProductsApi } from '../../../services/affiliateApi';
 import { useAuth } from '../../../context/AuthContext';
+import SEO from '../../../components/SEO';
 
 export default function PlaceOrder() {
   const { slug } = useParams();
@@ -177,6 +178,21 @@ export default function PlaceOrder() {
   // ── Order form ───────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <SEO
+        title={`${product.name} - Buy on Dexter Shop`}
+        description={product.description || `Buy ${product.name} on Dexter Shop. ${product.is_digital ? 'Instant digital delivery' : 'Fast shipping available'}. KES ${parseFloat(product.price).toLocaleString()}`}
+        image={product.images && product.images.length > 0 ? product.images[0] : (product.thumbnail || null)}
+        imageAlt={product.name}
+        type="product"
+        keywords={`${product.category || 'product'}, ${product.name}, ${product.is_digital ? 'digital download' : 'buy online'}, Dexter shop, Kenya e-commerce`}
+        product={{
+          price: product.price,
+          currency: 'KES',
+          availability: product.status === 'active' ? 'in stock' : 'out of stock',
+          brand: 'Dexter Shop',
+          condition: 'new',
+        }}
+      />
       <div className="max-w-4xl mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-8">
           {/* Product Details */}

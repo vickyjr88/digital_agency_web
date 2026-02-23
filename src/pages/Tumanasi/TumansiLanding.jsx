@@ -4,6 +4,7 @@ import {
     Package, MapPin, Camera, CreditCard, Clock, Shield,
     ChevronRight, Phone, Star, Zap, ArrowRight
 } from 'lucide-react';
+import SEO from '../../components/SEO';
 import './Tumanasi.css';
 
 const STEPS = [
@@ -25,6 +26,14 @@ export default function TumansiLanding() {
 
     return (
         <div className="tum-landing">
+            <SEO
+                title="Tumanasi - Fast & Safe Delivery Service in Nairobi"
+                description="Fast, safe, photo-verified errand and parcel delivery across Nairobi. Same-day delivery to 200+ areas. Verified riders, transparent pricing from KES 100. Book in minutes, pay on delivery."
+                image="/og-images/tumanasi-landing.png"
+                imageAlt="Tumanasi - Your Partner in Sending Easy"
+                keywords="Tumanasi delivery, Nairobi delivery service, same-day delivery Kenya, parcel delivery Nairobi, errand service, fast delivery, verified riders, photo proof delivery"
+                type="website"
+            />
             {/* ── HERO ── */}
             <section className="tum-hero">
                 <div className="tum-hero-bg" />

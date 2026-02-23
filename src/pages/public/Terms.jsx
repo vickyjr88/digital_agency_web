@@ -1,4 +1,5 @@
 import { FileText } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 export default function Terms() {
   const sections = [
@@ -135,6 +136,12 @@ Address: Nairobi, Kenya`
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Terms of Service - Dexter Platform"
+        description="Review Dexter's terms of service. Understand your rights and responsibilities when using our influencer marketing platform."
+        keywords="terms of service, user agreement, platform rules, Dexter terms, legal terms"
+        type="website"
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

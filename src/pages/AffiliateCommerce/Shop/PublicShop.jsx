@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { productsApi } from '../../../services/affiliateApi';
+import SEO from '../../../components/SEO';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -202,6 +203,12 @@ export default function PublicShop() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO
+        title="Dexter Shop - Buy Digital & Physical Products Online in Kenya"
+        description="Browse and buy high-quality digital and physical products on Dexter Shop. Instant digital downloads, secure payments, and fast shipping across Kenya. Discover trending products today!"
+        keywords="online shopping Kenya, digital products, e-commerce, buy online, instant downloads, secure payments, Dexter marketplace"
+        type="website"
+      />
       {/* ── Topbar ──────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">

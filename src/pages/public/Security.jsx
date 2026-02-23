@@ -1,4 +1,5 @@
 import { Shield, Lock, Eye, Server, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 export default function Security() {
   const measures = [
@@ -45,6 +46,12 @@ export default function Security() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Security - Dexter Platform"
+        description="Learn about Dexter's security measures. We use enterprise-grade encryption, secure infrastructure, and regular audits to protect your data."
+        keywords="platform security, data encryption, secure infrastructure, cybersecurity, Dexter security measures"
+        type="website"
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

@@ -1,4 +1,5 @@
 import { Shield } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 export default function Privacy() {
   const sections = [
@@ -102,6 +103,12 @@ For EU users, our Data Protection Officer can be reached at dpo@dexter.co`
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Privacy Policy - Dexter Platform"
+        description="Read Dexter's privacy policy to understand how we collect, use, and protect your personal information. We prioritize data security and transparency."
+        keywords="privacy policy, data protection, user privacy, Dexter security, GDPR compliance"
+        type="website"
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

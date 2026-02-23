@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { tumansiApi } from '../../services/tumansiApi';
 import { ArrowRight, Search, MapPin, Truck, ChevronDown, ChevronUp } from 'lucide-react';
+import SEO from '../../components/SEO';
 import './Tumanasi.css';
 
 /* ─── Mini zone autocomplete ─── */
@@ -114,6 +115,14 @@ export default function TumansiPricing() {
 
     return (
         <div style={{ background: '#f8fafc', minHeight: '100vh', fontFamily: 'Poppins, sans-serif' }}>
+            <SEO
+                title="Tumanasi Delivery Prices - Transparent Pricing Across Nairobi"
+                description="View Tumanasi's transparent, flat-rate delivery pricing across 200+ Nairobi locations. Starting from KES 100. No hidden fees. Use our price calculator for instant quotes."
+                image="/og-images/tumanasi-pricing.png"
+                imageAlt="Tumanasi Delivery Prices & Area List"
+                keywords="Tumanasi pricing, delivery prices Nairobi, Nairobi delivery cost, parcel delivery rates, transparent pricing, delivery quote calculator, Nairobi delivery areas"
+                type="website"
+            />
 
             {/* ── Hero ── */}
             <div style={{

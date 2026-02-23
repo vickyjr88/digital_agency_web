@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import SEO from '../../components/SEO';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -68,6 +69,12 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Contact Dexter - Get in Touch with Our Team"
+        description="Have questions about Dexter's influencer marketing platform? Contact our team for support, partnerships, or general inquiries. We're here to help!"
+        keywords="contact Dexter, customer support, influencer marketing support, get in touch, Dexter help"
+        type="website"
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

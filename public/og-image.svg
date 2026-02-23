@@ -1,0 +1,124 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Gradient -->
+  <defs>
+    <linearGradient id="dexterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="50"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#dexterGradient)"/>
+
+  <!-- Decorative Elements -->
+  <circle cx="150" cy="100" r="150" fill="rgba(255,255,255,0.05)" filter="url(#blur)"/>
+  <circle cx="1050" cy="530" r="180" fill="rgba(147,197,253,0.1)" filter="url(#blur)"/>
+  <circle cx="600" cy="315" r="200" fill="rgba(255,255,255,0.03)" filter="url(#blur)"/>
+
+  <!-- Logo "D" -->
+  <g transform="translate(140, 160)">
+    <rect x="0" y="0" width="100" height="100" fill="#3B82F6" rx="16"/>
+    <text x="50" y="75" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="900" fill="white" text-anchor="middle">
+      D
+    </text>
+  </g>
+
+  <!-- Brand Name -->
+  <text x="280" y="240" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="900" fill="white" letter-spacing="2">
+    DEXTER
+  </text>
+
+  <!-- Tagline -->
+  <text x="280" y="305" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="400" fill="rgba(255,255,255,0.9)">
+    AI-Powered Influencer Marketing Platform
+  </text>
+
+  <!-- Features Grid -->
+  <g transform="translate(280, 360)">
+    <!-- Row 1 -->
+    <g>
+      <!-- Feature 1 -->
+      <g>
+        <circle cx="12" cy="12" r="10" fill="#93C5FD"/>
+        <text x="40" y="20" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="white" font-weight="600">
+          AI-Powered Matching
+        </text>
+      </g>
+
+      <!-- Feature 2 -->
+      <g transform="translate(320, 0)">
+        <circle cx="12" cy="12" r="10" fill="#93C5FD"/>
+        <text x="40" y="20" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="white" font-weight="600">
+          Transparent Analytics
+        </text>
+      </g>
+    </g>
+
+    <!-- Row 2 -->
+    <g transform="translate(0, 50)">
+      <!-- Feature 3 -->
+      <g>
+        <circle cx="12" cy="12" r="10" fill="#93C5FD"/>
+        <text x="40" y="20" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="white" font-weight="600">
+          Content Generation
+        </text>
+      </g>
+
+      <!-- Feature 4 -->
+      <g transform="translate(320, 0)">
+        <circle cx="12" cy="12" r="10" fill="#93C5FD"/>
+        <text x="40" y="20" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="white" font-weight="600">
+          Seamless Payments
+        </text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Stats -->
+  <g transform="translate(280, 500)">
+    <g>
+      <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-size="32" fill="white" font-weight="900">
+        500+
+      </text>
+      <text x="0" y="30" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="rgba(255,255,255,0.7)">
+        Brands
+      </text>
+    </g>
+
+    <g transform="translate(150, 0)">
+      <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-size="32" fill="white" font-weight="900">
+        10K+
+      </text>
+      <text x="0" y="30" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="rgba(255,255,255,0.7)">
+        Influencers
+      </text>
+    </g>
+
+    <g transform="translate(300, 0)">
+      <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-size="32" fill="white" font-weight="900">
+        $2M+
+      </text>
+      <text x="0" y="30" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="rgba(255,255,255,0.7)">
+        Paid to Creators
+      </text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <text x="280" y="605" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="rgba(255,255,255,0.6)">
+    dexter.vitaldigitalmedia.net
+  </text>
+</svg>

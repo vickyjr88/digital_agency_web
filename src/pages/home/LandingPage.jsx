@@ -18,6 +18,7 @@ import {
 	Shield,
 	CreditCard,
 } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 export default function LandingPage() {
 	const navigate = useNavigate();
@@ -85,6 +86,13 @@ export default function LandingPage() {
 
 	return (
 		<div className="bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+			<SEO
+				title="Dexter - AI-Powered Influencer Marketing & Content Generation Platform"
+				description="Connect brands with authentic influencers. AI-powered matching, transparent analytics, seamless payments, and automated content generation for successful marketing campaigns. Join 500+ brands and 10K+ influencers."
+				keywords="influencer marketing, AI content generation, brand collaboration, content marketing, social media marketing, influencer marketplace, automated content, trend detection, Dexter platform"
+				type="website"
+				url={typeof window !== 'undefined' ? window.location.href : ''}
+			/>
 			<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-32">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
