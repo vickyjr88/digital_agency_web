@@ -777,14 +777,67 @@ function AnalyticsDashboard({ data, formatPrice }) {
                     <div className="text-gray-500 text-sm font-medium mb-1">Marketplace</div>
                     <div className="flex gap-4 mt-2">
                         <div>
-                            <div className="text-xl font-bold text-gray-900">{data.marketplace.influencers}</div>
-                            <div className="text-xs text-gray-400">Influencers</div>
+                            <div className="text-xl font-bold text-gray-900">{data.marketplace?.influencers || 0}</div>
+                            <div className="text-xs text-gray-400">Profiles</div>
                         </div>
                         <div className="w-px bg-gray-200"></div>
                         <div>
-                            <div className="text-xl font-bold text-gray-900">{data.marketplace.campaigns}</div>
+                            <div className="text-xl font-bold text-gray-900">{data.marketplace?.campaigns || 0}</div>
                             <div className="text-xs text-gray-400">Campaigns</div>
                         </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                    <div className="text-gray-500 text-sm font-medium mb-1">Influencers</div>
+                    <div className="flex gap-4 mt-2">
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.influencers?.total_users || 0}</div>
+                            <div className="text-xs text-gray-400">Raw Users</div>
+                        </div>
+                        <div className="w-px bg-gray-200"></div>
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.influencers?.profiles || 0}</div>
+                            <div className="text-xs text-gray-400">Profiles</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                    <div className="text-gray-500 text-sm font-medium mb-1">Commerce</div>
+                    <div className="flex gap-4 mt-2">
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.commerce?.products || 0}</div>
+                            <div className="text-xs text-gray-400">Products</div>
+                        </div>
+                        <div className="w-px bg-gray-200"></div>
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.commerce?.orders || 0}</div>
+                            <div className="text-xs text-gray-400">Orders</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                    <div className="text-gray-500 text-sm font-medium mb-1">Brands</div>
+                    <div className="flex gap-4 mt-2">
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.brands?.total || 0}</div>
+                            <div className="text-xs text-gray-400">Raw Brands</div>
+                        </div>
+                        <div className="w-px bg-gray-200"></div>
+                        <div>
+                            <div className="text-xl font-bold text-gray-900">{data.brands?.profiles || 0}</div>
+                            <div className="text-xs text-gray-400">Profiles</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                    <div className="text-gray-500 text-sm font-medium mb-1">Logistics</div>
+                    <div className="text-3xl font-bold text-gray-900">{data.logistics?.riders || 0}</div>
+                    <div className="text-xs text-gray-400 font-medium mt-2">
+                        Active Riders
                     </div>
                 </div>
             </div>
