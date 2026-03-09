@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Mail, Calendar, Shield, Briefcase, Activity, CreditCard, Edit, X, Check } from 'lucide-react';
+import { ArrowLeft, User, Mail, Calendar, Shield, Briefcase, Activity, CreditCard, Edit, X, Check, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function UserDetails() {
@@ -11,6 +11,8 @@ export default function UserDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     // Edit form state
     const [selectedTier, setSelectedTier] = useState('');
@@ -52,6 +54,23 @@ export default function UserDetails() {
             alert('Failed to update: ' + err.message);
         } finally {
             setUpdating(false);
+        }
+    };
+
+    const handleDeleteUser = () => {
+        setShowDeleteModal(true);
+    };
+
+    const confirmDeleteUser = async () => {
+        setDeleting(true);
+        try {
+            await api.deleteAdminUser(id);
+            alert("User successfully deleted.");
+            navigate('/admin/users');
+        } catch (err) {
+            alert('Failed to delete user: ' + err.message);
+            setDeleting(false);
+            setShowDeleteModal(false);
         }
     };
 
@@ -169,6 +188,20 @@ export default function UserDetails() {
                             <p className="text-sm text-indigo-700 mb-4">
                                 Use the "Manage Subscription" button above to fix user plan issues manually.
                             </p>
+
+                            <hr className="my-4 border-indigo-200" />
+
+                            <h3 className="font-bold text-red-900 mb-2">Danger Zone</h3>
+                            <p className="text-sm text-red-700 mb-4">
+                                Permanently delete this user, their content, and all associated tracking data.
+                            </p>
+                            <button
+                                onClick={handleDeleteUser}
+                                disabled={deleting}
+                                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-medium transition-colors disabled:opacity-50"
+                            >
+                                {deleting ? <span className="animate-pulse">Deleting...</span> : <><Trash2 size={16} /> Delete User Data</>}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -242,6 +275,47 @@ export default function UserDetails() {
                                         </button>
                                     </div>
                                 </form>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
+
+                {/* Confirm Delete Modal */}
+                <AnimatePresence>
+                    {showDeleteModal && (
+                        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 relative"
+                            >
+                                <div className="flex flex-col items-center text-center">
+                                    <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+                                        <Trash2 size={24} />
+                                    </div>
+                                    <h2 className="text-xl font-bold text-gray-900 mb-2">Delete User?</h2>
+                                    <p className="text-sm text-gray-500 mb-6">
+                                        Are you absolutely sure you want to completely delete this user and all their associated data? This action cannot be undone.
+                                    </p>
+
+                                    <div className="flex justify-center gap-3 w-full">
+                                        <button
+                                            onClick={() => setShowDeleteModal(false)}
+                                            disabled={deleting}
+                                            className="flex-1 px-4 py-2 text-gray-600 font-medium bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={confirmDeleteUser}
+                                            disabled={deleting}
+                                            className="flex-1 flex justify-center items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                                        >
+                                            {deleting ? 'Deleting...' : 'Delete'}
+                                        </button>
+                                    </div>
+                                </div>
                             </motion.div>
                         </div>
                     )}

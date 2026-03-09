@@ -198,6 +198,12 @@ class ApiService {
     return this.request(`/admin/users?${queryString}`);
   }
 
+  async deleteAdminUser(userId) {
+    return this.request(`/admin/users/${userId}`, {
+      method: 'DELETE',
+    });
+  }
+
   async updateUserRole(userId, role) {
     return this.request(`/admin/users/${userId}/role`, {
       method: 'PATCH',
