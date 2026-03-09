@@ -23,6 +23,8 @@ export function useInfiniteScroll(fetchFunction, options = {}) {
 
   // Debounce search
   useEffect(() => {
+    if (searchTerm === debouncedSearch) return;
+
     clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -31,7 +33,7 @@ export function useInfiniteScroll(fetchFunction, options = {}) {
     }, searchDelay);
 
     return () => clearTimeout(searchTimeout.current);
-  }, [searchTerm, searchDelay]);
+  }, [searchTerm, searchDelay, debouncedSearch]);
 
   // Fetch data
   const fetchData = useCallback(async (pageNum, append = false) => {
