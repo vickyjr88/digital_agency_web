@@ -243,6 +243,27 @@ export const digitalProductsApi = {
   lookupPurchases: (email) => api.get('/digital-products/my-purchases', { params: { email } }),
 };
 
+// ============================================================================
+// ADMIN COMMERCE (Orders & Products Management)
+// ============================================================================
+
+export const adminCommerceApi = {
+  // Get all orders (admin)
+  getAllOrders: (params) => api.get('/orders/admin/all', { params }),
+
+  // Update order status (admin)
+  updateOrderStatus: (orderId, data) => api.put(`/orders/admin/${orderId}/status`, data),
+
+  // Download digital product file for verification (admin)
+  downloadDigitalProduct: (orderId) => api.get(`/orders/admin/${orderId}/download`),
+
+  // Get all products (admin)
+  getAllProducts: (params) => api.get('/products/admin/all-products', { params }),
+
+  // Download digital product file by product ID (admin)
+  downloadProductFile: (productId) => api.get(`/products/${productId}/download-file`),
+};
+
 export default {
   brands: brandsApi,
   brandProfile: brandProfileApi,
@@ -251,4 +272,5 @@ export default {
   orders: ordersApi,
   analytics: analyticsApi,
   digitalProducts: digitalProductsApi,
+  adminCommerce: adminCommerceApi,
 };

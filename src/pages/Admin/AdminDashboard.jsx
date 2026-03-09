@@ -4,7 +4,7 @@ import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
-import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight, ShieldAlert } from 'lucide-react';
+import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight, ShieldAlert, ShoppingCart } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -12,6 +12,7 @@ import AdminWithdrawals from './AdminWithdrawals';
 import AdminSubscriptionTransactions from './AdminSubscriptionTransactions';
 import AdminWalletTransactions from './AdminWalletTransactions';
 import AdminDisputes from './AdminDisputes';
+import AdminCommerce from './AdminCommerce';
 import AdminUsersList from '../../features/admin/AdminUsersList';
 import AdminBrandsList from '../../features/admin/AdminBrandsList';
 import { disputeApi } from '../../services/marketplaceApi';
@@ -54,6 +55,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
         if (path.startsWith('/admin/campaigns')) return 'campaigns';
         if (path.startsWith('/admin/bids')) return 'bids';
         if (path.startsWith('/admin/disputes')) return 'disputes';
+        if (path.startsWith('/admin/commerce')) return 'commerce';
         return defaultTab;
     };
 
@@ -65,7 +67,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
     useEffect(() => {
         if (!children) {
             // Only fetch data if the tab requires data loading at this level
-            if (activeTab === 'subscriptions' || activeTab === 'wallet_transactions' || activeTab === 'campaigns' || activeTab === 'bids') return;
+            if (activeTab === 'subscriptions' || activeTab === 'wallet_transactions' || activeTab === 'campaigns' || activeTab === 'bids' || activeTab === 'commerce') return;
             fetchAdminData();
         }
     }, [activeTab, children]);
@@ -222,6 +224,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 <Link to="/admin/bids" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'bids' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Briefcase size={20} /> Bids & Invites
                 </Link>
+                <Link to="/admin/commerce" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'commerce' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <ShoppingCart size={20} /> Orders & Products
+                </Link>
                 <Link to="/admin/disputes" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'disputes' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <ShieldAlert size={20} className={activeTab === 'disputes' ? 'text-indigo-600' : 'text-red-400'} /> Disputes
                 </Link>
@@ -322,6 +327,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                     {activeTab === 'subscriptions' && <AdminSubscriptionTransactions />}
                                     {activeTab === 'wallet_transactions' && <AdminWalletTransactions />}
                                     {activeTab === 'withdrawals' && <AdminWithdrawals />}
+                                    {activeTab === 'commerce' && <AdminCommerce />}
                                     {activeTab === 'disputes' && <AdminDisputes />}
                                 </div>
                             </div>
