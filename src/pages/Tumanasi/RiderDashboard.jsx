@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { tumansiApi } from '../../services/tumansiApi';
 import {
     MapPin, Camera, CheckCircle, AlertCircle, Loader,
-    Package, Phone, ChevronRight, Clock, Star, TrendingUp, X, Plus, Save
+    Package, Phone, ChevronRight, Clock, Star, TrendingUp, X, Plus, Save, Bike
 } from 'lucide-react';
 import './Tumanasi.css';
 
