@@ -18,6 +18,7 @@ import {
   FileText,
   Zap,
   CreditCard,
+  Store,
 } from 'lucide-react';
 import { productsApi, ordersApi, affiliateApi, brandProfileApi, digitalProductsApi } from '../../../services/affiliateApi';
 import { useAuth } from '../../../context/AuthContext';
@@ -257,10 +258,19 @@ export default function PlaceOrder() {
             )}
 
             {product.category && (
-              <div className="mb-4">
+              <div className="mb-4 flex items-center gap-2 flex-wrap">
                 <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                   {product.category}
                 </span>
+                {product.brand_profile_id && (
+                  <a
+                    href={`/shop/store/${product.brand_profile_id}`}
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors"
+                  >
+                    <Store className="w-3.5 h-3.5" />
+                    Visit Store
+                  </a>
+                )}
               </div>
             )}
 

@@ -16,7 +16,7 @@ import {
   Copy,
   Link2,
 } from 'lucide-react';
-import { productsApi, affiliateApi } from '../../../services/affiliateApi';
+import { productsApi, affiliateApi, systemCategoriesApi } from '../../../services/affiliateApi';
 
 export default function ProductMarketplace() {
   const navigate = useNavigate();
@@ -41,13 +41,13 @@ export default function ProductMarketplace() {
       const [productsRes, applicationsRes, categoriesRes, linksRes] = await Promise.all([
         productsApi.list({ status: 'active' }),
         affiliateApi.getMyApplications(),
-        productsApi.getCategories(),
+        systemCategoriesApi.list('product'),
         affiliateApi.getMyLinks()
       ]);
 
       setProducts(productsRes.data);
       setMyApplications(applicationsRes.data);
-      setCategories(categoriesRes.data);
+      setCategories(categoriesRes.data.map(c => c.name));
       setMyLinks(linksRes.data || []);
     } catch (error) {
       toast.error('Failed to load products');

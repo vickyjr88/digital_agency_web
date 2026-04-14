@@ -20,7 +20,7 @@ import {
   AlertCircle,
   Building2,
 } from 'lucide-react';
-import { productsApi, brandProfileApi, brandsApi } from '../../../services/affiliateApi';
+import { productsApi, brandProfileApi, systemCategoriesApi } from '../../../services/affiliateApi';
 
 export default function CreateProduct() {
   const navigate = useNavigate();
@@ -33,7 +33,38 @@ export default function CreateProduct() {
   const [showBrandPicker, setShowBrandPicker] = useState(false);
 
   // ── Digital file ──────────────────────────────────────────────────────────
-  const [digitalFile, setDigitalFile] = useState(null);          // File object
+  const [digitalFile, setDigitalFile] = useState(null);
+
+
+  useEffect(() => {
+    loadBrandProfiles();
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      const { data } = await systemCategoriesApi.list('product');
+      setCategories(data);
+    } catch (err) {
+      console.error('Failed to load categories', err);
+    }
+  };
+
+  const loadBrandProfiles = async () => {
+    try {
+      const res = await brandProfileApi.listMyProfiles();
+      const profiles = res.data || [];
+      setBrandProfiles(profiles);
+      // Auto-select if only one profile
+      if (profiles.length === 1) setSelectedProfile(profiles[0]);
+      else if (profiles.length > 1) setShowBrandPicker(true);
+    } catch {
+      setBrandProfiles([]);
+    } finally {
+      setProfileChecked(true);
+    }
+  };
+
   const [uploadingFile, setUploadingFile] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -87,14 +118,6 @@ export default function CreateProduct() {
     }
   };
 
-  const loadCategories = async () => {
-    try {
-      const response = await productsApi.getCategories();
-      setCategories(response.data);
-    } catch (error) {
-      console.error('Failed to load categories:', error);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -450,14 +473,20 @@ export default function CreateProduct() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Category
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    placeholder="Fashion, Electronics, etc."
+                    required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>

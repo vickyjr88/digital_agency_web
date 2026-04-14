@@ -22,6 +22,21 @@ api.interceptors.request.use((config) => {
 
 
 // ============================================================================
+// SYSTEM CATEGORIES
+// ============================================================================
+
+export const systemCategoriesApi = {
+  // Get categories by type
+  list: (type) => api.get('/categories/', { params: { type } }),
+  
+  // Create category (admin)
+  create: (data) => api.post('/categories/', data),
+  
+  // Delete category (admin)
+  delete: (id) => api.delete(`/categories/${id}`),
+};
+
+// ============================================================================
 // BRAND PROFILES
 // ============================================================================
 
@@ -56,6 +71,9 @@ export const brandProfileApi = {
   // Get brand contact info (public, shown to customers after order)
   getContactInfo: (id) => api.get(`/brand-profiles/${id}/contact`),
 
+  // List all active storefronts (public)
+  listStorefronts: () => api.get('/brand-profiles/storefronts/list'),
+
   // Legacy: returns first profile (used by pages that haven't migrated yet)
   getMyProfile: () => api.get('/brand-profiles/me'),
 };
@@ -86,14 +104,17 @@ export const productsApi = {
   // Delete (archive) product
   delete: (id) => api.delete(`/products/${id}`),
 
-  // Get categories
-  getCategories: () => api.get('/products/categories/list'),
+  // Get all active product categories
+  getCategories: () => api.get('/categories/', { params: { type: 'product' } }),
 
   // Add variant
   addVariant: (productId, data) => api.post(`/products/${productId}/variants`, data),
 
   // Get affiliates count
   getAffiliatesCount: (productId) => api.get(`/products/${productId}/affiliates-count`),
+
+  // Get public storefront (brand profile + products)
+  getStorefront: (brandProfileId, params) => api.get(`/products/storefront/${brandProfileId}`, { params }),
 
   // ── Digital product file management ──────────────────────────────────────
 

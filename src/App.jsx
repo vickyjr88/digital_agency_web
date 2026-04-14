@@ -57,6 +57,7 @@ import CampaignInvites from './pages/Bids/CampaignInvites';
 import AdminCampaigns from './pages/Admin/AdminCampaigns';
 import AdminBids from './pages/Admin/AdminBids';
 import AdminDisputes from './pages/Admin/AdminDisputes';
+import AdminCategories from './pages/Admin/AdminCategories';
 
 // Affiliate Commerce Pages
 import BrandProfileSetup from './pages/AffiliateCommerce/BrandProfile/BrandProfileSetup';
@@ -72,6 +73,7 @@ import DigitalLibrary from './pages/AffiliateCommerce/Orders/DigitalLibrary';
 import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDashboard';
 import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
 import PublicShop from './pages/AffiliateCommerce/Shop/PublicShop';
+import BrandStorefront from './pages/AffiliateCommerce/Shop/BrandStorefront';
 import MyLinks from './pages/AffiliateCommerce/MyLinks/MyLinks';
 
 // Public Pages
@@ -417,6 +419,9 @@ function App() {
                 <Route path="/shop/p/:slug" element={
                   <PlaceOrder />
                 } />
+                <Route path="/shop/store/:brandProfileId" element={
+                  <BrandStorefront />
+                } />
                 <Route path="/shop/payment/verify" element={
                   <PaymentVerify />
                 } />
@@ -614,6 +619,11 @@ function App() {
                 <Route path="/admin" element={
                   <AdminRoute>
                     <PageContainer><AdminDashboard /></PageContainer>
+                  </AdminRoute>
+                } />
+                <Route path="/admin/categories" element={
+                  <AdminRoute>
+                    <PageContainer><AdminCategories /></PageContainer>
                   </AdminRoute>
                 } />
 
