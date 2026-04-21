@@ -84,14 +84,7 @@ import API from './pages/public/API';
 import Integrations from './pages/public/Integrations';
 import Careers from './pages/public/Careers';
 
-// Tumanasi Delivery Service
-import TumansiLanding from './pages/Tumanasi/TumansiLanding';
-import BookingWizard from './pages/Tumanasi/BookingWizard';
-import TrackDelivery from './pages/Tumanasi/TrackDelivery';
-import RiderRegister from './pages/Tumanasi/RiderRegister';
-import RiderDashboard from './pages/Tumanasi/RiderDashboard';
-import TumansiAdmin from './pages/Tumanasi/TumansiAdmin';
-import TumansiPricing from './pages/Tumanasi/TumansiPricing';
+
 
 
 // Protected Route Component (Simplified for now)
@@ -426,27 +419,7 @@ function App() {
                   <DigitalLibrary />
                 } />
 
-                {/* ================================================================ */}
-                {/* TUMANASI DELIVERY SERVICE ROUTES                                  */}
-                {/* ================================================================ */}
 
-                {/* Public Tumanasi pages (no auth required) */}
-                <Route path="/tumanasi" element={<TumansiLanding />} />
-                <Route path="/tumanasi/pricing" element={<TumansiPricing />} />
-                <Route path="/tumanasi/book" element={<BookingWizard />} />
-                <Route path="/tumanasi/track" element={<TrackDelivery />} />
-                <Route path="/tumanasi/track/:trackingNumber" element={<TrackDelivery />} />
-
-                {/* Rider pages */}
-                <Route path="/tumanasi/rider/register" element={<ProtectedRoute><RiderRegister /></ProtectedRoute>} />
-                <Route path="/tumanasi/rider/dashboard" element={
-                  <ProtectedRoute><RiderDashboard /></ProtectedRoute>
-                } />
-
-                {/* Admin Tumanasi */}
-                <Route path="/admin/tumanasi" element={
-                  <AdminRoute><TumansiAdmin /></AdminRoute>
-                } />
 
                 {/* Public Influencer Profile by ID (short URL) */}
                 {/* This MUST come before specific /influencer/* routes,

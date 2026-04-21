@@ -24,16 +24,6 @@ const svgFiles = [
     input: 'public/og-image.svg',
     output: 'public/og-image.png',
     description: 'Default Dexter OG image'
-  },
-  {
-    input: 'public/og-images/tumanasi-landing.svg',
-    output: 'public/og-images/tumanasi-landing.png',
-    description: 'Tumanasi Landing page OG image'
-  },
-  {
-    input: 'public/og-images/tumanasi-pricing.svg',
-    output: 'public/og-images/tumanasi-pricing.png',
-    description: 'Tumanasi Pricing page OG image'
   }
 ];
 

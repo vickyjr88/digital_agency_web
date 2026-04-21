@@ -627,6 +627,24 @@ function OverviewDashboard({ stats, latest, navigate, formatPrice }) {
                 <StatsCard icon={FileText} title="Content Generated" value={stats?.content} color="bg-orange-50 text-orange-600" />
             </div>
 
+            {/* Complete Model Overview */}
+            {stats?.model_counts && (
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-6 mt-8">
+                    <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <LayoutDashboard size={18} className="text-gray-400" />
+                        Platform Model Overview
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        {Object.entries(stats.model_counts).map(([modelName, count], idx) => (
+                            <div key={idx} className="bg-gray-50 p-4 rounded-lg border border-gray-100 flex flex-col justify-between hover:bg-indigo-50 hover:border-indigo-100 transition-colors">
+                                <span className="text-xs font-semibold text-gray-500 uppercase">{modelName}</span>
+                                <span className="text-xl font-bold text-gray-900 mt-2">{count.toLocaleString()}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Recent Transactions Table */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -833,13 +851,7 @@ function AnalyticsDashboard({ data, formatPrice }) {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-                    <div className="text-gray-500 text-sm font-medium mb-1">Logistics</div>
-                    <div className="text-3xl font-bold text-gray-900">{data.logistics?.riders || 0}</div>
-                    <div className="text-xs text-gray-400 font-medium mt-2">
-                        Active Riders
-                    </div>
-                </div>
+
             </div>
 
             {/* Charts */}

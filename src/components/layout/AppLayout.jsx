@@ -29,8 +29,6 @@ import {
   ClipboardCheck,
   Settings,
   Link2,
-  Truck,
-  Bike,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import PublicNavbar from './PublicNavbar';
@@ -59,11 +57,7 @@ export default function AppLayout() {
     '/shop/p',
     '/shop/payment/verify',
     '/shop/digital-library',
-    '/tumanasi',
-    '/tumanasi/book',
-    '/tumanasi/track',
-    '/tumanasi/pricing',
-    '/tumanasi/rider/register',
+
   ];
 
   // Check if current route is a public route
@@ -102,11 +96,7 @@ export default function AppLayout() {
       { path: '/affiliate/orders', icon: ClipboardCheck, label: 'Orders' },
       { path: '/affiliate/analytics', icon: BarChart2, label: 'Affiliate Stats' },
 
-      // Tumanasi Delivery
-      { type: 'divider', label: 'Tumanasi Delivery' },
-      { path: '/tumanasi', icon: Truck, label: 'Book a Delivery' },
-      { path: '/tumanasi/track', icon: Target, label: 'Track Parcel' },
-      { path: '/tumanasi/rider/dashboard', icon: Bike, label: 'Rider Dashboard' },
+
     ];
 
     // Add Influencer Tools section for influencers
@@ -127,7 +117,7 @@ export default function AppLayout() {
       items.push(
         { type: 'divider', label: 'Admin' },
         { path: '/admin', icon: Shield, label: 'Admin Panel' },
-        { path: '/admin/tumanasi', icon: Truck, label: 'Tumanasi Admin' }
+
       );
     }
 
