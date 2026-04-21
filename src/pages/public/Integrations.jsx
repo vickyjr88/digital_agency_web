@@ -1,4 +1,5 @@
 import { Plug, CheckCircle } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 export default function Integrations() {
   const integrations = [
@@ -54,6 +55,12 @@ export default function Integrations() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Integrations - Connect Dexter with Your Favorite Tools"
+        description="Streamline your influencer marketing workflow by connecting Dexter with Instagram, TikTok, YouTube, Shopify, and more. Maximize your campaign performance with seamless data syncing."
+        keywords="Dexter integrations, marketing automation, social media tools, Shopify influencer marketing, Instagram API marketing"
+        type="website"
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

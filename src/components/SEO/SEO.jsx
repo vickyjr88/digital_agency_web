@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
  * Supports Open Graph (Facebook, LinkedIn, WhatsApp) and Twitter Cards
  */
 export default function SEO({
-  title = 'Dexter - AI-Powered Influencer Marketing Platform',
+  title = 'Dexter - Influencer Marketing Platform',
   description = 'Connect brands with authentic influencers. AI-powered matching, transparent analytics, and seamless payments for successful marketing campaigns.',
   image = null,
   url = null,
@@ -14,7 +14,7 @@ export default function SEO({
   imageAlt = 'Dexter Platform',
   siteName = 'Dexter',
   twitterCard = 'summary_large_image',
-  twitterHandle = '@DexterPlatform',
+  twitterHandle = '@infinitydigy',
   keywords = 'influencer marketing, brand collaboration, content marketing, AI marketing, social media marketing',
   author = 'Dexter',
   publishedTime = null,

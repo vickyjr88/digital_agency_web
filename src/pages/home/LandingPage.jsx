@@ -87,7 +87,7 @@ export default function LandingPage() {
 	return (
 		<div className="bg-gradient-to-br from-indigo-50 via-white to-blue-50">
 			<SEO
-				title="Dexter - AI-Powered Influencer Marketing & Content Generation Platform"
+				title="Dexter - Influencer Marketing & Content Generation Platform"
 				description="Connect brands with authentic influencers. AI-powered matching, transparent analytics, seamless payments, and automated content generation for successful marketing campaigns. Join 500+ brands and 10K+ influencers."
 				keywords="influencer marketing, AI content generation, brand collaboration, content marketing, social media marketing, influencer marketplace, automated content, trend detection, Dexter platform"
 				type="website"

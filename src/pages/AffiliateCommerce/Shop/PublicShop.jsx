@@ -208,6 +208,7 @@ export default function PublicShop() {
         description="Browse and buy high-quality digital and physical products on Dexter Shop. Instant digital downloads, secure payments, and fast shipping across Kenya. Discover trending products today!"
         keywords="online shopping Kenya, digital products, e-commerce, buy online, instant downloads, secure payments, Dexter marketplace"
         type="website"
+        image="/og-images/shop.png"
       />
       {/* ── Topbar ──────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">

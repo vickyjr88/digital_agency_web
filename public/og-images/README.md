@@ -10,7 +10,7 @@ Social media preview images for sharing Dexter platform links.
 **Used for:** All Dexter pages without specific OG images
 **Branding:** Indigo/Blue gradient, Dexter logo, AI-powered influencer marketing theme
 **Features shown:**
-- AI-Powered Matching
+- Matching
 - Transparent Analytics
 - Content Generation
 - Seamless Payments

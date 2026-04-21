@@ -74,6 +74,7 @@ export default function Contact() {
         description="Have questions about Dexter's influencer marketing platform? Contact our team for support, partnerships, or general inquiries. We're here to help!"
         keywords="contact Dexter, customer support, influencer marketing support, get in touch, Dexter help"
         type="website"
+        image="/og-images/contact.png"
       />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">

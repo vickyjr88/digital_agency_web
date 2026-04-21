@@ -28,10 +28,11 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       <SEO
-        title="About Dexter - AI-Powered Influencer Marketing Platform"
+        title="About Dexter - Influencer Marketing Platform"
         description="Learn about Dexter, the platform revolutionizing influencer marketing. We connect 500+ brands with 10K+ influencers through AI-powered matching, transparent analytics, and seamless payments."
         keywords="about Dexter, influencer marketing platform, brand influencer collaboration, AI marketing, social media campaigns"
         type="website"
+        image="/og-images/about.png"
       />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">

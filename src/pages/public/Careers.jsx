@@ -1,4 +1,5 @@
 import { Briefcase, Heart, Rocket, Users } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 export default function Careers() {
   const values = [
@@ -64,6 +65,13 @@ export default function Careers() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Careers at Dexter - Join the Future of Influencer Marketing"
+        description="Build the future of AI-powered influencer marketing. Join our remote-first team and help us connect brands and creators worldwide. View our open positions and benefits."
+        keywords="careers at Dexter, influencer marketing jobs, tech jobs Nairobi, remote marketing jobs, join Dexter team"
+        type="website"
+        image="/og-images/careers.png"
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

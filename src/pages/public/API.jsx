@@ -1,4 +1,5 @@
 import { Code, Book, Zap, Shield } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 export default function API() {
   const features = [
@@ -33,6 +34,12 @@ export default function API() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Dexter API Documentation - Build Custom Marketing Tools"
+        description="Integrate Dexter's powerful AI influencer matching and analytics into your own applications. Explore our comprehensive API documentation, SDKs, and code samples."
+        keywords="Dexter API, influencer marketing API, developer documentation, marketing SDK, build marketing tools"
+        type="website"
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
