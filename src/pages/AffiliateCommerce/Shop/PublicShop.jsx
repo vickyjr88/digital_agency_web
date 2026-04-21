@@ -12,8 +12,11 @@ import {
   Loader,
   SlidersHorizontal,
   X,
+  Store,
+  MapPin,
+  ArrowRight,
 } from 'lucide-react';
-import { productsApi } from '../../../services/affiliateApi';
+import { productsApi, brandProfileApi, systemCategoriesApi } from '../../../services/affiliateApi';
 import SEO from '../../../components/SEO';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -38,15 +41,15 @@ function ProductCard({ product }) {
   return (
     <Link
       to={`/shop/p/${product.slug}`}
-      className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-gray-100 flex flex-col"
+      className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
     >
       {/* Image */}
-      <div className="relative h-52 bg-gray-100 overflow-hidden">
+      <div className="relative h-52 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
         {product.thumbnail ? (
           <img
             src={product.thumbnail}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-gray-300">
@@ -64,12 +67,12 @@ function ProductCard({ product }) {
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           {hasDiscount && (
-            <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded">
+            <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
               -{discountPct}%
             </span>
           )}
           {product.is_digital && (
-            <span className="bg-blue-600 text-white text-xs font-semibold px-2 py-0.5 rounded flex items-center gap-1">
+            <span className="bg-blue-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
               <Zap className="w-3 h-3" /> Digital
             </span>
           )}
@@ -78,11 +81,25 @@ function ProductCard({ product }) {
 
       {/* Info */}
       <div className="flex flex-col flex-1 p-4 gap-2">
-        {product.category && (
-          <span className="text-xs text-blue-600 font-medium uppercase tracking-wide">
-            {product.category}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {product.category && (
+            <span className="text-xs text-blue-600 font-medium uppercase tracking-wide">
+              {product.category}
+            </span>
+          )}
+          {product.brand_name && (
+            <>
+              <span className="text-xs text-gray-300">•</span>
+              <Link
+                to={`/shop/store/${product.brand_profile_id}`}
+                onClick={e => e.stopPropagation()}
+                className="text-xs text-gray-500 hover:text-blue-600 font-medium truncate transition-colors"
+              >
+                {product.brand_name}
+              </Link>
+            </>
+          )}
+        </div>
 
         <h3 className="font-semibold text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-700 transition-colors">
           {product.name}
@@ -115,6 +132,48 @@ function ProductCard({ product }) {
   );
 }
 
+function StorefrontCard({ store }) {
+  return (
+    <Link
+      to={`/shop/store/${store.id}`}
+      className="group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex flex-col gap-3"
+    >
+      <div className="flex items-start gap-3">
+        {/* Avatar */}
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg font-bold shrink-0 group-hover:scale-105 transition-transform">
+          {(store.brand_name || '?').charAt(0).toUpperCase()}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors truncate">
+            {store.brand_name}
+          </h3>
+          {store.business_category && (
+            <span className="text-xs text-blue-600 font-medium">{store.business_category}</span>
+          )}
+        </div>
+        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+      </div>
+
+      {store.business_description && (
+        <p className="text-sm text-gray-500 line-clamp-2">{store.business_description}</p>
+      )}
+
+      <div className="flex items-center gap-3 text-xs text-gray-400 mt-auto">
+        {store.business_location && (
+          <span className="flex items-center gap-1 truncate">
+            <MapPin className="w-3 h-3 shrink-0" />
+            {store.business_location}
+          </span>
+        )}
+        <span className="flex items-center gap-1 ml-auto shrink-0 font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+          <Package className="w-3 h-3" />
+          {store.product_count} product{store.product_count !== 1 ? 's' : ''}
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export default function PublicShop() {
@@ -122,9 +181,11 @@ export default function PublicShop() {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [storefronts, setStorefronts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const [showStorefronts, setShowStorefronts] = useState(false);
 
   // Filter state — initialised from URL params so links are shareable
   const [search, setSearch] = useState(searchParams.get('q') || '');
@@ -141,9 +202,10 @@ export default function PublicShop() {
     return () => clearTimeout(t);
   }, [search]);
 
-  // Load categories once
+  // Load categories & storefronts once
   useEffect(() => {
-    productsApi.getCategories().then(r => setCategories(r.data)).catch(() => {});
+    systemCategoriesApi.list('product').then(r => setCategories(r.data.map(c => c.name))).catch(() => {});
+    brandProfileApi.listStorefronts().then(r => setStorefronts(r.data || [])).catch(() => {});
   }, []);
 
   // Load products whenever filters change
@@ -238,77 +300,131 @@ export default function PublicShop() {
             )}
           </div>
 
-          {/* Mobile filter toggle */}
-          <button
-            onClick={() => setShowFilters(v => !v)}
-            className="md:hidden flex items-center gap-1 text-sm text-gray-600 border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-50"
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters
-          </button>
-        </div>
-
-        {/* Filter row (desktop always visible, mobile collapsible) */}
-        <div className={`${showFilters ? 'block' : 'hidden md:block'} border-t border-gray-100 bg-white`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center gap-3">
-            {/* Category */}
-            <div className="flex items-center gap-2">
-              <Tag className="w-4 h-4 text-gray-400" />
-              <select
-                value={category}
-                onChange={e => { setCategory(e.target.value); setPage(1); }}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">All Categories</option>
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Type */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-400" />
-              <select
-                value={productType}
-                onChange={e => { setProductType(e.target.value); setPage(1); }}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">All Types</option>
-                <option value="digital">Digital only</option>
-                <option value="physical">Physical only</option>
-              </select>
-            </div>
-
-            {/* Sort */}
-            <div className="flex items-center gap-2 ml-auto">
-              <span className="text-sm text-gray-500">Sort:</span>
-              <select
-                value={sortBy}
-                onChange={e => { setSortBy(e.target.value); setPage(1); }}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="newest">Newest</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-              </select>
-            </div>
-
-            {/* Clear filters */}
-            {hasActiveFilters && (
+          {/* Storefronts & Filter toggles */}
+          <div className="flex items-center gap-2">
+            {storefronts.length > 0 && (
               <button
-                onClick={clearFilters}
-                className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium"
+                onClick={() => setShowStorefronts(v => !v)}
+                className={`hidden sm:flex items-center gap-1.5 text-sm border rounded-lg px-3 py-2 font-medium transition-colors ${
+                  showStorefronts
+                    ? 'bg-blue-50 border-blue-300 text-blue-700'
+                    : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                }`}
               >
-                <X className="w-3 h-3" /> Clear
+                <Store className="w-4 h-4" />
+                Brands
               </button>
             )}
+            <button
+              onClick={() => setShowFilters(v => !v)}
+              className="md:hidden flex items-center gap-1 text-sm text-gray-600 border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-50"
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              Filters
+            </button>
+          </div>
+        </div>
+
+        {/* Category chips + filter row */}
+        <div className={`${showFilters ? 'block' : 'hidden md:block'} border-t border-gray-100 bg-white`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+            {/* Category chips row */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-2 scrollbar-hide">
+              <Tag className="w-4 h-4 text-gray-400 shrink-0" />
+              <button
+                onClick={() => { setCategory('all'); setPage(1); }}
+                className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  category === 'all'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                All Categories
+              </button>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => { setCategory(cat); setPage(1); }}
+                  className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    category === cat
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Additional filters */}
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Type */}
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-gray-400" />
+                <select
+                  value={productType}
+                  onChange={e => { setProductType(e.target.value); setPage(1); }}
+                  className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="all">All Types</option>
+                  <option value="digital">Digital only</option>
+                  <option value="physical">Physical only</option>
+                </select>
+              </div>
+
+              {/* Sort */}
+              <div className="flex items-center gap-2 ml-auto">
+                <span className="text-sm text-gray-500">Sort:</span>
+                <select
+                  value={sortBy}
+                  onChange={e => { setSortBy(e.target.value); setPage(1); }}
+                  className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="newest">Newest</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="price_desc">Price: High to Low</option>
+                </select>
+              </div>
+
+              {/* Clear filters */}
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium"
+                >
+                  <X className="w-3 h-3" /> Clear
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </header>
 
       {/* ── Body ────────────────────────────────────────────────────────────── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Storefronts Section (collapsible) */}
+        {showStorefronts && storefronts.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <Store className="w-5 h-5 text-blue-600" />
+                Brand Storefronts
+              </h2>
+              <button
+                onClick={() => setShowStorefronts(false)}
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                Hide
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {storefronts.map(store => (
+                <StorefrontCard key={store.id} store={store} />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Page title row */}
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -322,6 +438,15 @@ export default function PublicShop() {
               </p>
             )}
           </div>
+          {storefronts.length > 0 && !showStorefronts && (
+            <button
+              onClick={() => setShowStorefronts(true)}
+              className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
+              <Store className="w-4 h-4" />
+              Browse Brands ({storefronts.length})
+            </button>
+          )}
         </div>
 
         {/* Loading */}

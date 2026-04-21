@@ -44,6 +44,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
         if (path === '/admin') return 'overview';
         if (path.startsWith('/admin/users')) return 'users';
         if (path.startsWith('/admin/brands')) return 'brands';
+        if (path.startsWith('/admin/categories')) return 'categories';
         if (path.startsWith('/admin/content')) return 'content';
         if (path.startsWith('/admin/analytics')) return 'analytics';
         if (path.startsWith('/admin/failures')) return 'failures';
@@ -184,6 +185,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 </Link>
                 <Link to="/admin/brands" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'brands' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Building2 size={20} /> Brands
+                </Link>
+                <Link to="/admin/categories" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'categories' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Package size={20} /> Categories
                 </Link>
                 <Link to="/admin/content" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'content' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <FileText size={20} /> Content
