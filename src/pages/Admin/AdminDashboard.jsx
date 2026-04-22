@@ -529,40 +529,47 @@ function InfluencerManagement({ influencers, onVerify }) {
                         <tr key={inf.id} className="hover:bg-gray-50 transition-colors">
                             <td className="p-4">
                                 <Link to={`/marketplace/influencer/${inf.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
-                                        {inf.profile_picture_url ? <img src={inf.profile_picture_url} className="w-full h-full object-cover" /> : <span className="text-gray-500 font-bold">{inf.display_name?.[0]}</span>}
+                                    <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-white shadow-sm">
+                                        {inf.profile_picture_url ? (
+                                            <img src={inf.profile_picture_url} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <span className="text-indigo-600 font-bold">{inf.display_name?.[0]}</span>
+                                        )}
                                     </div>
                                     <div>
-                                        <div className="font-medium text-gray-900">{inf.display_name}</div>
-                                        <div className="text-xs text-gray-500">@{inf.handle || inf.username}</div>
+                                        <div className="font-bold text-gray-900">{inf.display_name}</div>
+                                        <div className="text-[10px] text-gray-500 font-medium">@{inf.handle || 'influencer'}</div>
                                     </div>
                                 </Link>
                             </td>
-                            <td className="p-4 text-sm text-gray-600">{inf.niche}</td>
-                            <td className="p-4 text-sm text-gray-900 font-medium">{new Intl.NumberFormat().format(inf.follower_count || 0)}</td>
+                            <td className="p-4 text-sm font-medium text-gray-600">
+                                <span className="px-2 py-0.5 bg-gray-100 rounded text-[10px] uppercase tracking-wider">{inf.niche}</span>
+                            </td>
+                            <td className="p-4 text-sm text-gray-900 font-bold">{new Intl.NumberFormat().format(inf.follower_count || 0)}</td>
                             <td className="p-4">
-                                <span className={`px-2 py-1 rounded-full text-xs capitalize font-medium ${inf.verificationStatus === 'verified' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                                    {inf.verificationStatus}
+                                <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-widest font-bold ${inf.verification_status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                    {inf.verification_status || 'pending'}
                                 </span>
                             </td>
                             <td className="p-4">
                                 <div className="flex gap-2">
-                                    {inf.verificationStatus === 'pending' && (
-                                        <>
-                                            <button className="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors" onClick={() => onVerify(inf.id, 'approve')}>Approve</button>
-                                            <button className="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors" onClick={() => onVerify(inf.id, 'reject')}>Reject</button>
-                                        </>
-                                    )}
-                                    {inf.whatsapp_number && (
+                                    {(inf.whatsapp_number || inf.phone_number) && (
                                         <a 
-                                            href={`https://wa.me/${inf.whatsapp_number.replace(/\D/g, '')}`} 
+                                            href={`https://wa.me/${(inf.whatsapp_number || inf.phone_number).replace(/\D/g, '')}`} 
                                             target="_blank" 
                                             rel="noreferrer"
-                                            className="p-1.5 bg-green-50 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-colors"
-                                            title="Chat on WhatsApp"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white text-xs font-bold rounded-lg hover:bg-green-700 transition-all shadow-sm shadow-green-100"
+                                            title="Initiate WhatsApp Chat"
                                         >
                                             <MessageCircle size={14} />
+                                            <span>WhatsApp</span>
                                         </a>
+                                    )}
+                                    {inf.verification_status === 'pending' && (
+                                        <>
+                                            <button className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-all shadow-sm" onClick={() => onVerify(inf.id, 'approve')}>Approve</button>
+                                            <button className="px-3 py-1.5 bg-white border border-red-200 text-red-600 text-xs font-bold rounded-lg hover:bg-red-50 transition-all" onClick={() => onVerify(inf.id, 'reject')}>Reject</button>
+                                        </>
                                     )}
                                 </div>
                             </td>
