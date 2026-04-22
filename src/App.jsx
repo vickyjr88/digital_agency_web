@@ -58,6 +58,7 @@ import AdminCampaigns from './pages/Admin/AdminCampaigns';
 import AdminBids from './pages/Admin/AdminBids';
 import AdminDisputes from './pages/Admin/AdminDisputes';
 import AdminCategories from './pages/Admin/AdminCategories';
+import AdminExternalServices from './pages/Admin/AdminExternalServices';
 
 // Affiliate Commerce Pages
 import BrandProfileSetup from './pages/AffiliateCommerce/BrandProfile/BrandProfileSetup';
@@ -597,6 +598,15 @@ function App() {
                 <Route path="/admin/categories" element={
                   <AdminRoute>
                     <PageContainer><AdminCategories /></PageContainer>
+                  </AdminRoute>
+                } />
+                <Route path="/admin/external-services" element={
+                  <AdminRoute>
+                    <PageContainer>
+                      <AdminDashboard defaultTab="external_services">
+                        <AdminExternalServices />
+                      </AdminDashboard>
+                    </PageContainer>
                   </AdminRoute>
                 } />
 

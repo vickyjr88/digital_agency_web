@@ -590,6 +590,23 @@ class ApiService {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/admin/orders?${queryString}`);
   }
+
+  // ============ External Services ============
+  async getExternalServices() {
+    return this.request('/external');
+  }
+
+  async registerExternalApp(name) {
+    return this.request(`/external/register-app?name=${encodeURIComponent(name)}`, {
+      method: 'POST',
+    });
+  }
+
+  async deleteExternalService(serviceId) {
+    return this.request(`/external/${serviceId}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 

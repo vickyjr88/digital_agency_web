@@ -29,7 +29,8 @@ export default function API() {
     { method: 'GET', path: '/api/campaigns', description: 'List all campaigns' },
     { method: 'POST', path: '/api/campaigns', description: 'Create a new campaign' },
     { method: 'GET', path: '/api/influencers', description: 'Search influencers' },
-    { method: 'GET', path: '/api/analytics', description: 'Fetch campaign analytics' }
+    { method: 'GET', path: '/api/analytics', description: 'Fetch campaign analytics' },
+    { method: 'GET', path: '/api/external/download/{id}', description: 'Secure digital product download (X-Access-Key auth)' }
   ];
 
   return (

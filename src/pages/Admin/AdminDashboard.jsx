@@ -13,7 +13,9 @@ import AdminSubscriptionTransactions from './AdminSubscriptionTransactions';
 import AdminWalletTransactions from './AdminWalletTransactions';
 import AdminDisputes from './AdminDisputes';
 import AdminCommerce from './AdminCommerce';
+import AdminExternalServices from './AdminExternalServices';
 import AdminUsersList from '../../features/admin/AdminUsersList';
+
 import AdminBrandsList from '../../features/admin/AdminBrandsList';
 import { disputeApi } from '../../services/marketplaceApi';
 
@@ -57,7 +59,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
         if (path.startsWith('/admin/bids')) return 'bids';
         if (path.startsWith('/admin/disputes')) return 'disputes';
         if (path.startsWith('/admin/commerce')) return 'commerce';
+        if (path.startsWith('/admin/external-services')) return 'external_services';
         return defaultTab;
+
     };
 
     useEffect(() => {
@@ -234,6 +238,10 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 <Link to="/admin/disputes" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'disputes' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <ShieldAlert size={20} className={activeTab === 'disputes' ? 'text-indigo-600' : 'text-red-400'} /> Disputes
                 </Link>
+                <Link to="/admin/external-services" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'external_services' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <Key size={20} /> External Services
+                </Link>
+
             </nav>
 
             <div className="p-4 border-t border-gray-100">
@@ -333,6 +341,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                     {activeTab === 'withdrawals' && <AdminWithdrawals />}
                                     {activeTab === 'commerce' && <AdminCommerce />}
                                     {activeTab === 'disputes' && <AdminDisputes />}
+                                    {activeTab === 'external_services' && <AdminExternalServices />}
                                 </div>
                             </div>
                         )
