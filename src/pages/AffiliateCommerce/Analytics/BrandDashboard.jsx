@@ -12,7 +12,9 @@ import {
   Loader,
   Globe,
   Activity,
-  MapPin
+  MapPin,
+  MessageCircle,
+  ExternalLink as LinkIcon
 } from 'lucide-react';
 import { analyticsApi } from '../../../services/affiliateApi';
 
@@ -372,11 +374,12 @@ export default function BrandDashboard() {
                     <th className="text-center py-3 px-4 text-sm font-semibold text-gray-600">Conversion</th>
                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-600">Sales</th>
                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-600">Commission</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {topAffiliates.map((affiliate, index) => (
-                    <tr key={affiliate.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={affiliate.influencer_id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 font-bold text-xs">
                           {index + 1}
@@ -384,16 +387,16 @@ export default function BrandDashboard() {
                       </td>
                       <td className="py-3 px-4">
                         <div>
-                          <p className="font-medium text-gray-900">{affiliate.name || 'Unknown'}</p>
+                          <p className="font-medium text-gray-900">{affiliate.display_name || 'Unknown'}</p>
                           <p className="text-sm text-gray-500">@{affiliate.instagram_handle || 'N/A'}</p>
                         </div>
                       </td>
                       <td className="py-3 px-4 text-center text-gray-900">{affiliate.clicks_count || 0}</td>
-                      <td className="py-3 px-4 text-center text-gray-900">{affiliate.orders_count || 0}</td>
+                      <td className="py-3 px-4 text-center text-gray-900">{affiliate.sales_count || 0}</td>
                       <td className="py-3 px-4 text-center">
                         <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
                           {affiliate.clicks_count > 0
-                            ? ((affiliate.orders_count / affiliate.clicks_count) * 100).toFixed(1)
+                            ? ((affiliate.sales_count / affiliate.clicks_count) * 100).toFixed(1)
                             : 0}%
                         </span>
                       </td>
@@ -401,7 +404,31 @@ export default function BrandDashboard() {
                         KES {parseFloat(affiliate.total_sales || 0).toLocaleString()}
                       </td>
                       <td className="py-3 px-4 text-right font-semibold text-green-600">
-                        KES {parseFloat(affiliate.total_commission || 0).toLocaleString()}
+                        KES {parseFloat(affiliate.commission_earned || 0).toLocaleString()}
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          {affiliate.phone_number && (
+                            <a
+                              href={`https://wa.me/${affiliate.phone_number.replace(/\D/g, '')}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors"
+                              title="Message on WhatsApp"
+                            >
+                              <MessageCircle className="w-4 h-4" />
+                            </a>
+                          )}
+                          <a
+                            href={`/shop/i/${affiliate.influencer_id}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                            title="View Storefront"
+                          >
+                            <LinkIcon className="w-4 h-4" />
+                          </a>
+                        </div>
                       </td>
                     </tr>
                   ))}

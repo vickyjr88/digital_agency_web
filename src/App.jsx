@@ -73,6 +73,7 @@ import PlaceOrder from './pages/AffiliateCommerce/Orders/PlaceOrder';
 import PaymentVerify from './pages/AffiliateCommerce/Orders/PaymentVerify';
 import DigitalLibrary from './pages/AffiliateCommerce/Orders/DigitalLibrary';
 import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDashboard';
+import BrandInfluencers from './pages/AffiliateCommerce/Influencers/BrandInfluencers';
 import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
 import PublicShop from './pages/AffiliateCommerce/Shop/PublicShop';
 import BrandStorefront from './pages/AffiliateCommerce/Shop/BrandStorefront';
@@ -289,6 +290,14 @@ function App() {
                   </AdminRoute>
                 } />
 
+                <Route path="/admin/affiliate-network" element={
+                  <AdminRoute>
+                    <PageContainer>
+                      <AdminDashboard defaultTab="affiliate_network" />
+                    </PageContainer>
+                  </AdminRoute>
+                } />
+
                 {/* Brand Pages wrapped in Dashboard for Sidebar */}
                 <Route path="/dashboard/brands/new" element={
                   <ProtectedRoute>
@@ -383,6 +392,11 @@ function App() {
                 <Route path="/affiliate/orders" element={
                   <ProtectedRoute>
                     <PageContainer><BrandOrders /></PageContainer>
+                  </ProtectedRoute>
+                } />
+                <Route path="/affiliate/influencers" element={
+                  <ProtectedRoute>
+                    <PageContainer><BrandInfluencers /></PageContainer>
                   </ProtectedRoute>
                 } />
                 <Route path="/affiliate/analytics" element={

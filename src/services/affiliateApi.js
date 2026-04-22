@@ -179,6 +179,9 @@ export const affiliateApi = {
   // Get pending approvals (brand)
   getPendingApprovals: () => api.get('/affiliate/pending-approvals'),
 
+  // Get all approved influencers (brand)
+  getBrandInfluencers: () => api.get('/affiliate/brand/influencers'),
+
   // Get influencer storefront (public)
   getInfluencerStorefront: (influencerId) => api.get(`/affiliate/storefront/${influencerId}`),
 
@@ -238,6 +241,9 @@ export const analyticsApi = {
 
   // Top performing affiliates (brand)
   getBrandTopAffiliates: (limit = 10) => api.get('/affiliate-analytics/brand/top-affiliates', { params: { limit } }),
+
+  // Global affiliate stats (admin)
+  getAdminAffiliateStats: () => api.get('/affiliate-analytics/admin/affiliate-stats'),
 };
 
 // ============================================================================

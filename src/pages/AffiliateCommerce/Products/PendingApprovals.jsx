@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Check, X, Clock, Users, Mail, Phone, Instagram, Youtube, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Check, X, Clock, Users, Mail, Phone, Instagram, Youtube, ExternalLink, ShieldCheck, MessageCircle } from 'lucide-react';
 import { affiliateApi } from '../../../services/affiliateApi';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -121,8 +121,17 @@ export default function PendingApprovals() {
                         </div>
                       )}
                       {approval.influencer?.phone_number && (
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <Phone className="w-4 h-4" /> {approval.influencer.phone_number}
+                        <div className="flex items-center gap-2 text-sm">
+                          <Phone className="w-4 h-4 text-gray-400" />
+                          <a 
+                            href={`https://wa.me/${approval.influencer.phone_number.replace(/\D/g, '')}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-gray-700 hover:text-green-600 flex items-center gap-1"
+                          >
+                            {approval.influencer.phone_number}
+                            <MessageCircle className="w-3 h-3" />
+                          </a>
                         </div>
                       )}
                     </div>

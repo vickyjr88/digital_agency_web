@@ -4,7 +4,7 @@ import { api } from '../../services/api';
 import { influencerApi, packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
 import './AdminDashboard.css';
 import { toast } from 'sonner';
-import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight, ShieldAlert, ShoppingCart, Key } from 'lucide-react';
+import { Users, Building2, FileText, AlertTriangle, UserCheck, Package, Target, Menu, X, LayoutDashboard, LogOut, TrendingUp, Shield, Clock, Briefcase, ArrowUpRight, ShieldAlert, ShoppingCart, Key, MessageCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -15,6 +15,7 @@ import AdminDisputes from './AdminDisputes';
 import AdminCommerce from './AdminCommerce';
 import AdminExternalServices from './AdminExternalServices';
 import AdminUsersList from '../../features/admin/AdminUsersList';
+import AdminAffiliateOverview from './AdminAffiliateOverview';
 
 import AdminBrandsList from '../../features/admin/AdminBrandsList';
 import { disputeApi } from '../../services/marketplaceApi';
@@ -60,6 +61,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
         if (path.startsWith('/admin/disputes')) return 'disputes';
         if (path.startsWith('/admin/commerce')) return 'commerce';
         if (path.startsWith('/admin/external-services')) return 'external_services';
+        if (path.startsWith('/admin/affiliate-network')) return 'affiliate_network';
         return defaultTab;
 
     };
@@ -241,6 +243,9 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                 <Link to="/admin/external-services" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'external_services' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                     <Key size={20} /> External Services
                 </Link>
+                <Link to="/admin/affiliate-network" onClick={isMobile ? closeMobileSidebar : undefined} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${activeTab === 'affiliate_network' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                    <TrendingUp size={20} /> Affiliate Network
+                </Link>
 
             </nav>
 
@@ -342,6 +347,7 @@ export default function AdminDashboard({ defaultTab = 'overview', children }) {
                                     {activeTab === 'commerce' && <AdminCommerce />}
                                     {activeTab === 'disputes' && <AdminDisputes />}
                                     {activeTab === 'external_services' && <AdminExternalServices />}
+                                    {activeTab === 'affiliate_network' && <AdminAffiliateOverview />}
                                 </div>
                             </div>
                         )
@@ -546,6 +552,17 @@ function InfluencerManagement({ influencers, onVerify }) {
                                             <button className="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors" onClick={() => onVerify(inf.id, 'approve')}>Approve</button>
                                             <button className="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors" onClick={() => onVerify(inf.id, 'reject')}>Reject</button>
                                         </>
+                                    )}
+                                    {inf.whatsapp_number && (
+                                        <a 
+                                            href={`https://wa.me/${inf.whatsapp_number.replace(/\D/g, '')}`} 
+                                            target="_blank" 
+                                            rel="noreferrer"
+                                            className="p-1.5 bg-green-50 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-colors"
+                                            title="Chat on WhatsApp"
+                                        >
+                                            <MessageCircle size={14} />
+                                        </a>
                                     )}
                                 </div>
                             </td>

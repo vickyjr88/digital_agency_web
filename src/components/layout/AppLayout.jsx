@@ -94,6 +94,7 @@ export default function AppLayout() {
       { path: '/affiliate/marketplace', icon: ShoppingBag, label: 'Browse Products' },
       { path: '/affiliate/products', icon: Package, label: 'My Products' },
       { path: '/affiliate/pending-approvals', icon: Users, label: 'Pending Requests' },
+      { path: '/affiliate/influencers', icon: Users, label: 'My Influencers' },
       { path: '/affiliate/orders', icon: ClipboardCheck, label: 'Orders' },
       { path: '/affiliate/analytics', icon: BarChart2, label: 'Affiliate Stats' },
 
