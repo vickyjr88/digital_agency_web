@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Check, X, Clock, Users, Mail, Phone, Instagram, Youtube, ExternalLink, ShieldCheck } from 'lucide-react';
 import { affiliateApi } from '../../../services/affiliateApi';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function PendingApprovals() {
+  const { user } = useAuth();
+  const isAdmin = user?.role?.toLowerCase() === 'admin' || user?.user_type?.toLowerCase() === 'admin';
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,10 +57,12 @@ export default function PendingApprovals() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
           <ShieldCheck className="w-8 h-8 text-blue-600" />
-          Pending Affiliate Requests
+          {isAdmin ? 'All Pending Affiliate Requests' : 'Pending Affiliate Requests'}
         </h1>
         <p className="mt-2 text-gray-600">
-          Review and approve influencers who want to promote your products.
+          {isAdmin 
+            ? 'Review and approve influencers applying to any product on the system.' 
+            : 'Review and approve influencers who want to promote your products.'}
         </p>
       </div>
 

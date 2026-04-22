@@ -28,9 +28,12 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { productsApi, brandProfileApi, brandsApi, affiliateApi } from '../../../services/affiliateApi';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function ProductsList() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.role?.toLowerCase() === 'admin' || user?.user_type?.toLowerCase() === 'admin';
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,12 +50,12 @@ export default function ProductsList() {
   }, []);
 
   useEffect(() => {
-    if (profileChecked && brandProfiles.length > 0) {
+    if (profileChecked && (isAdmin || brandProfiles.length > 0)) {
       loadProducts();
-    } else if (profileChecked && brandProfiles.length === 0) {
+    } else if (profileChecked && !isAdmin && brandProfiles.length === 0) {
       setLoading(false);
     }
-  }, [statusFilter, profileChecked]);  // eslint-disable-line
+  }, [statusFilter, profileChecked, isAdmin]);  // eslint-disable-line
 
   const checkBrandProfiles = async () => {
     try {
@@ -154,7 +157,7 @@ export default function ProductsList() {
     );
   }
 
-  if (brandProfiles.length === 0) {
+  if (!isAdmin && brandProfiles.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4">
@@ -190,39 +193,45 @@ export default function ProductsList() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Products</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {isAdmin ? 'All System Products' : 'My Products'}
+              </h1>
               <p className="text-gray-600 mt-2">
-                Manage your products available for affiliate promotion
+                {isAdmin ? 'Manage all products on the platform' : 'Manage your products available for affiliate promotion'}
               </p>
             </div>
-            <button
-              onClick={() => navigate('/affiliate/products/create')}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              Create Product
-            </button>
+            {!isAdmin && (
+              <button
+                onClick={() => navigate('/affiliate/products/create')}
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+                Create Product
+              </button>
+            )}
           </div>
 
           {/* Brand profile banner */}
-          <div className="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 mb-4 text-sm">
-            <div className="flex items-center gap-2 text-blue-800 flex-wrap">
-              <Building2 className="w-4 h-4 shrink-0" />
-              <span className="font-medium">Selling under:</span>
-              {brandProfiles.map((p, i) => (
-                <span key={p.id} className="inline-flex items-center gap-1">
-                  {i > 0 && <span className="text-blue-400">·</span>}
-                  <span className="font-semibold">{p.brand_name || p.business_category || 'Brand'}</span>
-                </span>
-              ))}
+          {brandProfiles.length > 0 && (
+            <div className="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 mb-4 text-sm">
+              <div className="flex items-center gap-2 text-blue-800 flex-wrap">
+                <Building2 className="w-4 h-4 shrink-0" />
+                <span className="font-medium">Selling under:</span>
+                {brandProfiles.map((p, i) => (
+                  <span key={p.id} className="inline-flex items-center gap-1">
+                    {i > 0 && <span className="text-blue-400">·</span>}
+                    <span className="font-semibold">{p.brand_name || p.business_category || 'Brand'}</span>
+                  </span>
+                ))}
+              </div>
+              <Link
+                to="/affiliate/brand-profile"
+                className="text-blue-600 hover:text-blue-800 font-medium underline-offset-2 hover:underline shrink-0 ml-3"
+              >
+                Manage profiles
+              </Link>
             </div>
-            <Link
-              to="/affiliate/brand-profile"
-              className="text-blue-600 hover:text-blue-800 font-medium underline-offset-2 hover:underline shrink-0 ml-3"
-            >
-              Manage profiles
-            </Link>
-          </div>
+          )}
 
           {/* Stats Summary */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -318,7 +327,7 @@ export default function ProductsList() {
                 ? 'Try adjusting your search terms'
                 : 'Create your first product to start selling through affiliates'}
             </p>
-            {!searchQuery && (
+            {!searchQuery && !isAdmin && (
               <button
                 onClick={() => navigate('/affiliate/products/create')}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
