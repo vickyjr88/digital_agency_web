@@ -9,7 +9,10 @@ import {
   TrendingUp,
   Percent,
   Award,
-  Loader
+  Loader,
+  Globe,
+  Activity,
+  MapPin
 } from 'lucide-react';
 import { analyticsApi } from '../../../services/affiliateApi';
 
@@ -200,7 +203,7 @@ export default function BrandDashboard() {
         </div>
 
         {/* Performance Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-3 bg-blue-100 rounded-lg">
@@ -234,9 +237,79 @@ export default function BrandDashboard() {
                 </p>
               </div>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 mt-2">
               Total sales: KES {parseFloat(stats.total_sales || 0).toLocaleString()}
             </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-indigo-100 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-indigo-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">ROI</p>
+                <p className="text-3xl font-bold text-indigo-600">{stats.roi || 0}%</p>
+              </div>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-indigo-600 h-2 rounded-full transition-all"
+                style={{ width: `${Math.min(parseFloat(stats.roi || 0), 100)}%` }}
+              />
+            </div>
+            <p className="text-sm text-gray-500 mt-2">Return on commission spend</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-purple-100 rounded-lg">
+                <Activity className="w-6 h-6 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">CPE</p>
+                <p className="text-3xl font-bold text-purple-600">KES {parseFloat(stats.cpe || 0).toFixed(2)}</p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">Cost per click engagement</p>
+          </div>
+        </div>
+
+        {/* Location & Map Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-1 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-6">
+              <MapPin className="w-6 h-6 text-blue-600" />
+              Top Conversion Locations
+            </h2>
+            {(!stats.conversions_by_location || stats.conversions_by_location.length === 0) ? (
+              <p className="text-gray-500 text-center py-8">No location data yet</p>
+            ) : (
+              <div className="space-y-4">
+                {stats.conversions_by_location.map((loc, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Globe className="w-5 h-5 text-gray-400" />
+                      <span className="font-medium text-gray-900">{loc.country === 'Unknown' ? 'Global/Unknown' : loc.country}</span>
+                    </div>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
+                      {loc.conversions} sales
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-6 flex flex-col justify-center items-center text-center">
+            <Globe className="w-16 h-16 text-blue-100 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Regional Reach</h3>
+            <p className="text-gray-500 max-w-md">
+              Your products are being promoted across different regions. This map visualization will grow as you expand your affiliate network.
+            </p>
+            <div className="mt-6 w-full h-48 bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-center">
+              <span className="text-blue-300 font-medium">Map Visualization (Coming Soon)</span>
+            </div>
           </div>
         </div>
 

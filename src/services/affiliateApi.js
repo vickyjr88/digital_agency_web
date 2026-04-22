@@ -179,6 +179,9 @@ export const affiliateApi = {
   // Get pending approvals (brand)
   getPendingApprovals: () => api.get('/affiliate/pending-approvals'),
 
+  // Get influencer storefront (public)
+  getInfluencerStorefront: (influencerId) => api.get(`/affiliate/storefront/${influencerId}`),
+
   // Track click
   trackClick: (ref, productSlug) => api.get('/affiliate/track-click', { params: { ref, product_slug: productSlug } }),
 };

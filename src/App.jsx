@@ -63,6 +63,7 @@ import AdminExternalServices from './pages/Admin/AdminExternalServices';
 // Affiliate Commerce Pages
 import BrandProfileSetup from './pages/AffiliateCommerce/BrandProfile/BrandProfileSetup';
 import ProductsList from './pages/AffiliateCommerce/Products/ProductsList';
+import PendingApprovals from './pages/AffiliateCommerce/Products/PendingApprovals';
 import CreateProduct from './pages/AffiliateCommerce/Products/CreateProduct';
 import EditProduct from './pages/AffiliateCommerce/Products/EditProduct';
 import ProductMarketplace from './pages/AffiliateCommerce/Products/ProductMarketplace';
@@ -75,6 +76,7 @@ import BrandAffiliateDashboard from './pages/AffiliateCommerce/Analytics/BrandDa
 import InfluencerAffiliateDashboard from './pages/AffiliateCommerce/Analytics/InfluencerDashboard';
 import PublicShop from './pages/AffiliateCommerce/Shop/PublicShop';
 import BrandStorefront from './pages/AffiliateCommerce/Shop/BrandStorefront';
+import InfluencerStorefront from './pages/AffiliateCommerce/Shop/InfluencerStorefront';
 import MyLinks from './pages/AffiliateCommerce/MyLinks/MyLinks';
 
 // Public Pages
@@ -363,6 +365,11 @@ function App() {
                     <PageContainer><ProductsList /></PageContainer>
                   </ProtectedRoute>
                 } />
+                <Route path="/affiliate/pending-approvals" element={
+                  <ProtectedRoute>
+                    <PageContainer><PendingApprovals /></PageContainer>
+                  </ProtectedRoute>
+                } />
                 <Route path="/affiliate/products/create" element={
                   <ProtectedRoute>
                     <PageContainer><CreateProduct /></PageContainer>
@@ -415,6 +422,9 @@ function App() {
                 } />
                 <Route path="/shop/store/:brandProfileId" element={
                   <BrandStorefront />
+                } />
+                <Route path="/shop/i/:influencerId" element={
+                  <InfluencerStorefront />
                 } />
                 <Route path="/shop/payment/verify" element={
                   <PaymentVerify />
