@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { influencerApi, packageApi, campaignApi, walletApi } from '../../services/marketplaceApi';
 import InfluencerProfileSettings from './InfluencerProfileSettings';
+import { Link2, Copy, ExternalLink } from 'lucide-react';
+import { toast } from 'sonner';
 import './InfluencerDashboard.css';
 
 export default function InfluencerDashboard({ defaultTab: propDefaultTab }) {
@@ -114,6 +116,39 @@ export default function InfluencerDashboard({ defaultTab: propDefaultTab }) {
                         <div className="rating">
                             <span className="stars">{'⭐'.repeat(Math.round(profile.rating || 0))}</span>
                             <span className="count">({profile.review_count || 0} reviews)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="shop-link-container">
+                    <div className="shop-link-box">
+                        <div className="shop-link-label">
+                            <Link2 className="icon-sm" />
+                            <span>My Shop:</span>
+                        </div>
+                        <div className="shop-link-url">
+                            {window.location.origin}/shop/i/{profile.id}
+                        </div>
+                        <div className="shop-link-actions">
+                            <button 
+                                onClick={() => {
+                                    navigator.clipboard.writeText(`${window.location.origin}/shop/i/${profile.id}`);
+                                    toast.success('Shop link copied!');
+                                }}
+                                className="action-btn"
+                                title="Copy Link"
+                            >
+                                <Copy className="icon-xs" />
+                            </button>
+                            <a 
+                                href={`/shop/i/${profile.id}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="action-btn"
+                                title="View Shop"
+                            >
+                                <ExternalLink className="icon-xs" />
+                            </a>
                         </div>
                     </div>
                 </div>

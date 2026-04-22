@@ -74,7 +74,7 @@ export default function InfluencerDashboard() {
     );
   }
 
-  const stats = dashboardData.stats;
+  const stats = dashboardData.stats || dashboardData;
   const conversionRate = stats.total_clicks > 0
     ? ((stats.total_orders / stats.total_clicks) * 100).toFixed(2)
     : 0;

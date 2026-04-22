@@ -105,6 +105,7 @@ export default function AppLayout() {
       items.push(
         { type: 'divider', label: 'Influencer Tools' },
         { path: '/influencer/dashboard', icon: Star, label: 'My Services' },
+        { path: '/affiliate/my-dashboard', icon: BarChart2, label: 'Performance' },
         { path: '/affiliate/my-links', icon: Link2, label: 'My Affiliate Links' },
         { path: '/affiliate/my-orders', icon: ShoppingBag, label: 'My Earnings' },
         { path: '/payment-methods', icon: CreditCard, label: 'Payout Settings' },
