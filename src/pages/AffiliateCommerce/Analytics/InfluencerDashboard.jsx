@@ -9,7 +9,10 @@ import {
   Award,
   Clock,
   Loader,
-  Package
+  Package,
+  Copy,
+  Link2,
+  ExternalLink
 } from 'lucide-react';
 import { analyticsApi } from '../../../services/affiliateApi';
 
@@ -84,23 +87,57 @@ export default function InfluencerDashboard() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Affiliate Dashboard</h1>
               <p className="text-gray-600 mt-2">
                 Track your performance and earnings
               </p>
             </div>
-            <select
-              value={timeRange}
-              onChange={(e) => setTimeRange(parseInt(e.target.value))}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value={7}>Last 7 days</option>
-              <option value={30}>Last 30 days</option>
-              <option value={90}>Last 90 days</option>
-              <option value={365}>Last year</option>
-            </select>
+            
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center bg-white border border-gray-200 rounded-xl px-3 py-2 shadow-sm">
+                <div className="flex items-center gap-2 text-sm text-gray-500 mr-4">
+                  <Link2 className="w-4 h-4" />
+                  <span className="font-medium hidden sm:inline">My Shop:</span>
+                  <span className="text-gray-900 truncate max-w-[150px] sm:max-w-xs font-mono">
+                    {window.location.origin}/shop/i/{stats.influencer_id}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 border-l pl-3">
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${window.location.origin}/shop/i/${stats.influencer_id}`);
+                      toast.success('Shop link copied!');
+                    }}
+                    className="p-1.5 hover:bg-gray-100 rounded-lg text-blue-600 transition-colors"
+                    title="Copy Link"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <a 
+                    href={`/shop/i/${stats.influencer_id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors"
+                    title="View Shop"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+
+              <select
+                value={timeRange}
+                onChange={(e) => setTimeRange(parseInt(e.target.value))}
+                className="px-4 py-2 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm font-medium"
+              >
+                <option value={7}>Last 7 days</option>
+                <option value={30}>Last 30 days</option>
+                <option value={90}>Last 90 days</option>
+                <option value={365}>Last year</option>
+              </select>
+            </div>
           </div>
         </div>
 
