@@ -362,32 +362,45 @@ export default function InfluencerDashboard() {
         </div>
 
         {/* Tips & Insights */}
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
-          <h3 className="text-xl font-semibold mb-4">Performance Tips</h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Increase Your Clicks</h4>
-              <p className="text-sm opacity-90">
-                Share your affiliate links on multiple platforms and create engaging content around the products
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Improve Conversion Rate</h4>
-              <p className="text-sm opacity-90">
-                Promote products that align with your audience's interests and provide honest reviews
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Track Performance</h4>
-              <p className="text-sm opacity-90">
-                Monitor which products perform best and focus on promoting similar items
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Maximize Earnings</h4>
-              <p className="text-sm opacity-90">
-                Look for products with higher commission rates and promote during peak shopping seasons
-              </p>
+        <div className="bg-slate-900 rounded-3xl shadow-2xl p-8 md:p-12 text-white relative overflow-hidden">
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-blue-600 rounded-full opacity-20 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-indigo-600 rounded-full opacity-20 blur-3xl"></div>
+          
+          <div className="relative z-10">
+            <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
+              <span className="p-2 bg-blue-500/20 rounded-lg">💡</span>
+              Performance Tips
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+                <h4 className="font-bold text-lg mb-3 text-blue-400">Increase Your Clicks</h4>
+                <p className="text-gray-300 leading-relaxed">
+                  Share your affiliate links on multiple platforms and create engaging content around the products. Use high-quality visuals to stop the scroll.
+                </p>
+              </div>
+              
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+                <h4 className="font-bold text-lg mb-3 text-green-400">Improve Conversion Rate</h4>
+                <p className="text-gray-300 leading-relaxed">
+                  Promote products that align with your audience's interests and provide honest reviews. Authenticity is the key to closing the sale.
+                </p>
+              </div>
+              
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+                <h4 className="font-bold text-lg mb-3 text-purple-400">Track Performance</h4>
+                <p className="text-gray-300 leading-relaxed">
+                  Monitor which products perform best and focus on promoting similar items. Use your dashboard data to refine your strategy weekly.
+                </p>
+              </div>
+              
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+                <h4 className="font-bold text-lg mb-3 text-orange-400">Maximize Earnings</h4>
+                <p className="text-gray-300 leading-relaxed">
+                  Look for products with higher commission rates and promote during peak shopping seasons like Black Friday or holidays.
+                </p>
+              </div>
             </div>
           </div>
         </div>

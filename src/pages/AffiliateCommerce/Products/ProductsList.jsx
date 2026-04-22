@@ -346,9 +346,9 @@ export default function ProductsList() {
               >
                 {/* Product Image */}
                 <div className="relative h-48 bg-gray-200">
-                  {product.images && product.images.length > 0 ? (
+                  {(product.images && product.images.length > 0) || product.thumbnail ? (
                     <img
-                      src={product.images[0]}
+                      src={(product.images && product.images.length > 0) ? product.images[0] : product.thumbnail}
                       alt={product.name}
                       className="w-full h-full object-cover"
                     />
